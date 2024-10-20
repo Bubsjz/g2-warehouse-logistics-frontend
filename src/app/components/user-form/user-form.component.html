@@ -13,6 +13,49 @@
           placeholder="Introduce el nombre del usuario"
         />
       </div>
+      <div class="my-3">
+        <label class="form-label" for="nombre">Email</label>
+        <input
+          class="form-control"
+          type="text"
+          id="email"
+          formControlName="email"
+          placeholder="Introduce el email"
+        />
+      </div>
+      <div class="my-3">
+        <label class="form-label" for="nombre">Cargo</label>
+        <select class="form-select" id="cargo" formControlName="cargo">
+          <option value="">Selecciona un cargo</option>
+          <option value="operario">Operario</option>
+          <option value="encargado">Encargado</option>
+          <option value="jefe de equipo">Jefe de equipo</option>
+        </select>
+      </div>
+      <div class="my-3">
+        <label class="form-label" for="nombre">Contraseña</label>
+        <input
+          class="form-control"
+          type="password"
+          id="Contraseña"
+          formControlName="Contraseña"
+          placeholder="Introduce la contraseña"
+        />
+      </div>
+      <div class="my-3">
+        <label class="form-label" for="nombre">Almacén</label>
+        <input
+          class="form-control"
+          type="text"
+          id="almacen"
+          formControlName="almacen"
+          placeholder="Asigna un almacén"
+        />
+      </div>
+      <div class="d-flex gap-2 my-3">
+        <input type="submit" value="Registrar" class="btn btn-success w-100" />
+        <input type="submit" value="Eliminar" class="btn btn-danger w-100" />
+      </div>
     </form>
   </div>
 </section>
