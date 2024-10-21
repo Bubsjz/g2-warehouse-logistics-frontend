@@ -1,9 +1,12 @@
+/*color de todos los valores */
 td{
     color: rgb(18, 87, 144);
 }
+/*Quito el margen de los p para poder poner el punto al lado del estado del ready, waitin o review */
 .td-p{
     margin: 0;
 }
+/* circulo que hace del estado del send order */
 .status-circle {
     width: 10px;
     height: 10px;
@@ -14,7 +17,7 @@ td{
     animation: pulse 2s infinite; /* Añade la animación */
 
   }
-
+/*color de todos los valores del circulo */
   .in-progress {
     background-color: #f0ad4e; /* Color naranja (Waiting) */
   }
@@ -26,17 +29,21 @@ td{
   .pending {
     background-color: #d9534f; /* Color rojo (Review) */
   }
+
+  
   .task-status {
     font-size: 18px;
     display: flex;
     align-items: center;
   }
 
+/* Animacion circulos de send order  */
+
   @keyframes pulse {
     0%, 100% {
       opacity: 1; /* Totalmente visible */
     }
     50% {
-      opacity: 0.5; /* Más transparente */
+      opacity: 0.2; /* Más transparente */
     }
   }
