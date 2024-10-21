@@ -1,19 +1,42 @@
-.td-waiting{
-    font-size: medium;
-    animation: tdwaiting 3s ease-in-out infinite;
+td{
+    color: rgb(18, 87, 144);
 }
+.td-p{
+    margin: 0;
+}
+.status-circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%; /* Hace el div circular */
+    display: flex;
+    flex-direction: row;
+    margin-right: 10px;
+    animation: pulse 2s infinite; /* Añade la animación */
 
-@keyframes tdwaiting{
+  }
+
+  .in-progress {
+    background-color: #f0ad4e; /* Color naranja (Waiting) */
+  }
+
+  .completed {
+    background-color: #5cb85c; /* Color verde (Ready) */
+  }
+
+  .pending {
+    background-color: #d9534f; /* Color rojo (Review) */
+  }
+  .task-status {
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+  }
+
+  @keyframes pulse {
     0%, 100% {
-        transform: scale(1); /* Tamaño normal */
-      }
-      25% {
-        transform: scale(1.1); /* Aumenta el tamaño en un 20% */
-      }
-      50% {
-        transform: scale(0.9); /* Disminuye el tamaño */
-      }
-      75% {
-        transform: scale(1.1); /* Vuelve a crecer */
-      }
-}
+      opacity: 1; /* Totalmente visible */
+    }
+    50% {
+      opacity: 0.5; /* Más transparente */
+    }
+  }

@@ -1,42 +1,85 @@
-<section class="container mt-3 ">
+<section class="container mt-3">
     <table class="table">
-        <thead >
-          <tr>
-            <th class="text-secondary" scope="col">Orders</th>
-            <th scope="col">Date</th>
-            <th scope="col">Origin</th>
-            <th scope="col">Destination</th>
-            <th scope="col">Number plate</th>
-            <th scope="col">Status</th>
-            <th scope="col">Send order</th>
-            <th scope="col">Edit</th>
-          </tr>
+        <thead class="table table-success">
+            <tr >
+                <th scope="col">Orders</th>
+                <th scope="col">Date</th>
+                <th scope="col">Origin</th>
+                <th scope="col">Destination</th>
+                <th scope="col">Number plate</th>
+                <th scope="col">Status</th>
+                <th scope="col">Send order</th>
+                <th scope="col">Edit</th>
+            </tr>
         </thead>
         <tbody>
-          <tr>
-            <th scope="row" ><strong>AJERT34X</strong></th>
-            <td>21/10/2024</td>
-            <td>Sevilla</td>
-            <td>Madrid</td>
-            <td>8547MDF</td>
-            <td>Active</td>
-            <td>Waiting...</td>
-            <td><i class="fa-regular fa-pen-to-square fa-xl" style="color: #9e9e9e;"></i></td>
-            
-            
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>fat</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>twitter</td>
-          </tr>
+            <tr>
+                <th scope="row"><strong>AUIT34J</strong></th>
+                <td>21/10/2024</td>
+                <td>Sevilla</td>
+                <td>Madrid</td>
+                <td>8547MDF</td>
+                <td><button class="btn btn-light text-success">Active</button></td>
+                <td>
+                    <button class="btn btn-light">
+                        <div class="task-status">
+                            <span class="status-circle completed"></span>
+                            <p class="td-p">Ready</p>
+                        </div>
+                    </button>
+                </td>
+                <td>
+                    <button class="btn btn-warning">
+                        <i class="fa-regular fa-pen-to-square fa-xl" style="color: #060606"></i>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><strong>BESRT58</strong></th>
+                <td>21/10/2024</td>
+                <td>Sevilla</td>
+                <td>Madrid</td>
+                <td>8547MDF</td>
+                <td>
+                    <button class="btn btn-light text-danger">Not Active</button>
+                </td>
+                <td> 
+                    <button class="btn btn-light">
+                        <div class="task-status">
+                            <span class="status-circle in-progress"></span>
+                            <p class="td-p">Waiting</p>
+                        </div>
+                    </button>
+                </td>
+                <td>
+                    <button class="btn btn-warning">
+                        <i class="fa-regular fa-pen-to-square fa-xl" style="color: #060606"></i>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><strong>AJET34X</strong></th>
+                <td>21/10/2024</td>
+                <td>Sevilla</td>
+                <td>Madrid</td>
+                <td>8547MDF</td>
+                <td>
+                    <button class="btn btn-light text-danger">Not Active</button>
+                </td>
+                <td> 
+                    <button class="btn btn-light">
+                    <div class="task-status">
+                        <span class="status-circle pending"></span>
+                        <p class="td-p">Review</p>
+                    </div>
+                </button>
+                </td>
+                <td>
+                    <button class="btn btn-warning">
+                        <i class="fa-regular fa-pen-to-square fa-xl" style="color: #060606"></i>
+                    </button>
+                </td>
+            </tr>
         </tbody>
-      </table>
+    </table>
 </section>
-
