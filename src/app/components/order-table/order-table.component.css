@@ -14,16 +14,18 @@ td{
     display: flex;
     flex-direction: row;
     margin-right: 10px;
-    animation: pulse 2s infinite; /* Añade la animación */
-
+    
   }
 /*color de todos los valores del circulo */
   .in-progress {
     background-color: #f0ad4e; /* Color naranja (Waiting) */
   }
 
+/* cuando esta completo el pedido se realiza animacion */
   .completed {
     background-color: #5cb85c; /* Color verde (Ready) */
+    animation: pulse 2s infinite; /* Añade la animación */
+
   }
 
   .pending {
@@ -37,7 +39,7 @@ td{
     align-items: center;
   }
 
-/* Animacion circulos de send order  */
+/* Animacion circulo verde de send order  */
 
   @keyframes pulse {
     0%, 100% {
