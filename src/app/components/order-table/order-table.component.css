@@ -1,0 +1,19 @@
+.td-waiting{
+    font-size: medium;
+    animation: tdwaiting 3s ease-in-out infinite;
+}
+
+@keyframes tdwaiting{
+    0%, 100% {
+        transform: scale(1); /* Tamaño normal */
+      }
+      25% {
+        transform: scale(1.1); /* Aumenta el tamaño en un 20% */
+      }
+      50% {
+        transform: scale(0.9); /* Disminuye el tamaño */
+      }
+      75% {
+        transform: scale(1.1); /* Vuelve a crecer */
+      }
+}
