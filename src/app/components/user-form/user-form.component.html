@@ -1,12 +1,12 @@
-<section class="container mt-3">
-  <div class="card shadow p-5">
-    <h3>Insertar un usuario</h3>
+<section class="container mt-5">
+  <div class="card shadow-lg p-4">
+    <h3 class="text-center my-4">Insertar un usuario</h3>
     <hr />
     <form>
       <div class="my-3">
         <label class="form-label" for="nombre">Nombre usuario</label>
         <input
-          class="form-control"
+          class="form-control rounded-pill"
           type="text"
           id="nombre"
           formControlName="nombre"
@@ -16,7 +16,7 @@
       <div class="my-3">
         <label class="form-label" for="nombre">Email</label>
         <input
-          class="form-control"
+          class="form-control rounded-pill"
           type="text"
           id="email"
           formControlName="email"
@@ -25,17 +25,21 @@
       </div>
       <div class="my-3">
         <label class="form-label" for="nombre">Cargo</label>
-        <select class="form-select" id="cargo" formControlName="cargo">
+        <select
+          class="form-select rounded-pill"
+          id="cargo"
+          formControlName="cargo"
+        >
           <option value="">Selecciona un cargo</option>
           <option value="operario">Operario</option>
           <option value="encargado">Encargado</option>
           <option value="jefe de equipo">Jefe de equipo</option>
         </select>
       </div>
-      <div class="my-3">
+      <div class="mb-3">
         <label class="form-label" for="nombre">Contraseña</label>
         <input
-          class="form-control"
+          class="form-control rounded-pill"
           type="password"
           id="Contraseña"
           formControlName="Contraseña"
@@ -45,7 +49,7 @@
       <div class="my-3">
         <label class="form-label" for="nombre">Almacén</label>
         <input
-          class="form-control"
+          class="form-control rounded-pill"
           type="text"
           id="almacen"
           formControlName="almacen"
@@ -53,8 +57,16 @@
         />
       </div>
       <div class="d-flex gap-2 my-3">
-        <input type="submit" value="Registrar" class="btn btn-success w-100" />
-        <input type="submit" value="Eliminar" class="btn btn-danger w-100" />
+        <input
+          type="submit"
+          value="Registrar"
+          class="btn btn-success w-100 rounded-pill"
+        />
+        <input
+          type="submit"
+          value="Eliminar"
+          class="btn btn-danger w-100 rounded-pill"
+        />
       </div>
     </form>
   </div>
