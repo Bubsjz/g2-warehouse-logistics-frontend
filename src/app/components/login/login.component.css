@@ -11,3 +11,33 @@
   width: 550px;
   border-radius: 30px;
 }
+
+.custom-input {
+  padding: 10px;
+  border-radius: 15px;
+  border-color: rgb(145, 145, 145);
+  
+}
+
+.custom-input::placeholder {
+  color: #797979; 
+  font-weight: bold;
+}
+
+.underline-email {
+  text-decoration: underline;
+  text-decoration-color: #797979 ;
+}
+
+.btn-color {
+  background-color: #007aff
+}
+
+.btn-text-size {
+  font-size: 20px;
+  font-weight: 500
+}
+
+.underline-text {
+  text-decoration: underline;
+}
