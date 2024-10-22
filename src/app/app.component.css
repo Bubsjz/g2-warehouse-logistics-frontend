@@ -1,0 +1,9 @@
+footer {
+    background-color: #7eadee;
+    padding: 30px;
+}
+.footer-down {
+    display: grid;
+    min-height: 100vh;
+    grid-template-rows: auto 1fr auto;
+}
