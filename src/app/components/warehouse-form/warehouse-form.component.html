@@ -1,6 +1,40 @@
 <section class="container mt-5">
   <div class="card shadow-lg p-4">
-    <h3 class="text-center my-4">Creación almacen</h3>
+    <h3 class="text-center my-4">Creación almacén</h3>
     <hr />
+    <form>
+      <div class="my-3">
+        <label class="form-label" for="nombre">Nombre almacén</label>
+        <input
+          class="form-control rounded-pill"
+          type="text"
+          id="nombre"
+          formControlName="nombre"
+          placeholder="Introduce el nombre del almacén"
+        />
+      </div>
+      <div class="my-3">
+        <label class="form-label" for="nombre">Ubicación</label>
+        <input
+          class="form-control rounded-pill"
+          type="text"
+          id="ubicacion"
+          formControlName="ubicacion"
+          placeholder="Introduce la dirección"
+        />
+      </div>
+      <div class="d-flex gap-2 my-3">
+        <input
+          type="submit"
+          value="Registrar"
+          class="btn btn-success w-100 rounded-pill"
+        />
+        <input
+          type="submit"
+          value="Eliminar"
+          class="btn btn-danger w-100 rounded-pill"
+        />
+      </div>
+    </form>
   </div>
 </section>
