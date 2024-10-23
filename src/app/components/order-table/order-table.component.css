@@ -62,3 +62,7 @@ table tr, table td, table th{
       opacity: 0.2; /* Más transparente */
     }
   }
+
+  .pointer{
+    cursor: pointer;
+  }
