@@ -1,13 +1,19 @@
 /*color de todos los valores */
 td{
-    font-weight:bold;
+    font-weight:600;
 }
 /*Quito el margen de los p para poder poner el punto al lado del estado del ready, waitin o review */
 .td-p{
     margin: 0;
 }
-/* para quitar el entrelineas de las filas */
 
+/*encabezado de la tabla con fuente mas gruesa para resaltar sobre la tabla */
+thead tr th{
+  font-size: large;
+  font-weight: 800;
+}
+
+/* para quitar el entrelineas de las filas */
 table tr, table td, table th{
   padding-top: 20px;
   padding-bottom: 20px;
