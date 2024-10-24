@@ -20,7 +20,7 @@ body {
 
 .btn {
   border: none;
-  border-radius: 5px;
+  border-radius: 15px;
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
@@ -89,21 +89,21 @@ body {
 .icons {
   display: flex;
   justify-content: center;
-  margin-top: 15px; /* Más separación entre el botón y los íconos */
+  margin-top: 15px; 
 }
 
 .icons i {
-  margin: 0 15px; /* Más espacio entre los íconos */
-  font-size: 28px; /* Aumenta el tamaño de los íconos */
+  margin: 0 15px; 
+  font-size: 28px; 
   color: rgb(39, 39, 32);
-  padding: 10px; /* Añade espacio alrededor de los íconos para simular botones */
-  border: 2px solid #ccc; /* Añade un borde a los íconos para parecer botones */
-  border-radius: 50%; /* Hace los bordes redondeados como botones */
-  cursor: pointer; /* Cambia el cursor al pasar por encima */
-  transition: background-color 0.3s, transform 0.3s; /* Transiciones suaves */
+  padding: 10px; 
+  border: 2px solid #ccc; 
+  border-radius: 50%; 
+  cursor: pointer; 
+  transition: background-color 0.3s, transform 0.3s; 
 }
 
 .icons i:hover {
-  background-color: #f1c40f; /* Cambia el color de fondo al pasar por encima */
-  transform: scale(1.1); /* Aumenta ligeramente el tamaño al pasar por encima */
+  background-color: #f1c40f; 
+  transform: scale(1.1); 
 }
