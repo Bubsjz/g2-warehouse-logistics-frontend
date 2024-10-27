@@ -43,6 +43,28 @@
           placeholder="Enter the street of the warehouse"
         />
       </div>
+      <div class="my-3">
+        <label class="form-label" for="photo">Upload photo</label>
+        <div class="photo-upload">
+          <input
+            class="form-control rounded-pill"
+            type="file"
+            id="photo"
+            formControlName="photo"
+            accept="image/*"
+            style="display: none"
+            onchange="document.getElementById('file-name').innerText = this.files[0] ? this.files[0].name : 'No file selected';"
+          />
+          <button
+            type="button"
+            onclick="document.getElementById('photo').click()"
+            class="btn btn-secondary"
+          >
+            Select photo
+          </button>
+          <span id="photo-name" class="ms-2">No photo selected</span>
+        </div>
+      </div>
       <div class="d-flex gap-2 my-3">
         <input
           type="submit"
