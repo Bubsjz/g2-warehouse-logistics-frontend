@@ -1,16 +1,16 @@
 <section class="container mt-5">
   <div class="card shadow-lg p-4">
-    <h3 class="text-center my-4">Insertar un usuario</h3>
+    <h3 class="text-center my-4">Insert a user</h3>
     <hr />
     <form>
       <div class="my-3">
-        <label class="form-label" for="nombre">Nombre usuario</label>
+        <label class="form-label" for="nombre">Username</label>
         <input
           class="form-control rounded-pill"
           type="text"
-          id="nombre"
-          formControlName="nombre"
-          placeholder="Introduce el nombre del usuario"
+          id="username"
+          formControlName="username"
+          placeholder="Enter the username"
         />
       </div>
       <div class="my-3">
@@ -20,51 +20,54 @@
           type="text"
           id="email"
           formControlName="email"
-          placeholder="Introduce el email"
+          placeholder="Enter the email"
         />
       </div>
       <div class="my-3">
-        <label class="form-label" for="nombre">Cargo</label>
+        <label class="form-label" for="nombre">Job title</label>
         <select
           class="form-select rounded-pill"
-          id="cargo"
-          formControlName="cargo"
+          id="job title"
+          formControlName="job title"
         >
-          <option value="">Selecciona un cargo</option>
-          <option value="operario">Operario</option>
-          <option value="encargado">Encargado</option>
-          <option value="jefe de equipo">Jefe de equipo</option>
+          <option value="">Select a job title</option>
+          <option value="operator">Operator</option>
+          <option value="manager">Manager</option>
+          <option value="team leader">Team leader</option>
         </select>
       </div>
       <div class="mb-3">
-        <label class="form-label" for="nombre">Contraseña</label>
+        <label class="form-label" for="nombre">Password</label>
         <input
           class="form-control rounded-pill"
           type="password"
-          id="Contraseña"
-          formControlName="Contraseña"
-          placeholder="Introduce la contraseña"
+          id="password"
+          formControlName="password"
+          placeholder="Enter the password"
         />
       </div>
       <div class="my-3">
-        <label class="form-label" for="nombre">Almacén</label>
-        <input
-          class="form-control rounded-pill"
-          type="text"
-          id="almacen"
-          formControlName="almacen"
-          placeholder="Asigna un almacén"
-        />
+        <label class="form-label" for="nombre">Warehouse</label>
+        <select
+          class="form-select rounded-pill"
+          id="warehouse"
+          formControlName="warehouse"
+        >
+          <option value="">Select a warehouse</option>
+          <option value="warehouse A">Warehouse A</option>
+          <option value="warehouse B">Warehouse B</option>
+          <option value="warehouse C">Warehouse C</option>
+        </select>
       </div>
       <div class="d-flex gap-2 my-3">
         <input
           type="submit"
-          value="Registrar"
+          value="Register"
           class="btn btn-success w-100 rounded-pill"
         />
         <input
           type="submit"
-          value="Eliminar"
+          value="Delete"
           class="btn btn-danger w-100 rounded-pill"
         />
       </div>
