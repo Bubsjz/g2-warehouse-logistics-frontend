@@ -1,16 +1,27 @@
-<div class="container mt-3 d-flex justify-content-end gap-3">
-    <button class="btn btn-light">
-        <i class="fa-solid fa-arrow-up-wide-short fa-l" style="color: #000000;"></i>
-        <Strong> Filter</Strong>
-    </button>
-
-    <button class="btn btn-light p-4">
-        <span>
-            <i class="fa-solid fa-box-open fa-xl" style="color: #000; "></i><strong> NEW ORDER</strong> 
-        </span>
-     </button>
-    
-</div>
+<nav class="navbar">
+    <div class="container mt-3 d-flex justify-content-end gap-3">
+        <button class="btn btn-light p-4">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                <i class="fa-solid fa-arrow-up-wide-short fa-l" style="color: #000000;"></i>
+                <Strong> Filter</Strong>
+            </a>
+            <ul class="dropdown-menu ">
+                <li><a class="dropdown-item" href="#">Send Orders</a></li>
+                <li><a class="dropdown-item" href="#">Status</a></li>
+                <li><a class="dropdown-item" href="#">Origin</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="#">Order Arrive</a></li>
+            </ul>
+        </button>
+        <button class="btn btn-light p-4">
+            <span>
+                <i class="fa-solid fa-box-open fa-xl" style="color: #000; "></i><strong> NEW ORDER</strong>
+            </span>
+        </button>
+    </div>
+</nav>
 <section class="container mt-3">
     <div class="table-responsive">
         <table class="table table-borderless table-hover  ">
@@ -30,10 +41,10 @@
             <tbody>
                 <tr>
                     <th scope="row" class="pointer"><strong class="text-primary pointer ">AUIT34J</strong></th>
-                    <td >21/10/2024</td>
+                    <td>21/10/2024</td>
                     <td>Sevilla</td>
                     <td>Madrid</td>
-                    <td >8547MDF</td>
+                    <td>8547MDF</td>
                     <td><button class="btn btn-light text-success ">Active</button></td>
                     <td>
                         <button class="btn btn-light">
@@ -50,7 +61,7 @@
                             </div>
                         </button>
                     </td>
-    
+
                     <td>
                         <button class="btn btn-outline-primary">
                             <i class="fa-regular fa-pen-to-square fa-xl" style="color: #060606"></i>
@@ -66,7 +77,7 @@
                     <td>
                         <button class="btn btn-light text-danger ">Not Active</button>
                     </td>
-                    <td> 
+                    <td>
                         <button class="btn btn-light">
                             <div class="task-status">
                                 <span class="status-circle in-progress"></span>
@@ -74,7 +85,7 @@
                             </div>
                         </button>
                     </td>
-                    <td> 
+                    <td>
                         <button class="btn btn-danger">
                             <div class="task-status">
                                 <p class="td-p ">Not send</p>
@@ -96,20 +107,20 @@
                     <td>
                         <button class="btn btn-light text-danger ">Not Active</button>
                     </td>
-                    <td> 
+                    <td>
                         <button class="btn btn-light">
-                        <div class="task-status">
-                            <span class="status-circle pending"></span>
-                            <p class="td-p">Review</p>
-                        </div>
-                    </button>
+                            <div class="task-status">
+                                <span class="status-circle pending"></span>
+                                <p class="td-p">Review</p>
+                            </div>
+                        </button>
                     </td>
-                    <td> 
+                    <td>
                         <button class="btn btn-danger">
-                        <div class="task-status">
-                            <p class="td-p">Not Send</p>
-                        </div>
-                    </button>
+                            <div class="task-status">
+                                <p class="td-p">Not Send</p>
+                            </div>
+                        </button>
                     </td>
                     <td>
                         <button class="btn btn-outline-primary">

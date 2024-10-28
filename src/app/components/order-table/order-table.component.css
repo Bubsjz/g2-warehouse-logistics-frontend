@@ -66,3 +66,9 @@ table tr, table td, table th{
   .pointer{
     cursor: pointer;
   }
+
+  /* Dropdown de filter*/
+  .dropdown-menu[data-bs-popper]{
+    top: auto;
+    left: auto;
+  }
