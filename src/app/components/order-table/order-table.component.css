@@ -2,7 +2,7 @@
 td{
     font-weight:600;
 }
-/*Quito el margen de los p para poder poner el punto al lado del estado del ready, waitin o review */
+/*Quito el margen de los p para poder poner el punto al lado del estado del ready o review */
 .td-p{
     margin: 0;
 }
@@ -29,10 +29,7 @@ table tr, table td, table th{
     margin-right: 10px;
     
   }
-/*color de todos los valores del circulo */
-  .in-progress {
-    background-color: #f0ad4e; /* Color naranja (Waiting) */
-  }
+
 
 /* cuando esta completo el pedido se realiza animacion */
   .completed {
