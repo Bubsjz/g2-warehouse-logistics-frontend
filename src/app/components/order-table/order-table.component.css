@@ -71,4 +71,6 @@ table tr, table td, table th{
   .dropdown-menu[data-bs-popper]{
     top: auto;
     left: auto;
+    width: 15%;
+    height: auto;
   }
