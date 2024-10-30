@@ -29,67 +29,23 @@
                 <tr>
                     <th scope="col">Orders</th>
                     <th scope="col">Date</th>
-                    <th scope="col">Origin</th>
                     <th scope="col">Destination</th>
                     <th scope="col">Number plate</th>
                     <th scope="col">Status</th>
-                    <th scope="col">Review</th>
-                    <th scope="col"><i class="fa-solid fa-plane-departure fa-lg"></i>Send Order</th>
                     <th scope="col">Edit</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <th scope="row" class="pointer"><strong class="text-primary pointer ">AUIT34J</strong></th>
+                    <th scope="row" class="text-primary pointer">AUIT34J</th>
                     <td>21/10/2024</td>
-                    <td>Sevilla</td>
-                    <td>Madrid</td>
-                    <td>8547MDF</td>
-                    <td><button class="btn btn-light text-success ">Active</button></td>
-                    <td>
-                        <button class="btn btn-light">
-                            <div class="task-status">
-                                <span class="status-circle completed"></span>
-                                <p class="td-p">Ready</p>
-                            </div>
-                        </button>
-                    </td>
-                    <td>
-                        <button class="btn btn-success">
-                            <div class="task-status">
-                                <p class="td-p ">Send</p>
-                            </div>
-                        </button>
-                    </td>
-
-                    <td>
-                        <button class="btn btn-outline-primary">
-                            <i class="fa-regular fa-pen-to-square fa-xl" style="color: #060606"></i>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row" class="pointer"><strong class="text-primary pointer">BESRT58</strong></th>
-                    <td>21/10/2024</td>
-                    <td>Sevilla</td>
-                    <td>Madrid</td>
+                    <td>Almacen A </td>
                     <td>8547MDF</td>
                     <td>
-                        <button class="btn btn-light text-danger ">Not Active</button>
-                    </td>
-                    <td>
                         <button class="btn btn-light">
-                            <div class="task-status">
-                                <span class="status-circle in-progress"></span>
-                                <p class="td-p">Waiting</p>
-                            </div>
-                        </button>
-                    </td>
-                    <td>
-                        <button class="btn btn-danger">
-                            <div class="task-status">
-                                <p class="td-p ">Not send</p>
-                            </div>
+                        <div class="task-status">
+                            <p class="td-p text-warning">Pending</p>
+                        </div>
                         </button>
                     </td>
                     <td>
@@ -99,27 +55,15 @@
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row" class="pointer"><strong class="text-primary pointer">AJET34X</strong></th>
+                    <th scope="row" class="text-primary pointer">AUIT34J</th>
                     <td>21/10/2024</td>
-                    <td>Sevilla</td>
-                    <td>Madrid</td>
+                    <td>Almacen C </td>
                     <td>8547MDF</td>
                     <td>
-                        <button class="btn btn-light text-danger ">Not Active</button>
-                    </td>
-                    <td>
                         <button class="btn btn-light">
-                            <div class="task-status">
-                                <span class="status-circle pending"></span>
-                                <p class="td-p">Review</p>
-                            </div>
-                        </button>
-                    </td>
-                    <td>
-                        <button class="btn btn-danger">
-                            <div class="task-status">
-                                <p class="td-p">Not Send</p>
-                            </div>
+                        <div class="task-status">
+                            <p class="td-p text-danger">Review</p>
+                        </div>
                         </button>
                     </td>
                     <td>
@@ -128,6 +72,80 @@
                         </button>
                     </td>
                 </tr>
+                <tr>
+                    <th scope="row" class="text-primary pointer">AUIT34J</th>
+                    <td>21/10/2024</td>
+                    <td>Almacen X </td>
+                    <td>8547MDF</td>
+                    <td>
+                        <button class="btn btn-light">
+                        <div class="task-status">
+                            <span class="status-circle corrections"></span>
+                            <p class="td-p text-danger">Corrections <i class="fa-solid fa-circle-exclamation"></i></p>
+                        </div>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-primary">
+                            <i class="fa-regular fa-pen-to-square fa-xl" style="color: #060606"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row" class="text-primary pointer">AUIT34J</th>
+                    <td>21/10/2024</td>
+                    <td>Almacen P </td>
+                    <td>8547MDF</td>
+                    <td>
+                        <button class="btn btn-light">
+                        <div class="task-status">
+                            <span class="status-circle ready"></span>
+                            <p class="td-p text-success">Ready </p>
+                        </div>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-primary">
+                            <i class="fa-regular fa-pen-to-square fa-xl" style="color: #060606"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row" class="text-primary pointer">AUIT34J</th>
+                    <td>21/10/2024</td>
+                    <td>Almacen B</td>
+                    <td>8547MDF</td>
+                    <td>
+                        <button class="btn btn-light">
+                        <div class="task-status">
+                            <p class="td-p text-success">In transit <i class="fa-solid fa-truck-fast fa-lg"></i></p>
+                        </div>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-primary">
+                            <i class="fa-regular fa-pen-to-square fa-xl" style="color: #060606"></i>
+                        </button>
+                    </td>
+                </tr>   
+                <tr>
+                    <th scope="row" class="text-primary pointer">AUIT34J</th>
+                    <td>21/10/2024</td>
+                    <td>Almacen A </td>
+                    <td>8547MDF</td>
+                    <td>
+                        <button class="btn btn-light">
+                        <div class="task-status">
+                            <p class="td-p text-success">Delivered <i class="fa-solid fa-user-check fa-lg"></i></p>
+                        </div>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-primary">
+                            <i class="fa-regular fa-pen-to-square fa-xl" style="color: #060606"></i>
+                        </button>
+                    </td>
+                </tr>   
             </tbody>
         </table>
     </div>

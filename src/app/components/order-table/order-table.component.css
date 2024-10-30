@@ -11,13 +11,22 @@ td{
 thead tr th{
   font-size: large;
   font-weight: 800;
+  text-align: center;
+  width: 100px
+   
 }
+
 
 /* para poner separacion entre pedidos */
 table tr, table td, table th{
   padding-top: 20px;
   padding-bottom: 20px;
+  text-align: center;
 
+}
+
+td button {
+  font-weight: 700 ;
 }
 /* circulo que hace del estado del send order */
 .status-circle {
@@ -30,22 +39,19 @@ table tr, table td, table th{
     
   }
 /*color de todos los valores del circulo */
-  .in-progress {
-    background-color: #f0ad4e; /* Color naranja (Waiting) */
+ 
+  .corrections {
+    background-color: #d9534f; /* Color rojo (Review) */
+    animation: pulse 2s infinite; 
   }
 
-/* cuando esta completo el pedido se realiza animacion */
-  .completed {
-    background-color: #5cb85c; /* Color verde (Ready) */
+/* cuando esta completo el pedido se realiza animacion para especificar que ya puede salir el envio */
+  .ready {
+    background-color: #5cb85c; /* Color verde más vivo (Ready) */
     animation: pulse 2s infinite; /* Añade la animación */
 
   }
 
-  .pending {
-    background-color: #d9534f; /* Color rojo (Review) */
-  }
-
-  
   .task-status {
     font-size: 18px;
     display: flex;
@@ -59,12 +65,13 @@ table tr, table td, table th{
       opacity: 1; /* Totalmente visible */
     }
     50% {
-      opacity: 0.2; /* Más transparente */
+      opacity: 0.1; /* Más transparente */
     }
   }
 
   .pointer{
     cursor: pointer;
+    font-weight: 900;
   }
 
   /* Dropdown de filter*/
