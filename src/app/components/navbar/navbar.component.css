@@ -12,6 +12,38 @@ body {
   padding: 20px;
 }
 
+.search-bar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  background-color: #f8f8f8;
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 60%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px 0 0 5px;
+}
+
+.search-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  background-color: #071f43;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 0 5px 5px 0;
+  transition: background-color 0.3s;
+}
+
+.search-button:hover {
+  background-color: #30057b;
+}
+
 .card-container {
   display: flex;
   justify-content: space-around;
@@ -62,25 +94,12 @@ body {
   padding: 10px;
 }
 
-.store-status {
-  margin-bottom: 5px;
-}
-
-.store-description {
+.store-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
   margin-bottom: 10px;
-}
-
-.read-more {
-  background-color: #0d6efd;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 10px;
-  cursor: pointer;
-  margin-top: 10px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .store-actions {
@@ -90,21 +109,31 @@ body {
 .icons {
   display: flex;
   justify-content: center;
-  margin-top: 15px; 
+  margin-top: 15px;
 }
 
 .icons i {
-  margin: 0 15px; 
-  font-size: 28px; 
+  margin: 0 15px;
+  font-size: 28px;
   color: rgb(39, 39, 32);
-  padding: 10px; 
-  border: 2px solid #ccc; 
-  border-radius: 50%; 
-  cursor: pointer; 
-  transition: background-color 0.3s, transform 0.3s; 
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.3s;
 }
 
 .icons i:hover {
-  background-color: #f1c40f; 
-  transform: scale(1.1); 
+  color: rgb(39, 39, 32);
+  border-color: red;
+  animation: rotateBorder 1s linear 1; 
+}
+
+@keyframes rotateBorder {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
