@@ -6,6 +6,7 @@ import { LoginComponent } from './components/login/login.component';
 import { OrderFormComponent } from './components/order-form/order-form.component';
 import { WarehouseFormComponent } from './components/warehouse-form/warehouse-form.component';
 import { UserFormComponent } from './components/user-form/user-form.component';
+import { WarehouseViewComponent } from './pages/warehouse-view/warehouse-view.component';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,7 @@ import { UserFormComponent } from './components/user-form/user-form.component';
   imports: [RouterOutlet, LoginComponent, OrderFormComponent],
   imports: [RouterOutlet, LoginComponent, WarehouseFormComponent],
   imports: [RouterOutlet, UserFormComponent],
+  imports: [RouterOutlet, LoginComponent, WarehouseViewComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
