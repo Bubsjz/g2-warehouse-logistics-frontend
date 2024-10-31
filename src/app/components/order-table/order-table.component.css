@@ -1,0 +1,83 @@
+/*color de todos los valores */
+td{
+    font-weight:600;
+}
+/*Quito el margen de los p para poder poner el punto al lado del estado del ready, waitin o review */
+.td-p{
+    margin: 0;
+}
+
+/*encabezado de la tabla con fuente mas gruesa para resaltar sobre la tabla */
+thead tr th{
+  font-size: large;
+  font-weight: 800;
+  text-align: center;
+  width: 100px
+   
+}
+
+
+/* para poner separacion entre pedidos */
+table tr, table td, table th{
+  padding-top: 20px;
+  padding-bottom: 20px;
+  text-align: center;
+
+}
+
+td button {
+  font-weight: 700 ;
+}
+/* circulo que hace del estado del send order */
+.status-circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%; /* Hace el div circular */
+    display: flex;
+    flex-direction: row;
+    margin-right: 10px;
+    
+  }
+/*color de todos los valores del circulo */
+ 
+  .corrections {
+    background-color: #d9534f; /* Color rojo (Review) */
+    animation: pulse 2s infinite; 
+  }
+
+/* cuando esta completo el pedido se realiza animacion para especificar que ya puede salir el envio */
+  .ready {
+    background-color: #5cb85c; /* Color verde más vivo (Ready) */
+    animation: pulse 2s infinite; /* Añade la animación */
+
+  }
+
+  .task-status {
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+  }
+
+/* Animacion circulo verde de send order  */
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1; /* Totalmente visible */
+    }
+    50% {
+      opacity: 0.1; /* Más transparente */
+    }
+  }
+
+  .pointer{
+    cursor: pointer;
+    font-weight: 900;
+  }
+
+  /* Dropdown de filter*/
+  .dropdown-menu[data-bs-popper]{
+    top: auto;
+    left: auto;
+    width: 15%;
+    height: auto;
+  }
