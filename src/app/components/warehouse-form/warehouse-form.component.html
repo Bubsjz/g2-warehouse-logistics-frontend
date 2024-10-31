@@ -1,0 +1,82 @@
+<section class="container mt-5">
+  <div class="card shadow-lg p-4">
+    <h3 class="text-center my-4">Creation of warehouse</h3>
+    <hr />
+    <form>
+      <div class="my-3">
+        <label class="form-label" for="name">Warehouse name</label>
+        <input
+          class="form-control rounded-pill"
+          type="text"
+          id="name"
+          formControlName="name"
+          placeholder="Enter the name of the warehouse"
+        />
+      </div>
+      <div class="my-3">
+        <label class="form-label" for="country">Country</label>
+        <input
+          class="form-control rounded-pill"
+          type="text"
+          id="country"
+          formControlName="country"
+          placeholder="Enter the country of the warehouse"
+        />
+      </div>
+      <div class="my-3">
+        <label class="form-label" for="city">City</label>
+        <input
+          class="form-control rounded-pill"
+          type="text"
+          id="city"
+          formControlName="city"
+          placeholder="Enter the city of the warehouse"
+        />
+      </div>
+      <div class="my-3">
+        <label class="form-label" for="address">Address</label>
+        <input
+          class="form-control rounded-pill"
+          type="text"
+          id="address"
+          formControlName="address"
+          placeholder="Enter the street of the warehouse"
+        />
+      </div>
+      <div class="my-3">
+        <label class="form-label" for="photo">Upload photo</label>
+        <div class="photo-upload">
+          <input
+            class="form-control rounded-pill"
+            type="file"
+            id="photo"
+            formControlName="photo"
+            accept="image/*"
+            style="display: none"
+            onchange="document.getElementById('file-name').innerText = this.files[0] ? this.files[0].name : 'No file selected';"
+          />
+          <button
+            type="button"
+            onclick="document.getElementById('photo').click()"
+            class="btn btn-secondary"
+          >
+            Select photo
+          </button>
+          <span id="photo-name" class="ms-2">No photo selected</span>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center gap-2 my-3">
+        <input
+          type="submit"
+          value="Registrar"
+          class="btn btn-success rounded-pill btn-size"
+        />
+        <input
+          type="submit"
+          value="Eliminar"
+          class="btn btn-danger rounded-pill btn-size"
+        />
+      </div>
+    </form>
+  </div>
+</section>
