@@ -1,12 +1,11 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { DashboardoperatorComponent } from './components/dashboardoperator/dashboardoperator.component';
+import { DashboardoperatorComponent } from './pages/dashboardoperator/dashboardoperator.component';
 import { OrderTableComponent } from './pages/order-table/order-table.component';
 import { OrderFormComponent } from './pages/order-form/order-form.component';
-import { DashboardmanagerComponent } from './components/dashboardmanager/dashboardmanager.component';
-import { DashboardbossComponent } from './components/dashboardboss/dashboardboss.component';
-import { WarehouseCardComponent } from './pages/warehouse-card/warehouse-card.component';
+import { DashboardmanagerComponent } from './pages/dashboardmanager/dashboardmanager.component';
+import { DashboardbossComponent } from './pages/dashboardboss/dashboardboss.component';
 import { WarehouseFormComponent } from './pages/warehouse-form/warehouse-form.component';
 import { WarehouseViewComponent } from './pages/warehouse-view/warehouse-view.component';
 
@@ -24,7 +23,6 @@ export const routes: Routes = [
             {path:'orderForm/:id',component:OrderFormComponent},
         ]},
         {path:'dashboardboss',component:DashboardbossComponent,children:[
-            {path:'warehousecard',component:WarehouseCardComponent},
             {path:'warehouseview/:id',component:WarehouseViewComponent},
             {path:'warehouseform/:id',component:WarehouseFormComponent},
         ]},  
