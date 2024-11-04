@@ -4,13 +4,23 @@
     <hr />
     <form>
       <div class="my-3">
-        <label class="form-label" for="username">Username</label>
+        <label class="form-label" for="name">Name</label>
         <input
           class="form-control rounded-pill"
           type="text"
-          id="username"
-          formControlName="username"
-          placeholder="Enter the username"
+          id="name"
+          formControlName="name"
+          placeholder="Enter the employee's name"
+        />
+      </div>
+      <div class="my-3">
+        <label class="form-label" for="surname">Surname</label>
+        <input
+          class="form-control rounded-pill"
+          type="text"
+          id="surname"
+          formControlName="surname"
+          placeholder="Enter the employee's surname"
         />
       </div>
       <div class="my-3">
@@ -23,19 +33,6 @@
           placeholder="Enter the email"
         />
       </div>
-      <div class="my-3">
-        <label class="form-label" for="job title">Job title</label>
-        <select
-          class="form-select rounded-pill"
-          id="job title"
-          formControlName="job title"
-        >
-          <option value="">Select a job title</option>
-          <option value="operator">Operator</option>
-          <option value="manager">Manager</option>
-          <option value="team leader">Team leader</option>
-        </select>
-      </div>
       <div class="mb-3">
         <label class="form-label" for="password">Password</label>
         <input
@@ -45,6 +42,15 @@
           formControlName="password"
           placeholder="Enter the password"
         />
+      </div>
+      <div class="my-3">
+        <label class="form-label" for="rol">Rol</label>
+        <select class="form-select rounded-pill" id="rol" formControlName="rol">
+          <option value="">Select a rol</option>
+          <option value="operator">Operator</option>
+          <option value="manager">Manager</option>
+          <option value="team leader">Team leader</option>
+        </select>
       </div>
       <div class="my-3">
         <label class="form-label" for="warehouse">Warehouse</label>

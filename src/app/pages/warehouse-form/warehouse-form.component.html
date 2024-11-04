@@ -14,23 +14,13 @@
         />
       </div>
       <div class="my-3">
-        <label class="form-label" for="country">Country</label>
+        <label class="form-label" for="locality">Locality</label>
         <input
           class="form-control rounded-pill"
           type="text"
-          id="country"
-          formControlName="country"
-          placeholder="Enter the country of the warehouse"
-        />
-      </div>
-      <div class="my-3">
-        <label class="form-label" for="city">City</label>
-        <input
-          class="form-control rounded-pill"
-          type="text"
-          id="city"
-          formControlName="city"
-          placeholder="Enter the city of the warehouse"
+          id="locality"
+          formControlName="locality"
+          placeholder="Enter the locality of the warehouse"
         />
       </div>
       <div class="my-3">
@@ -44,36 +34,36 @@
         />
       </div>
       <div class="my-3">
-        <label class="form-label" for="photo">Upload photo</label>
-        <div class="photo-upload">
+        <label class="form-label" for="image">Upload image</label>
+        <div class="image-upload">
           <input
             class="form-control rounded-pill"
             type="file"
-            id="photo"
-            formControlName="photo"
+            id="image"
+            formControlName="image"
             accept="image/*"
             style="display: none"
             onchange="document.getElementById('file-name').innerText = this.files[0] ? this.files[0].name : 'No file selected';"
           />
           <button
             type="button"
-            onclick="document.getElementById('photo').click()"
+            onclick="document.getElementById('image').click()"
             class="btn btn-secondary"
           >
-            Select photo
+            Select image
           </button>
-          <span id="photo-name" class="ms-2">No photo selected</span>
+          <span id="image-name" class="ms-2">No image selected</span>
         </div>
       </div>
       <div class="d-flex justify-content-center gap-2 my-3">
         <input
           type="submit"
-          value="Registrar"
+          value="Create"
           class="btn btn-success rounded-pill btn-size"
         />
         <input
           type="submit"
-          value="Eliminar"
+          value="Delete"
           class="btn btn-danger rounded-pill btn-size"
         />
       </div>
