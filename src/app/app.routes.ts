@@ -8,6 +8,8 @@ import { DashboardmanagerComponent } from './pages/dashboardmanager/dashboardman
 import { DashboardbossComponent } from './pages/dashboardboss/dashboardboss.component';
 import { WarehouseFormComponent } from './pages/warehouse-form/warehouse-form.component';
 import { WarehouseViewComponent } from './pages/warehouse-view/warehouse-view.component';
+import { NavbarComponent } from './pages/navbar/navbar.component';
+import { UserFormComponent } from './pages/user-form/user-form.component';
 
 
 export const routes: Routes = [
@@ -23,8 +25,10 @@ export const routes: Routes = [
             {path:'orderForm/:id',component:OrderFormComponent},
         ]},
         {path:'dashboardboss',component:DashboardbossComponent,children:[
+            {path:'warehousefirstview',component: NavbarComponent},
             {path:'warehouseview/:id',component:WarehouseViewComponent},
-            {path:'warehouseform/:id',component:WarehouseFormComponent},
+            {path:'warehouseform',component:WarehouseFormComponent},
+            {path:'wuserform',component:UserFormComponent}
         ]},  
     ]},
     {path:'**', redirectTo:'login'}
