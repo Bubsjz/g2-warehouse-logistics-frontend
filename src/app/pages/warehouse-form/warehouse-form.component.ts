@@ -43,7 +43,7 @@ export class WarehouseFormComponent {
   }
 
 
-  getDataForm(){
+  getDataForm(fileInput: HTMLInputElement){
     if (this.warehouseForm.invalid){
       alert('Please complete all fields correctly before submitting.')
       return
@@ -59,6 +59,7 @@ export class WarehouseFormComponent {
     alert('Form submitted correctly')
     this.warehouseForm.reset()
     this.selectedImage = null
+    fileInput.value = ""
   }
 
   backTo(){
