@@ -16,17 +16,19 @@ export class UserFormComponent {
   formTitle: string = 'Insert a user'
   buttonText: string = 'Register'
   userId: string | null = null
+  successMessage: string = ""
 
   constructor(){
     this.userForm = new FormGroup({
       name: new FormControl(null, [Validators.required]),
       surname: new FormControl(null, [Validators.required]),
-      email: new FormControl(null, [Validators.required, Validators.email]),
-      password: new FormControl(null, [Validators.required, Validators.minLength(6)]),
+      email: new FormControl(null, [Validators.required, Validators.email, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.(com|org|net)$')]),
+      password: new FormControl(null, [Validators.required, Validators.minLength(6), Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{6,}$')]),
       rol: new FormControl("", [Validators.required]),
       warehouse: new FormControl("", [Validators.required])
     })
   }
+
   ngOnInit(){
     this.activatedRoute.params.subscribe(params => {
       this.userId = params['id']
@@ -47,10 +49,16 @@ export class UserFormComponent {
     }
     if (this.userId){
       // Llamar al servicio para actualizar usuario
+      this.successMessage = "User updated successfully"
     } else {
       // Llamar al servicio para crear un usuario
+      this.successMessage = "User registered successfully"
     }
     this.userForm.reset()
+  }
+
+  goback(){
+    this.router.navigate(['/dashboard', 'dashboardboss', 'warehousefirstview'])
   }
 
 }

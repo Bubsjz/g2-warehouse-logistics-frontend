@@ -4,7 +4,9 @@
     <hr />
     <form [formGroup]="userForm" (ngSubmit)="getDataForm()">
       <div class="my-3">
-        <label class="form-label" for="name">Name</label>
+        <label class="form-label" for="name"
+          >Name <span class="text-danger">*</span></label
+        >
         <input
           class="form-control rounded-pill"
           type="text"
@@ -21,7 +23,9 @@
         }
       </div>
       <div class="my-3">
-        <label class="form-label" for="surname">Surname</label>
+        <label class="form-label" for="surname"
+          >Surname <span class="text-danger">*</span></label
+        >
         <input
           class="form-control rounded-pill"
           type="text"
@@ -39,7 +43,9 @@
         }
       </div>
       <div class="my-3">
-        <label class="form-label" for="email">Email</label>
+        <label class="form-label" for="email"
+          >Email <span class="text-danger">*</span></label
+        >
         <input
           class="form-control rounded-pill"
           type="text"
@@ -53,12 +59,16 @@
           <small>Email is required</small>
           } @if (userForm.get('email')?.hasError('email')){
           <small>Must be a valid email</small>
+          } @if (userForm.get('email')?.hasError('pattern')){
+          <small>Email domain must be .com, .org or .net</small>
           }
         </div>
         }
       </div>
       <div class="mb-3">
-        <label class="form-label" for="password">Password</label>
+        <label class="form-label" for="password"
+          >Password <span class="text-danger">*</span></label
+        >
         <input
           class="form-control rounded-pill"
           type="password"
@@ -72,13 +82,17 @@
           @if (userForm.get('password')?.hasError('required')){
           <small>Password is required</small>
           } @if (userForm.get('password')?.hasError('minlength')){
-          <small>Password must be at least 6 characters</small>
+          <small>Password must be at least 6 characters </small>
+          } @if (userForm.get('password')?.hasError('pattern')){
+          <small>Password must contain uppercase, lowercase and a number</small>
           }
         </div>
         }
       </div>
       <div class="my-3">
-        <label class="form-label" for="rol">Rol</label>
+        <label class="form-label" for="rol"
+          >Rol <span class="text-danger">*</span></label
+        >
         <select class="form-select rounded-pill" id="rol" formControlName="rol">
           <option value="" disabled>Select a rol</option>
           <option value="operator">Operator</option>
@@ -92,7 +106,9 @@
         }
       </div>
       <div class="my-3">
-        <label class="form-label" for="warehouse">Warehouse</label>
+        <label class="form-label" for="warehouse"
+          >Warehouse <span class="text-danger">*</span></label
+        >
         <select
           class="form-select rounded-pill"
           id="warehouse"
@@ -113,14 +129,16 @@
       <div class="d-flex justify-content-center gap-2 my-3">
         <input
           type="submit"
-          value="Register"
+          [value]="buttonText"
           class="btn btn-success rounded-pill btn-size"
         />
-        <input
-          type="submit"
-          value="Delete"
+        <button
+          type="button"
+          (click)="goback()"
           class="btn btn-danger rounded-pill btn-size"
-        />
+        >
+          Back to
+        </button>
       </div>
     </form>
   </div>
