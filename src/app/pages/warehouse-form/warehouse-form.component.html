@@ -2,7 +2,7 @@
   <div class="card shadow-lg p-4">
     <h3 class="text-center my-4">Creation of warehouse</h3>
     <hr />
-    <form>
+    <form [formGroup]="warehouseForm" (ngSubmit)="getDataForm()">
       <div class="my-3">
         <label class="form-label" for="name">Warehouse name</label>
         <input
