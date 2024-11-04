@@ -4,7 +4,9 @@
     <hr />
     <form [formGroup]="warehouseForm" (ngSubmit)="getDataForm()">
       <div class="my-3">
-        <label class="form-label" for="name">Warehouse name</label>
+        <label class="form-label" for="name"
+          >Warehouse name <span class="text-danger">*</span></label
+        >
         <input
           class="form-control rounded-pill"
           type="text"
@@ -12,9 +14,19 @@
           formControlName="name"
           placeholder="Enter the name of the warehouse"
         />
+        @if (warehouseForm.get('name')?.invalid &&
+        warehouseForm.get('name')?.touched){
+        <div class="text-danger">
+          @if (warehouseForm.get('name')?.hasError('required')){
+          <small>Name is required</small>
+          }
+        </div>
+        }
       </div>
       <div class="my-3">
-        <label class="form-label" for="locality">Locality</label>
+        <label class="form-label" for="locality"
+          >Locality<span class="text-danger">*</span></label
+        >
         <input
           class="form-control rounded-pill"
           type="text"
@@ -22,9 +34,19 @@
           formControlName="locality"
           placeholder="Enter the locality of the warehouse"
         />
+        @if (warehouseForm.get('locality')?.invalid &&
+        warehouseForm.get('locality')?.touched){
+        <div class="text-danger">
+          @if (warehouseForm.get('locality')?.hasError('required')){
+          <small>Locality is required</small>
+          }
+        </div>
+        }
       </div>
       <div class="my-3">
-        <label class="form-label" for="address">Address</label>
+        <label class="form-label" for="address"
+          >Address<span class="text-danger">*</span></label
+        >
         <input
           class="form-control rounded-pill"
           type="text"
@@ -32,27 +54,37 @@
           formControlName="address"
           placeholder="Enter the street of the warehouse"
         />
+        @if (warehouseForm.get('address')?.invalid &&
+        warehouseForm.get('address')?.touched){
+        <div class="text-danger">
+          @if (warehouseForm.get('address')?.hasError('required')){
+          <small>Address is required</small>
+          }
+        </div>
+        }
       </div>
       <div class="my-3">
-        <label class="form-label" for="image">Upload image</label>
+        <label class="form-label" for="image"
+          >Upload image<span class="text-danger">*</span></label
+        >
         <div class="image-upload">
           <input
             class="form-control rounded-pill"
             type="file"
             id="image"
-            formControlName="image"
-            accept="image/*"
-            style="display: none"
-            onchange="document.getElementById('file-name').innerText = this.files[0] ? this.files[0].name : 'No file selected';"
+            (change)="onFileSelected($event)"
+            accept=".jpeg, .jpg, .gif, .png"
           />
-          <button
-            type="button"
-            onclick="document.getElementById('image').click()"
-            class="btn btn-secondary"
-          >
-            Select image
-          </button>
-          <span id="image-name" class="ms-2">No image selected</span>
+          @if (warehouseForm.get('image')?.invalid &&
+          warehouseForm.get('image')?.touched){
+          <div class="text-danger">
+            @if (warehouseForm.get('image')?.hasError('required')){
+            <small>Image is required</small>
+            } @if (warehouseForm.get('image')?.hasError('invalidImageFile')){
+            <small>Must be a valid image file</small>
+            }
+          </div>
+          }
         </div>
       </div>
       <div class="d-flex justify-content-center gap-2 my-3">
@@ -61,11 +93,13 @@
           value="Create"
           class="btn btn-success rounded-pill btn-size"
         />
-        <input
-          type="submit"
-          value="Delete"
+        <button
+          type="button"
+          (click)="backTo()"
           class="btn btn-danger rounded-pill btn-size"
-        />
+        >
+          Back to
+        </button>
       </div>
     </form>
   </div>

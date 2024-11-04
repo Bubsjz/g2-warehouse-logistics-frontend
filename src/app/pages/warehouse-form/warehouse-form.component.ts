@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators, AbstractControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-warehouse-form',
@@ -11,6 +12,8 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators, AbstractContro
 export class WarehouseFormComponent {
   warehouseForm: FormGroup;
   selectedImage: File | null = null
+  router = inject(Router)
+  activatedRoute = inject(ActivatedRoute)
 
   constructor(){
     this.warehouseForm = new FormGroup({
@@ -42,7 +45,7 @@ export class WarehouseFormComponent {
 
   getDataForm(){
     if (this.warehouseForm.invalid){
-      alert('Por favor, completa correctamente todos los campos antes de enviar.')
+      alert('Please complete all fields correctly before submitting.')
       return
     }
     const formData = new FormData()
@@ -53,8 +56,12 @@ export class WarehouseFormComponent {
     if (this.selectedImage){
       formData.append('image', this.selectedImage)
     }
-    alert('Formulario enviado correctamente')
+    alert('Form submitted correctly')
     this.warehouseForm.reset()
     this.selectedImage = null
+  }
+
+  backTo(){
+    this.router.navigate(['/dashboard','dashboardboss', 'warehousefirstview' ])
   }
 }
