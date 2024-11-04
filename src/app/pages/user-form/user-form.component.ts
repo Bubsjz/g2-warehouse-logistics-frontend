@@ -21,10 +21,10 @@ export class UserFormComponent {
     this.userForm = new FormGroup({
       name: new FormControl(null, [Validators.required]),
       surname: new FormControl(null, [Validators.required]),
-      email: new FormControl(null, [Validators.required]),
-      password: new FormControl(null, [Validators.required]),
-      rol: new FormControl(null, [Validators.required]),
-      warehouse: new FormControl(null, [Validators.required])
+      email: new FormControl(null, [Validators.required, Validators.email]),
+      password: new FormControl(null, [Validators.required, Validators.minLength(6)]),
+      rol: new FormControl("", [Validators.required]),
+      warehouse: new FormControl("", [Validators.required])
     })
   }
   ngOnInit(){
