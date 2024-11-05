@@ -1,1 +1,7 @@
-<router-outlet></router-outlet>
+<div class="footer-down">
+    <div *ngIf="router.url !== '/login'"><app-main-header></app-main-header></div>
+  <main><router-outlet></router-outlet></main>
+  <footer>
+    <div *ngIf="router.url !== '/login'"><app-main-footer></app-main-footer></div>
+  </footer>
+</div>
