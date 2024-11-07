@@ -30,7 +30,7 @@ export const routes: Routes = [
             {path:'warehouseview/:id',component:WarehouseViewComponent},
             {path:'warehouseform',component:WarehouseFormComponent},
             {path:'wuserform',component:UserFormComponent},
-            {path:'employee-view',component:EmployeeViewComponent}
+            {path:'employee-view/:id',component:EmployeeViewComponent}
 
         ]},  
     ]},
