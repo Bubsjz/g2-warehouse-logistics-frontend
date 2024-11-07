@@ -18,18 +18,18 @@ export const routes: Routes = [
     {path:'login', component:LoginComponent},
     {path:'dashboard', component:DashboardComponent,children:[
         {path:'operator',component:DashboardoperatorComponent,children:[
-            {path:'orderList',component:OrderTableComponent},
-            {path:'orderForm/:id',component:OrderFormComponent},
+            {path:'order-list',component:OrderTableComponent},
+            {path:'order-form/:id',component:OrderFormComponent},
         ]},
         {path:'manager',component:DashboardmanagerComponent,children:[
-            {path:'orderList',component:OrderTableComponent},
-            {path:'orderForm/:id',component:OrderFormComponent},
+            {path:'order-list',component:OrderTableComponent},
+            {path:'order-form/:id',component:OrderFormComponent},
         ]},
         {path:'boss',component:DashboardbossComponent,children:[
-            {path:'warehousefirstview',component: NavbarComponent},
-            {path:'warehouseview/:id',component:WarehouseViewComponent},
-            {path:'warehouseform',component:WarehouseFormComponent},
-            {path:'wuserform',component:UserFormComponent},
+            {path:'warehouse-info',component: NavbarComponent},
+            {path:'warehouse-view/:id',component:WarehouseViewComponent},
+            {path:'warehouse-form',component:WarehouseFormComponent},
+            {path:'w-userform',component:UserFormComponent},
             {path:'employee-view/:id',component:EmployeeViewComponent}
 
         ]},  
