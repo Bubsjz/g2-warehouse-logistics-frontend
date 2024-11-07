@@ -1,0 +1,16 @@
+.margin {
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+.img-small {
+    width: 550px;
+    height: 550px
+}
+
+.divider {
+    width: 2px;
+    min-height: 200px;
+    background-color: #ccc;
+    align-self: stretch;
+}
