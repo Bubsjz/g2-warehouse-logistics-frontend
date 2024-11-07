@@ -16,15 +16,15 @@ export const routes: Routes = [
     {path:'', pathMatch:'full', redirectTo:'login'},
     {path:'login', component:LoginComponent},
     {path:'dashboard', component:DashboardComponent,children:[
-        {path:'dashboardoperator',component:DashboardoperatorComponent,children:[
-            {path: 'orderList',component:OrderTableComponent},
-            {path:'orderForm/:id',component:OrderFormComponent},
-        ]},
-        {path:'dashboardmanager',component:DashboardmanagerComponent,children:[
+        {path:'operator',component:DashboardoperatorComponent,children:[
             {path:'orderList',component:OrderTableComponent},
             {path:'orderForm/:id',component:OrderFormComponent},
         ]},
-        {path:'dashboardboss',component:DashboardbossComponent,children:[
+        {path:'manager',component:DashboardmanagerComponent,children:[
+            {path:'orderList',component:OrderTableComponent},
+            {path:'orderForm/:id',component:OrderFormComponent},
+        ]},
+        {path:'boss',component:DashboardbossComponent,children:[
             {path:'warehousefirstview',component: NavbarComponent},
             {path:'warehouseview/:id',component:WarehouseViewComponent},
             {path:'warehouseform',component:WarehouseFormComponent},
