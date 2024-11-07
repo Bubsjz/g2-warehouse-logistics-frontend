@@ -10,6 +10,7 @@ import { WarehouseFormComponent } from './pages/warehouse-form/warehouse-form.co
 import { WarehouseViewComponent } from './pages/warehouse-view/warehouse-view.component';
 import { NavbarComponent } from './pages/navbar/navbar.component';
 import { UserFormComponent } from './pages/user-form/user-form.component';
+import { EmployeeViewComponent } from './pages/employee-view/employee-view.component';
 
 
 export const routes: Routes = [
@@ -28,7 +29,9 @@ export const routes: Routes = [
             {path:'warehousefirstview',component: NavbarComponent},
             {path:'warehouseview/:id',component:WarehouseViewComponent},
             {path:'warehouseform',component:WarehouseFormComponent},
-            {path:'wuserform',component:UserFormComponent}
+            {path:'wuserform',component:UserFormComponent},
+            {path:'employee-view/:id',component:EmployeeViewComponent}
+
         ]},  
     ]},
     {path:'**', redirectTo:'login'}
