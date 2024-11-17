@@ -1,0 +1,82 @@
+<section class="container mt-5">
+  <div class="card shadow-lg p-4">
+    <h3 class="text-center my-4">Insert a user</h3>
+    <hr />
+    <form>
+      <div class="my-3">
+        <label class="form-label" for="name">Name</label>
+        <input
+          class="form-control rounded-pill"
+          type="text"
+          id="name"
+          formControlName="name"
+          placeholder="Enter the employee's name"
+        />
+      </div>
+      <div class="my-3">
+        <label class="form-label" for="surname">Surname</label>
+        <input
+          class="form-control rounded-pill"
+          type="text"
+          id="surname"
+          formControlName="surname"
+          placeholder="Enter the employee's surname"
+        />
+      </div>
+      <div class="my-3">
+        <label class="form-label" for="email">Email</label>
+        <input
+          class="form-control rounded-pill"
+          type="text"
+          id="email"
+          formControlName="email"
+          placeholder="Enter the email"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="password">Password</label>
+        <input
+          class="form-control rounded-pill"
+          type="password"
+          id="password"
+          formControlName="password"
+          placeholder="Enter the password"
+        />
+      </div>
+      <div class="my-3">
+        <label class="form-label" for="rol">Rol</label>
+        <select class="form-select rounded-pill" id="rol" formControlName="rol">
+          <option value="">Select a rol</option>
+          <option value="operator">Operator</option>
+          <option value="manager">Manager</option>
+          <option value="team leader">Team leader</option>
+        </select>
+      </div>
+      <div class="my-3">
+        <label class="form-label" for="warehouse">Warehouse</label>
+        <select
+          class="form-select rounded-pill"
+          id="warehouse"
+          formControlName="warehouse"
+        >
+          <option value="">Select a warehouse</option>
+          <option value="warehouse A">Warehouse A</option>
+          <option value="warehouse B">Warehouse B</option>
+          <option value="warehouse C">Warehouse C</option>
+        </select>
+      </div>
+      <div class="d-flex justify-content-center gap-2 my-3">
+        <input
+          type="submit"
+          value="Register"
+          class="btn btn-success rounded-pill btn-size"
+        />
+        <input
+          type="submit"
+          value="Delete"
+          class="btn btn-danger rounded-pill btn-size"
+        />
+      </div>
+    </form>
+  </div>
+</section>

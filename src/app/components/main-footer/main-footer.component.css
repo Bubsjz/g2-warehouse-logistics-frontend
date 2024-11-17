@@ -1,0 +1,9 @@
+img {
+    max-width: 150px
+}
+
+footer {
+    border-top: 3px solid rgb(136, 136, 136);
+    color: rgb(117, 117, 117);
+    padding: 30px 30px 5px 30px;
+}

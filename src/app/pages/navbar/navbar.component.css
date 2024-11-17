@@ -1,0 +1,139 @@
+body {
+  background-color: #fff;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.layout-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.search-bar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  background-color: #f8f8f8;
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 60%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px 0 0 5px;
+}
+
+.search-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  background-color: #071f43;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 0 5px 5px 0;
+  transition: background-color 0.3s;
+}
+
+.search-button:hover {
+  background-color: #30057b;
+}
+
+.card-container {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.btn {
+  border: none;
+  border-radius: 15px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #fff;
+}
+
+.registrar-empleados {
+  background-color: #28a745;
+}
+
+.registrar-almacenes {
+  background-color: #f41909;
+}
+
+.store-container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.store {
+  border: 1px solid #a9a9a9;
+  border-radius: 10px;
+  width: 45%;
+  margin: 10px;
+  text-align: center;
+  padding: 15px;
+}
+
+.store-header {
+  background-color: #f8f8f8;
+  padding: 10px;
+  font-weight: bold;
+}
+
+.store-body {
+  padding: 10px;
+}
+
+.store-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.store-actions {
+  text-align: center;
+}
+
+.icons {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.icons i {
+  margin: 0 15px;
+  font-size: 28px;
+  color: rgb(39, 39, 32);
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.icons i:hover {
+  color: rgb(39, 39, 32);
+  border-color: red;
+  animation: rotateBorder 1s linear 1; 
+}
+
+@keyframes rotateBorder {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
