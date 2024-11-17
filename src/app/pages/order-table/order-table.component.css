@@ -16,6 +16,13 @@ thead tr th{
    
 }
 
+table.table.table-hover > thead.colortable > tr > th {
+  background-color: #026dde ; /* Fondo azul */
+  color: white ; /* Texto blanco */
+  text-align: center ;
+  
+}
+
 
 /* para poner separacion entre pedidos */
 table tr, table td, table th{
