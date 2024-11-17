@@ -1,0 +1,165 @@
+{
+    "Deliveries": [
+      {
+        "ID_delivery": 1001,
+        "Send_date": "2023-10-01",
+        "Received_date": "2023-10-03",
+        "Status": "correction needed",
+        "Truck": {
+          "ID_truck": 501,
+          "Plate": "ABC-1234"
+        },
+        "Origin_warehouse": {
+          "ID_warehouse": 201,
+          "Name": "Central Warehouse",
+          "Adress": "Calle Mayor 123, Madrid"
+        },
+        "Destiny_warehouse": {
+          "ID_warehouse": 202,
+          "Name": "North Warehouse",
+          "Adress": "Avenida de la Paz 456, Barcelona"
+        },
+        "Products": [
+          {
+            "ID_product": 301,
+            "Product_name": "Laptop",
+            "Quantity": 10
+          },
+          {
+            "ID_product": 302,
+            "Product_name": "Monitor",
+            "Quantity": 15
+          }
+        ]
+      },
+      {
+        "ID_delivery": 1002,
+        "Send_date": "2023-10-02",
+        "Received_date": "2023-10-03",
+        "Status": "in transit",
+        "Truck": {
+          "ID_truck": 502,
+          "Plate": "XYZ-5678"
+        },
+        "Origin_warehouse": {
+          "ID_warehouse": 203,
+          "Name": "South Warehouse",
+          "Adress": "Calle Sur 789, Sevilla"
+        },
+        "Destiny_warehouse": {
+          "ID_warehouse": 204,
+          "Name": "East Warehouse",
+          "Adress": "Calle Este 101, Valencia"
+        },
+        "Products": [
+          {
+            "ID_product": 303,
+            "Product_name": "Keyboard",
+            "Quantity": 50
+          },
+          {
+            "ID_product": 304,
+            "Product_name": "Mouse",
+            "Quantity": 75
+          },
+          {
+            "ID_product": 305,
+            "Product_name": "Headphones",
+            "Quantity": 20
+          }
+        ]
+      },
+      {
+        "ID_delivery": 1003,
+        "Send_date": "2023-10-05",
+        "Received_date": "2023-10-07",
+        "Status": "ready departure",
+        "Truck": {
+          "ID_truck": 503,
+          "Plate": "LMN-2345"
+        },
+        "Origin_warehouse": {
+          "ID_warehouse": 201,
+          "Name": "Central Warehouse",
+          "Adress": "Calle Mayor 123, Madrid"
+        },
+        "Destiny_warehouse": {
+          "ID_warehouse": 205,
+          "Name": "West Warehouse",
+          "Adress": "Calle Oeste 404, Bilbao"
+        },
+        "Products": [
+          {
+            "ID_product": 306,
+            "Product_name": "Tablet",
+            "Quantity": 30
+          }
+        ]
+      },
+      {
+        "ID_delivery": 1004,
+        "Send_date": "2023-10-08",
+        "Received_date": "2023-10-15",
+        "Status": "pending",
+        "Truck": {
+          "ID_truck": 504,
+          "Plate": "GHI-7890"
+        },
+        "Origin_warehouse": {
+          "ID_warehouse": 206,
+          "Name": "North-East Warehouse",
+          "Adress": "Avenida Principal 321, Zaragoza"
+        },
+        "Destiny_warehouse": {
+          "ID_warehouse": 203,
+          "Name": "South Warehouse",
+          "Adress": "Calle Sur 789, Sevilla"
+        },
+        "Products": [
+          {
+            "ID_product": 307,
+            "Product_name": "Smartphone",
+            "Quantity": 100
+          },
+          {
+            "ID_product": 308,
+            "Product_name": "Charger",
+            "Quantity": 150
+          }
+        ]
+      },
+      {
+        "ID_delivery": 1005,
+        "Send_date": "2023-10-08",
+        "Received_date": "2023-10-15",
+        "Status": "pending",
+        "Truck": {
+          "ID_truck": 504,
+          "Plate": "GHI-7890"
+        },
+        "Origin_warehouse": {
+          "ID_warehouse": 206,
+          "Name": "North-East Warehouse",
+          "Adress": "Avenida Principal 321, Zaragoza"
+        },
+        "Destiny_warehouse": {
+          "ID_warehouse": 203,
+          "Name": "South Warehouse",
+          "Adress": "Calle Sur 789, Sevilla"
+        },
+        "Products": [
+          {
+            "ID_product": 307,
+            "Product_name": "Smartphone",
+            "Quantity": 100
+          },
+          {
+            "ID_product": 308,
+            "Product_name": "Charger",
+            "Quantity": 150
+          }
+        ]
+      }
+    ]
+  }
+  
