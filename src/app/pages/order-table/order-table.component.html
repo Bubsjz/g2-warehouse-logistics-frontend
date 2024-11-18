@@ -1,14 +1,14 @@
 <div class="container">
-    @if(arrUser[0].rol === "driver"){
+    @if(loginUser[0].rol === "driver"){
         <div class="mb-5 d-flex justify-content-end img-fluid">
-            <i class="fa-solid fa-truck fa-xl"> {{arrUser[0].name}} </i>
+            <i class="fa-solid fa-truck fa-xl"> {{loginUser[0].name}} </i>
         </div>
         <div class=" d-flex justify-content-start mb-4 ">
             <app-new-order-btn></app-new-order-btn>
         </div>
-    }@else if(arrUser[0].rol === "manager"){ 
+    }@else if(loginUser[0].rol === "manager"){ 
         <div class="mb-5">
-            <i class="fa-solid fa-user-tie fa-xl"> {{ arrUser[0].name }} </i>
+            <i class="fa-solid fa-user-tie fa-xl"> {{ loginUser[0].name }} </i>
         </div>
         
         
@@ -21,16 +21,16 @@
     <section class="mt-5">
         <div class="table-responsive">
             <table class="table table-borderless table-hover  ">
-                <thead  [class]= "arrUser[0].rol === 'driver' ? 'driver' : 'manager'" >
+                <thead  [class]= "loginUser[0].rol === 'driver' ? 'driver' : 'manager'" >
                     <tr>
                         <th scope="col">Orders</th>
                         <th scope="col" class="d-none d-md-table-cell">Date</th>
                         <th scope="col">Destination</th>
                         <th scope="col" class="d-none d-md-table-cell">Number plate</th>
                         <th scope="col">Status</th>
-                        @if(arrUser[0].rol === "driver"){
+                        @if(loginUser[0].rol === "driver"){
                         <th scope="col">Edit</th>
-                        }@else if(arrUser[0].rol === "manager"){
+                        }@else if(loginUser[0].rol === "manager"){
                         <th scope="col">Review</th>
                         }
 
@@ -40,7 +40,7 @@
 
                     @for(order of this.arrDeliveri; track order.ID_delivery){
                     <tr>
-                        <th scope="row" [class]= "arrUser[0].rol === 'driver' ? 'text-primary' : 'text-manager'" class=" pointer">{{order.ID_delivery}}</th>
+                        <th scope="row" [class]= "loginUser[0].rol === 'driver' ? 'text-primary' : 'text-manager'" class=" pointer" [routerLink]="['/dashboard','operator','order-form',order.ID_delivery]">{{order.ID_delivery}}</th>
                         <td class="d-none d-md-table-cell">{{order.Received_date}}</td>
                         <td>{{order.Destiny_warehouse.Name}}</td>
                         <td class="d-none d-md-table-cell">{{order.Truck.Plate}}</td>
@@ -64,12 +64,12 @@
                             </button>
                         </td>
                         <td>
-                            @if(arrUser[0].rol === "driver"){
-                                <button class="btn btn-outline-primary">
+                            @if(loginUser[0].rol === "driver"){
+                                <button class="btn btn-outline-primary" [routerLink]="['/dashboard','operator','order-form',order.ID_delivery]">
                                     <i class=" fa-regular fa-pen-to-square fa-xl"></i>
                                 </button>
-                            }@else if (arrUser[0].rol === "manager") {
-                                <button class="btnreview ">
+                            }@else if (loginUser[0].rol === "manager") {
+                                <button class="btnreview" [routerLink]="['/dashboard','operator','order-form',order.ID_delivery]">
                                     <i class=" fa-solid fa-eye fa-xl"></i>
                                 </button>
                             }
