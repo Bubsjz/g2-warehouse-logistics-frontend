@@ -1,0 +1,122 @@
+{
+    "users":
+    [
+        {
+            "id" : 1,
+            "name" : "Jaime",
+            "surname" : "Agüero",
+            "email" : "jaguero@gmail.com",
+            "password" : "A6aK2=n9x(#;",
+            "rol" : "driver",
+            "asigned_id_warehouse" : 1
+        },
+        {
+            "id" : 2,
+            "name" : "María",
+            "surname" : "Nieves",
+            "email" : "marinieves@hotmail.com",
+            "password" : "2FM:;tDi>1A4",
+            "rol" : "driver",
+            "asigned_id_warehouse" : 1
+        },
+        {
+            "id" : 3,
+            "name" : "Lucía",
+            "surname" : "Martinez",
+            "email" : "luciamar@gmail.com",
+            "password" : "mi5]36WK^0m",
+            "rol" : "driver",
+            "asigned_id_warehouse" : 2
+        },
+        {
+            "id" : 4,
+            "name" : "Iván",
+            "surname" : "Campos",
+            "email" : "icamp@hotmail.com",
+            "password" : "ZvEI43A8>`P(",
+            "rol" : "driver",
+            "asigned_id_warehouse" : 2
+        },
+        {
+            "id" : 5,
+            "name" : "Miguel",
+            "surname" : "Hernandez",
+            "email" : "miguelhernan@hotmail.com",
+            "password" : "G/;dP.5yr8f1",
+            "rol" : "driver",
+            "asigned_id_warehouse" : 3
+        },
+        {
+            "id" : 6,
+            "name" : "Mónica",
+            "surname" : "Sánchez",
+            "email" : "monsan@hotmail.com",
+            "password" : "\"1E50,}Ib>b|",
+            "rol" : "driver",
+            "asigned_id_warehouse" : 3
+        },
+        {
+            "id" : 7,
+            "name" : "Antonio",
+            "surname" : "Muñiz",
+            "email" : "amuniz@hotmail.com",
+            "password" : "38|`Lk3ON)t",
+            "rol" : "driver",
+            "asigned_id_warehouse" : 4
+        },
+        {
+            "id" : 8,
+            "name" : "Cristina",
+            "surname" : "Alastra",
+            "email" : "crisa@hotmail.com",
+            "password" : ">^xJzJ957Pob",
+            "rol" : "driver",
+            "asigned_id_warehouse" : 4
+        },
+        {
+            "id" : 9,
+            "name" : "Daniel",
+            "surname" : "Frutos",
+            "email" : "dafrut@gmail.com",
+            "password" : "OH6[<u9G0Na^",
+            "rol" : "manager",
+            "asigned_id_warehouse" : 3
+        },
+        {
+            "id" : 10,
+            "name" : "Eugenia",
+            "surname" : "Rodríguez",
+            "email" : "eugeniarod@gmail.com",
+            "password" : "vDl[1_4Uqd6-",
+            "rol" : "manager",
+            "asigned_id_warehouse" : 2
+        },
+        {
+            "id" : 11,
+            "name" : "Pedro",
+            "surname" : "Garcia",
+            "email" : "pegarcia@gmail.com",
+            "password" : "1DbNr5[2t]5s",
+            "rol" : "manager",
+            "asigned_id_warehouse" : 1
+        },
+        {
+            "id" : 12,
+            "name" : "Roberto",
+            "surname" : "Marín",
+            "email" : "roberin@gmail.com",
+            "password" : "£H(d2%A33+51",
+            "rol" : "manager",
+            "asigned_id_warehouse" : 4
+        },
+        {
+            "id" : 13,
+            "name" : "María",
+            "surname" : "Domínguez",
+            "email" : "mardomin@gmail.com",
+            "password" : "29OtH8\"v2\"h)",
+            "rol" : "administrator",
+            "asigned_id_warehouse" : 1
+        }
+    ]
+}
