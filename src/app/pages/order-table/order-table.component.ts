@@ -1,7 +1,5 @@
 import { Component, inject } from "@angular/core";
-import { NewOrderBtnComponent } from "../../components/new-order-btn/new-order-btn.component";
 import { OrderFilterComponent } from "../../components/order-filter/order-filter.component";
-import { PaginatorComponent } from "../../components/paginator/paginator.component";
 import { Deliveri } from "../../interfaces/deliveri.interface";
 import { DeliveriService } from "../../services/deliveri.service";
 
@@ -10,7 +8,7 @@ import { DeliveriService } from "../../services/deliveri.service";
 @Component({
   selector: 'app-order-table',
   standalone: true,
-  imports: [PaginatorComponent, NewOrderBtnComponent, OrderFilterComponent],
+  imports: [ OrderFilterComponent],
   templateUrl: './order-table.component.html',
   styleUrl: './order-table.component.css'
 })
