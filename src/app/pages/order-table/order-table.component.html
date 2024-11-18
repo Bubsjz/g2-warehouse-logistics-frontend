@@ -1,54 +1,85 @@
 <div class="container">
-    <app-order-filter  (filteredDeliveriesChange)="filterPadre($event)" ></app-order-filter>
-</div>
-<section class="container mt-5">
-    <div class="table-responsive">
-        <table class="table table-borderless table-hover  ">
-            <thead class="colortable">
-                <tr>
-                    <th scope="col">Orders</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Destination</th>
-                    <th scope="col">Number plate</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Edit</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for(order of this.arrDeliveri; track order.ID_delivery){
+    @if(arrUser[0].rol === "driver"){
+        <div class="mb-5 d-flex justify-content-end img-fluid">
+            <i class="fa-solid fa-truck fa-xl"> {{arrUser[0].name}} </i>
+        </div>
+        <div class=" d-flex justify-content-start mb-4 ">
+            <app-new-order-btn></app-new-order-btn>
+        </div>
+    }@else if(arrUser[0].rol === "manager"){ 
+        <div class="mb-5">
+            <i class="fa-solid fa-user-tie fa-xl"> {{ arrUser[0].name }} </i>
+        </div>
+        
+        
+    }
+   
+    <div>
+        <app-order-filter (filteredDeliveriesChange)="filterPadre($event)"></app-order-filter>
+    </div>
+
+    <section class="mt-5">
+        <div class="table-responsive">
+            <table class="table table-borderless table-hover  ">
+                <thead  [class]= "arrUser[0].rol === 'driver' ? 'driver' : 'manager'" >
                     <tr>
-                        <th scope="row" class="text-primary pointer">AUIT34J</th>
-                        <td>{{order.Received_date}}</td>
+                        <th scope="col">Orders</th>
+                        <th scope="col" class="d-none d-md-table-cell">Date</th>
+                        <th scope="col">Destination</th>
+                        <th scope="col" class="d-none d-md-table-cell">Number plate</th>
+                        <th scope="col">Status</th>
+                        @if(arrUser[0].rol === "driver"){
+                        <th scope="col">Edit</th>
+                        }@else if(arrUser[0].rol === "manager"){
+                        <th scope="col">Review</th>
+                        }
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @for(order of this.arrDeliveri; track order.ID_delivery){
+                    <tr>
+                        <th scope="row" [class]= "arrUser[0].rol === 'driver' ? 'text-primary' : 'text-manager'" class=" pointer">{{order.ID_delivery}}</th>
+                        <td class="d-none d-md-table-cell">{{order.Received_date}}</td>
                         <td>{{order.Destiny_warehouse.Name}}</td>
-                        <td>{{order.Truck.Plate}}</td>
+                        <td class="d-none d-md-table-cell">{{order.Truck.Plate}}</td>
                         <td>
                             <button class="btn btn-light">
-                            <div class="task-status">
-                                @if(order.Status === "correction needed" ){
-                                    <span class="status-circle corrections"></span>
-                                    <p  class="td-p text-danger">{{order.Status}} <i class="fa-solid fa-circle-exclamation"></i></p>
-                                }@else if(order.Status === "in transit"|| order.Status === "accepted"){
-                                    <p  class="td-p text-success">{{order.Status}}<i class="fa-solid fa-truck-fast fa-lg"></i></p>
-                                }@else if(order.Status === "ready departure"){
-                                    <span class="status-circle ready"></span>
-                                    <p  class="td-p text-success">{{order.Status}}</p>
-                                }@else if(order.Status === "pending"){
-                                    <p  class="td-p text-warning">{{order.Status}}</p>
-                                }
-                            </div>
+                                <div class="task-status">
+                                    @if(order.Status === "correction needed" ){
+                                    <span class="status-circle corrections d-none d-lg-table-cell"></span>
+                                    <p class="td-p text-danger">{{order.Status}} <i
+                                            class="fa-solid fa-circle-exclamation"></i></p>
+                                    }@else if(order.Status === "in transit"|| order.Status === "accepted"){
+                                    <p class="td-p text-success">{{order.Status}}<i
+                                            class="fa-solid fa-truck-fast fa-lg"></i></p>
+                                    }@else if(order.Status === "ready departure"){
+                                    <span class="status-circle ready d-none d-lg-table-cell"></span>
+                                    <p class="td-p text-success">{{order.Status}}</p>
+                                    }@else if(order.Status === "pending"){
+                                    <p class="td-p text-warning">{{order.Status}}</p>
+                                    }
+                                </div>
                             </button>
                         </td>
                         <td>
-                            <button class="btn btn-outline-primary">
-                                <i class=" btnedit fa-regular fa-pen-to-square fa-xl" ></i>
-                            </button>
+                            @if(arrUser[0].rol === "driver"){
+                                <button class="btn btn-outline-primary">
+                                    <i class=" fa-regular fa-pen-to-square fa-xl"></i>
+                                </button>
+                            }@else if (arrUser[0].rol === "manager") {
+                                <button class="btnreview ">
+                                    <i class=" fa-solid fa-eye fa-xl"></i>
+                                </button>
+                            }
+                            
                         </td>
                     </tr>
-                }
-        </table>
-    </div>
-</section>
+                    }
 
-<div class="mt-5 d-flex flex-row justify-content-center ">
-  
+
+            </table>
+        </div>
+    </section>
 </div>

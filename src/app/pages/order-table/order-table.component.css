@@ -2,7 +2,7 @@
 td{
     font-weight:600;
 }
-/*Quito el margen de los p para poder poner el punto al lado del estado del ready, waitin o review */
+/*Quito el margen de los p para poder poner el punto al lado del status */
 .td-p{
     margin: 0;
 }
@@ -16,11 +16,42 @@ thead tr th{
    
 }
 
-table.table.table-hover > thead.colortable > tr > th {
+/* Para el driver/operario color de cabecera*/
+
+table.table.table-hover > thead.driver > tr > th {
   background-color: #026dde ; /* Fondo azul */
   color: white ; /* Texto blanco */
   text-align: center ;
   
+}
+
+/* Para el manager/encargado color de cabecera*/
+
+table.table.table-hover > thead.manager > tr > th {
+  background-color: #2C3E50; /* Azul oscuro */
+  color: white;
+  text-align: center ;
+  
+}
+
+/* Para el manager/encargado cambio de boton edit por review y color azul oscuro*/
+.btnreview{
+  background-color:white; 
+  color:#2C3E50 ;
+  padding: 5px;
+  border-radius: 8px;
+  border-color: 1px solid #2C3E50;
+  
+}
+
+.btnreview:hover{
+  background-color: #2C3E50; 
+  color: white;
+}
+
+/* Para el manager/encargado color del order */
+.text-manager{
+  color:#22476b;
 }
 
 
@@ -81,10 +112,4 @@ td button {
     font-weight: 900;
   }
 
-  /* Dropdown de filter*/
-  .dropdown-menu[data-bs-popper]{
-    top: auto;
-    left: auto;
-    width: 15%;
-    height: auto;
-  }
+ 

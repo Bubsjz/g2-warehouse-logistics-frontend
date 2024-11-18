@@ -1,5 +1,4 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
-import { NewOrderBtnComponent } from "../new-order-btn/new-order-btn.component";
 import { FormsModule } from '@angular/forms';
 import { Deliveri } from '../../interfaces/deliveri.interface';
 import { DeliveriService } from '../../services/deliveri.service';
@@ -7,7 +6,7 @@ import { DeliveriService } from '../../services/deliveri.service';
 @Component({
   selector: 'app-order-filter',
   standalone: true,
-  imports: [NewOrderBtnComponent ,FormsModule],
+  imports: [FormsModule],
   templateUrl: './order-filter.component.html',
   styleUrl: './order-filter.component.css'
 })
