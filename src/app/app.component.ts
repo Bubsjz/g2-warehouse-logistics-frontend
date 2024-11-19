@@ -6,12 +6,13 @@ import { WarehouseViewComponent } from "./pages/warehouse-view/warehouse-view.co
 import { MainHeaderComponent } from './components/main-header/main-header.component';
 import { MainFooterComponent } from './components/main-footer/main-footer.component';
 import { CommonModule } from '@angular/common';
+import { LoginComponent } from './components/login/login.component';
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, WarehouseCardComponent, WarehouseUserListComponent, WarehouseViewComponent, MainHeaderComponent, MainFooterComponent],
+  imports: [RouterOutlet, CommonModule, WarehouseCardComponent, WarehouseUserListComponent, WarehouseViewComponent, LoginComponent, MainHeaderComponent, MainFooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
