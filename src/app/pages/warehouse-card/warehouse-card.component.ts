@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { WarehousesService } from '../../services/warehouses.service';
+import { Iwarehouse } from '../../interfaces/iwarehouse.interface';
 
 @Component({
   selector: 'app-warehouse-card',
@@ -8,5 +10,7 @@ import { Component } from '@angular/core';
   styleUrl: './warehouse-card.component.css'
 })
 export class WarehouseCardComponent {
+  warehouseServices = inject(WarehousesService);
+  warehouseList: Iwarehouse[] = [];
 
 }
