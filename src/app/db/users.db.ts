@@ -2,6 +2,7 @@ import { Iuser } from "../interfaces/iuser.interface";
 
 export const USERS: Iuser[] = [
     {
+        'id': 1,
         'name': 'Maria',
         'surname': 'Nieves',
         'email': 'marinieves@hotmail.com',
@@ -10,6 +11,7 @@ export const USERS: Iuser[] = [
         'warehouse_id': 1
     },
     {
+        'id': 2,
         'name': 'Pedro',
         'surname': 'Garcia',
         'email': 'pegarcia@gmail.com',
@@ -18,6 +20,7 @@ export const USERS: Iuser[] = [
         'warehouse_id': 1
     },
     {
+        'id': 3,
         'name': 'Iván',
         'surname': 'Campos',
         'email': 'icamp@hotmail.com',
@@ -26,6 +29,7 @@ export const USERS: Iuser[] = [
         'warehouse_id': 2 
     },
     {
+        'id': 4,
         'name': 'Eugenia',
         'surname': 'Rodríguez',
         'email': 'eugeniarod@gmail.com',

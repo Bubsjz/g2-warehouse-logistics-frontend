@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { WarehousesService } from '../../services/warehouses.service';
 import { Iwarehouse } from '../../interfaces/iwarehouse.interface';
+import { Iuser } from '../../interfaces/iuser.interface';
 
 @Component({
   selector: 'app-warehouse-card',
@@ -11,6 +12,19 @@ import { Iwarehouse } from '../../interfaces/iwarehouse.interface';
 })
 export class WarehouseCardComponent {
   warehouseServices = inject(WarehousesService);
-  warehouseList: Iwarehouse[] = [];
+  warehouse: Iwarehouse | undefined;
+  operators: Iuser[] | undefined;
+  managers: Iuser[] | undefined;
+  n_operators: number = 0;
+  n_managers: number = 0;
 
+  ngOnInit() {
+
+    let warehouse_id = 1;
+    this.warehouse = this.warehouseServices.getById(warehouse_id)
+    this.managers = this.warehouse?.employees.filter(employee => employee.rol === 'manager')
+    this.operators = this.warehouse?.employees.filter(employee => employee.rol === 'operator')
+    this.n_operators = this.operators!.length
+    this.n_managers = this.managers!.length
+  }
 }
