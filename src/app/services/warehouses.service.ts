@@ -15,4 +15,9 @@ export class WarehousesService {
   getAll(): Iwarehouse[] {
     return this.arrWarehouses;
   }
+
+  getById(id: number): Iwarehouse | undefined {
+    let warehouse = this.arrWarehouses.find(warehouse => warehouse.id === id)
+    return warehouse
+  }
 }
