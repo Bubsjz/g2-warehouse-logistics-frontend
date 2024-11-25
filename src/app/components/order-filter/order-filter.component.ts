@@ -1,7 +1,8 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Deliveri } from '../../interfaces/deliveri.interface';
-import { DeliveriService } from '../../services/deliveri.service';
+import { Delivery } from '../../interfaces/deliveri.interface';
+
+
 
 @Component({
   selector: 'app-order-filter',
@@ -12,18 +13,20 @@ import { DeliveriService } from '../../services/deliveri.service';
 })
 export class OrderFilterComponent {
 
-  deliveriService = inject(DeliveriService)
+  
 
-  orders!:Deliveri[]
-  filteredDeliveries: Deliveri[] = [];
+  @Input() productos:Delivery[]= [];
+
+  orders!:Delivery[]
+  filteredDeliveries:any;
   selectedStatus: string = '';
 
   
-  @Output() filteredDeliveriesChange:EventEmitter<Deliveri[]> = new EventEmitter;
+  @Output() filteredDeliveriesChange:EventEmitter<Delivery[]> = new EventEmitter;
 
   async ngOnInit(){
-    const allDeliveries = await this.deliveriService.getAll()
-    this.orders = allDeliveries
+    
+    this.orders = this.productos;
     this.filteredDeliveries = this.orders
   }
 
@@ -31,7 +34,7 @@ export class OrderFilterComponent {
 filterByStatus(): void {
   if (this.selectedStatus) {
     this.filteredDeliveries = this.orders.filter(delivery => 
-      delivery.Status.toLowerCase() === this.selectedStatus.toLowerCase()
+      delivery.status.toLowerCase() === this.selectedStatus.toLowerCase()
     );
   } else {
     this.filteredDeliveries = this.orders;  // Si no hay filtro, mostramos todas las entregas

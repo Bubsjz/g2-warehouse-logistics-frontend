@@ -1,164 +1,99 @@
 {
     "Deliveries": [
       {
-        "ID_delivery": 1001,
-        "Send_date": "2023-10-01",
-        "Received_date": "2023-10-03",
-        "Status": "correction needed",
-        "Truck": {
-          "ID_truck": 501,
-          "Plate": "ABC-1234"
+        "id_delivery": 1,
+        "send_date": "2024-11-01T08:30:00",
+        "received_date": null,
+        "truck": {
+          "plate": "8936-IDN",
+          "driver": "Jaime Agüero"
         },
-        "Origin_warehouse": {
-          "ID_warehouse": 201,
-          "Name": "Central Warehouse",
-          "Adress": "Calle Mayor 123, Madrid"
+        "origin_warehouse": {
+          "name": "Central Warehouse",
+          "locality": "Madrid"
         },
-        "Destiny_warehouse": {
-          "ID_warehouse": 202,
-          "Name": "North Warehouse",
-          "Adress": "Avenida de la Paz 456, Barcelona"
+        "destination_warehouse": {
+          "name": "North Warehouse",
+          "locality": "Burgos"
         },
-        "Products": [
-          {
-            "ID_product": 301,
-            "Product_name": "Laptop",
-            "Quantity": 10
-          },
-          {
-            "ID_product": 302,
-            "Product_name": "Monitor",
-            "Quantity": 15
-          }
-        ]
+        "status": "ready departure",
+        "comments": null
       },
       {
-        "ID_delivery": 1002,
-        "Send_date": "2023-10-02",
-        "Received_date": "2023-10-03",
-        "Status": "in transit",
-        "Truck": {
-          "ID_truck": 502,
-          "Plate": "XYZ-5678"
+        "id_delivery": 2,
+        "send_date": "2024-11-02T09:00:00",
+        "received_date": null,
+        "truck": {
+          "plate": "1342-YGN",
+          "driver": "Lucía Martinez"
         },
-        "Origin_warehouse": {
-          "ID_warehouse": 203,
-          "Name": "South Warehouse",
-          "Adress": "Calle Sur 789, Sevilla"
+        "origin_warehouse": {
+          "name": "North Warehouse",
+          "locality": "Burgos"
         },
-        "Destiny_warehouse": {
-          "ID_warehouse": 204,
-          "Name": "East Warehouse",
-          "Adress": "Calle Este 101, Valencia"
+        "destination_warehouse": {
+          "name": "South Warehouse",
+          "locality": "Sevilla"
         },
-        "Products": [
-          {
-            "ID_product": 303,
-            "Product_name": "Keyboard",
-            "Quantity": 50
-          },
-          {
-            "ID_product": 304,
-            "Product_name": "Mouse",
-            "Quantity": 75
-          },
-          {
-            "ID_product": 305,
-            "Product_name": "Headphones",
-            "Quantity": 20
-          }
-        ]
+        "status": "in transit",
+        "comments": null
       },
       {
-        "ID_delivery": 1003,
-        "Send_date": "2023-10-05",
-        "Received_date": "2023-10-07",
-        "Status": "ready departure",
-        "Truck": {
-          "ID_truck": 503,
-          "Plate": "LMN-2345"
+        "id_delivery": 3,
+        "send_date": "2024-11-03T10:00:00",
+        "received_date": "2024-11-03T15:30:00",
+        "truck": {
+          "plate": "4756-JKL",
+          "driver": "Miguel Hernandez"
         },
-        "Origin_warehouse": {
-          "ID_warehouse": 201,
-          "Name": "Central Warehouse",
-          "Adress": "Calle Mayor 123, Madrid"
+        "origin_warehouse": {
+          "name": "South Warehouse",
+          "locality": "Sevilla"
         },
-        "Destiny_warehouse": {
-          "ID_warehouse": 205,
-          "Name": "West Warehouse",
-          "Adress": "Calle Oeste 404, Bilbao"
+        "destination_warehouse": {
+          "name": "East Warehouse",
+          "locality": "Valencia"
         },
-        "Products": [
-          {
-            "ID_product": 306,
-            "Product_name": "Tablet",
-            "Quantity": 30
-          }
-        ]
+        "status": "accepted",
+        "comments": null
       },
       {
-        "ID_delivery": 1004,
-        "Send_date": "2023-10-08",
-        "Received_date": "2023-10-15",
-        "Status": "pending",
-        "Truck": {
-          "ID_truck": 504,
-          "Plate": "GHI-7890"
+        "id_delivery": 4,
+        "send_date": "2024-11-04T12:00:00",
+        "received_date": null,
+        "truck": {
+          "plate": "0874-UIO",
+          "driver": "Mónica Sánchez"
         },
-        "Origin_warehouse": {
-          "ID_warehouse": 206,
-          "Name": "North-East Warehouse",
-          "Adress": "Avenida Principal 321, Zaragoza"
+        "origin_warehouse": {
+          "name": "South Warehouse",
+          "locality": "Sevilla"
         },
-        "Destiny_warehouse": {
-          "ID_warehouse": 203,
-          "Name": "South Warehouse",
-          "Adress": "Calle Sur 789, Sevilla"
+        "destination_warehouse": {
+          "name": "Central Warehouse",
+          "locality": "Madrid"
         },
-        "Products": [
-          {
-            "ID_product": 307,
-            "Product_name": "Smartphone",
-            "Quantity": 100
-          },
-          {
-            "ID_product": 308,
-            "Product_name": "Charger",
-            "Quantity": 150
-          }
-        ]
+        "status": "pending",
+        "comments": null
       },
       {
-        "ID_delivery": 1005,
-        "Send_date": "2023-10-08",
-        "Received_date": "2023-10-15",
-        "Status": "pending",
-        "Truck": {
-          "ID_truck": 504,
-          "Plate": "GHI-7890"
+        "id_delivery": 5,
+        "send_date": "2024-11-05T13:00:00",
+        "received_date": null,
+        "truck": {
+          "plate": "1638-VRG",
+          "driver": "Cristina Alastra"
         },
-        "Origin_warehouse": {
-          "ID_warehouse": 206,
-          "Name": "North-East Warehouse",
-          "Adress": "Avenida Principal 321, Zaragoza"
+        "origin_warehouse": {
+          "name": "East Warehouse",
+          "locality": "Valencia"
         },
-        "Destiny_warehouse": {
-          "ID_warehouse": 203,
-          "Name": "South Warehouse",
-          "Adress": "Calle Sur 789, Sevilla"
+        "destination_warehouse": {
+          "name": "South Warehouse",
+          "locality": "Sevilla"
         },
-        "Products": [
-          {
-            "ID_product": 307,
-            "Product_name": "Smartphone",
-            "Quantity": 100
-          },
-          {
-            "ID_product": 308,
-            "Product_name": "Charger",
-            "Quantity": 150
-          }
-        ]
+        "status": "correction needed",
+        "comments": "Las cantidades no se ajustan al stock"
       }
     ]
   }

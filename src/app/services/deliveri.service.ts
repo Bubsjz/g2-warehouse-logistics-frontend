@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { Deliveri } from '../interfaces/deliveri.interface';
+import { Delivery } from '../interfaces/deliveri.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,12 @@ export class DeliveriService {
   private httpClient = inject(HttpClient)
 
   getAll(){
-    return lastValueFrom(this.httpClient.get<Deliveri[]>(this.apiUrl))
+    return lastValueFrom(this.httpClient.get<Delivery[]>(this.apiUrl))
   }
+
+  getById(deliveryId:number){
+    return lastValueFrom(this.httpClient.get<Delivery[]>(`${this.apiUrl}?id_delivery=${deliveryId}`))
+  }
+  
  
 }

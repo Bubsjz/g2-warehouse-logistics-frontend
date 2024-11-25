@@ -1,85 +1,95 @@
 <div class="container">
-    @if(loginUser[0].rol === "driver"){
-        <div class="mb-5 d-flex justify-content-end img-fluid">
-            <i class="fa-solid fa-truck fa-xl"> {{loginUser[0].name}} </i>
-        </div>
-        <div class=" d-flex justify-content-start mb-4 ">
-            <app-new-order-btn></app-new-order-btn>
-        </div>
-    }@else if(loginUser[0].rol === "manager"){ 
-        <div class="mb-5">
-            <i class="fa-solid fa-user-tie fa-xl"> {{ loginUser[0].name }} </i>
-        </div>
-        
-        
+    @if(loginUser  && loginUser.rol ){
+        @if(loginUser.rol === "driver"){
+            <div class=" d-flex justify-content-start mb-4 ">
+                <app-new-order-btn></app-new-order-btn>
+            </div>
+        }@else if(loginUser.rol === "manager"){ 
+            <div class="d-flex flex-row justify-content-center gap-5 mb-4 p-5">
+                <div class="w-25" >
+                   <button class="btn btnreview2 w-100 " style="height: 80px;" (click)="entryOrders()">View entry orders</button> <!-- ver pedidos de entrada. origin es otro almacen, entrada es el almacen del usuario -->
+    
+                </div>
+               <div class="w-25 ">
+                   <button class=" btn btnreview2 w-100 " style="height: 80px;" (click)="outputOrders()">View output orders</button> <!-- ver pedidos de salida. origin es el almacen del usuario, salida es otro almacen-->
+               </div>
+            </div>
+        }
+    }@else{
+        <p>Not found</p>
     }
-   
-    <div>
-        <app-order-filter (filteredDeliveriesChange)="filterPadre($event)"></app-order-filter>
-    </div>
-
+        <div>
+            <app-order-filter [productos]="this.w.deliveries" (filteredDeliveriesChange)="filterFather($event)"></app-order-filter>
+        </div>
+  
     <section class="mt-5">
         <div class="table-responsive">
             <table class="table table-borderless table-hover  ">
-                <thead  [class]= "loginUser[0].rol === 'driver' ? 'driver' : 'manager'" >
+                <thead  [class]= "loginUser.rol === 'driver' ? 'driver' : 'manager'" >
                     <tr>
                         <th scope="col">Orders</th>
                         <th scope="col" class="d-none d-md-table-cell">Date</th>
-                        <th scope="col">Destination</th>
-                        <th scope="col" class="d-none d-md-table-cell">Number plate</th>
+                        <th scope="col" class="d-none d-lg-table-cell">Origin</th>
+                        <th scope="col"class="d-none d-md-table-cell">Destination</th>
+                        <th scope="col" >Number plate</th>
                         <th scope="col">Status</th>
-                        @if(loginUser[0].rol === "driver"){
+                        @if(loginUser.rol === "driver"){
                         <th scope="col">Edit</th>
-                        }@else if(loginUser[0].rol === "manager"){
+                        }@else if(loginUser.rol === "manager"){
                         <th scope="col">Review</th>
                         }
 
                     </tr>
                 </thead>
                 <tbody>
-
-                    @for(order of this.arrDeliveri; track order.ID_delivery){
-                    <tr>
-                        <th scope="row" [class]= "loginUser[0].rol === 'driver' ? 'text-primary' : 'text-manager'" class=" pointer" [routerLink]="['/dashboard','operator','order-form',order.ID_delivery]">{{order.ID_delivery}}</th>
-                        <td class="d-none d-md-table-cell">{{order.Received_date}}</td>
-                        <td>{{order.Destiny_warehouse.Name}}</td>
-                        <td class="d-none d-md-table-cell">{{order.Truck.Plate}}</td>
-                        <td>
-                            <button class="btn btn-light">
-                                <div class="task-status">
-                                    @if(order.Status === "correction needed" ){
-                                    <span class="status-circle corrections d-none d-lg-table-cell"></span>
-                                    <p class="td-p text-danger">{{order.Status}} <i
-                                            class="fa-solid fa-circle-exclamation"></i></p>
-                                    }@else if(order.Status === "in transit"|| order.Status === "accepted"){
-                                    <p class="td-p text-success">{{order.Status}}<i
-                                            class="fa-solid fa-truck-fast fa-lg"></i></p>
-                                    }@else if(order.Status === "ready departure"){
-                                    <span class="status-circle ready d-none d-lg-table-cell"></span>
-                                    <p class="td-p text-success">{{order.Status}}</p>
-                                    }@else if(order.Status === "pending"){
-                                    <p class="td-p text-warning">{{order.Status}}</p>
+                        @for(order of this.DeliveriesWarehouse; track order.id_delivery){
+                            <tr>
+                                <th scope="row" [class]= "loginUser.rol === 'driver' ? 'text-primary' : 'text-manager'" class=" pointer" [routerLink]="['/dashboard','operator','order-form',order.id_delivery]">{{order.id_delivery}}</th>
+                                <td class="d-none d-md-table-cell">{{order.send_date| date: 'fullDate'}}</td>
+                                <td class="d-none d-lg-table-cell">{{order.origin_warehouse.name}}({{order.origin_warehouse.locality}})</td>
+                                <td class="d-none d-md-table-cell">{{order.destination_warehouse.name}}({{order.destination_warehouse.locality}})</td>
+                                <td >{{order.truck.plate}}</td>
+                                <td>
+                                    <button class="btn btn-light">
+                                        <div class="task-status">
+                                            @if(order.status === "correction needed" ){
+                                            <span class="status-circle corrections d-none d-lg-table-cell"></span>
+                                            <p class="td-p text-danger">{{order.status}} <i
+                                                    class="fa-solid fa-circle-exclamation"></i></p>
+                                            }@else if(order.status === "in transit"|| order.status === "accepted"){
+                                            <p class="td-p text-success">{{order.status}}<i
+                                                    class="fa-solid fa-truck-fast fa-lg"></i></p>
+                                            }@else if(order.status === "ready departure"){
+                                            <span class="status-circle ready d-none d-lg-table-cell"></span>
+                                            <p class="td-p text-success">{{order.status}}</p>
+                                            }@else if(order.status === "pending"){
+                                            <p class="td-p text-warning">{{order.status}}</p>
+                                            }
+                                        </div>
+                                    </button>
+                                </td>
+                                <td>
+                                    @if(loginUser.rol === "driver"){
+                                        <button class="btn btn-outline-primary" [routerLink]="['/dashboard','operator','order-form',order.id_delivery]">
+                                            <i class=" fa-regular fa-pen-to-square fa-xl"></i>
+                                        </button>
+                                    }@else if (loginUser.rol === "manager") {
+                                        <button class="btnreview" [routerLink]="['/dashboard','operator','order-form',order.id_delivery]">
+                                            <i class=" fa-solid fa-eye fa-xl"></i>
+                                        </button>
                                     }
+                                    
+                                </td>
+                            </tr>
+                            }@empty{
+                                <div class=" d-inline flex-row">
+                                    <p>There are no orders with those characteristics</p>
                                 </div>
-                            </button>
-                        </td>
-                        <td>
-                            @if(loginUser[0].rol === "driver"){
-                                <button class="btn btn-outline-primary" [routerLink]="['/dashboard','operator','order-form',order.ID_delivery]">
-                                    <i class=" fa-regular fa-pen-to-square fa-xl"></i>
-                                </button>
-                            }@else if (loginUser[0].rol === "manager") {
-                                <button class="btnreview" [routerLink]="['/dashboard','operator','order-form',order.ID_delivery]">
-                                    <i class=" fa-solid fa-eye fa-xl"></i>
-                                </button>
                             }
-                            
-                        </td>
-                    </tr>
-                    }
-
-
+                </tbody>
             </table>
         </div>
     </section>
 </div>
+
+

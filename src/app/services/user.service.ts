@@ -8,7 +8,7 @@ import { User } from '../interfaces/user.interface';
 })
 export class UserService {
 
-  private baseUrl: string = 'http://localhost:3001/user'
+  private baseUrl: string = "http://localhost:3001/user"
   private httpClient = inject(HttpClient);
 
 
@@ -20,5 +20,9 @@ export class UserService {
   getById(id_user:number){
     return lastValueFrom(this.httpClient.get<User[]>(`${this.baseUrl}?id_user=${id_user}`))
   }
+
+ 
+
+ 
 
 }
