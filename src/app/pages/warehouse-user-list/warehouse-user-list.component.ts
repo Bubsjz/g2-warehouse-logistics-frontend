@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { WarehousesService } from '../../services/warehouses.service';
 import { Iwarehouse } from '../../interfaces/iwarehouse.interface';
 import { Iuser } from '../../interfaces/iuser.interface';
@@ -11,14 +11,15 @@ import { Iuser } from '../../interfaces/iuser.interface';
   styleUrl: './warehouse-user-list.component.css'
 })
 export class WarehouseUserListComponent {
+  @Input() warehouse_id!: number;
   warehouseServices = inject(WarehousesService);
   warehouse: Iwarehouse | undefined;
   employees: Iuser[] | undefined;
 
   ngOnInit() {
 
-    let warehouse_id = 1;
-    this.warehouse = this.warehouseServices.getById(warehouse_id)
+    this.warehouse = this.warehouseServices.getById(this.warehouse_id)
+    console.log(this.warehouse)
     this.employees = this.warehouse?.employees
   }
 
