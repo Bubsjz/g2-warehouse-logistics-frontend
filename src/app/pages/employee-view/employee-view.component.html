@@ -1,25 +1,25 @@
-<section class="container margin d-flex justify-content-between">
-    <div class="pt-5">
-
-        <img src="../../../assets/employee-test.jpg" alt="imagen" class="rounded-circle img-small">
-
-    </div>
-
-    <div class="divider mx-3"></div>
-
-    <div class="pt-5">
-        <h1 class="p-2 nunito-sans">Linda, Kennedy </h1>
-        <hr>
-        <h5 class="p-2 pt-4"><strong>Position:</strong> Operator</h5>
-        <h5 class="p-2"><strong>Employee ID:</strong> 46655215784</h5>
-        <h5 class="p-2"><strong>Email:</strong> lindak&#64;rountravel.com</h5>
-        <h5 class="p-2"><strong>Contact number:</strong> (806)-526-841</h5>
-        <h5 class="p-2"><strong>Assigned warehouse:</strong> Almacén Torrevieja</h5>
-
-        <div class="pt-4">
-            <button class="btn btn-outline-danger m-1 p-3 px-5">Delete</button>
-            <a class="btn btn-outline-success m-1 p-3 px-5">Update</a>
-            <a class="btn btn-outline-secondary m-1 p-3 px-5">Back to list</a>
+<section class="container margin d-flex justify-content-between responsive-section">
+        <div class="pt-5">
+            <img src="../../../assets/employee-test.jpg" alt="imagen" class="rounded-circle img-small">
         </div>
-    </div>
+
+        <div class="divider mx-3"></div>
+
+        <div class="pt-5" *ngIf="userInfo && warehouseInfo">
+            <p class="p-2 nunito-sans fs-1">{{userInfo.name}} {{userInfo.surname}}</p>
+            <hr>
+            <p class="p-2 pt-4 fs-4"><strong>Position:</strong> {{userInfo.rol}}</p>
+            <p class="p-2 fs-4"><strong>Employee ID:</strong> {{userInfo.id_user}}</p>
+            <p class="p-2 fs-4"><strong>Email:</strong> {{userInfo.email}}</p>
+            <p class="p-2 fs-4"><strong>Wharehouse:</strong> {{warehouseInfo.name}}</p>
+            <p class="p-2 fs-4"><strong>Wharehouse locality:</strong> {{warehouseInfo.locality}}</p>
+            <div class="pt-4">
+                <button class="btn btn-outline-danger m-1 p-3 px-5" (click)="deleteUser()">Delete</button>
+                <a class="btn btn-outline-success m-1 p-3 px-5" href="/dashboard/boss/w-userform">Update</a>
+                <a class="btn btn-outline-secondary m-1 p-3 px-5" href="/dashboard/boss/employee-view">Back to list</a>
+            </div>
+        </div>
+        <div *ngIf="!userInfo || !warehouseInfo">
+            <p>Cargando información...</p>
+          </div>
 </section>

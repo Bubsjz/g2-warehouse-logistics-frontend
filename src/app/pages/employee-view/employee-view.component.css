@@ -14,3 +14,41 @@
     background-color: #ccc;
     align-self: stretch;
 }
+
+
+@media (max-width: 1024px) {
+    .responsive-section {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin: 0;
+    }
+
+    .responsive-section img {
+        width: 50%;
+        height: 50%;
+    }
+
+    .responsive-section .divider {
+        display: none;
+    }
+
+    .responsive-section h1,
+    .responsive-section h5 {
+        text-align: center;
+    }
+
+    .responsive-section div.pt-5 {
+        margin-bottom: 1rem;
+    }
+
+    .responsive-section p {
+        font-size: 10px;
+        margin: 0;
+    }
+
+    .responsive-section button,
+    .responsive-section a {
+        width: 100%;
+    }
+}
