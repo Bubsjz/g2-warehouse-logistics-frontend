@@ -4,34 +4,25 @@
 </div>
 
 <div class="layout-grid">
+
   <div class="card-container">
     <button class="btn registrar-empleados">Registrar Empleados</button>
     <button class="btn registrar-almacenes">Registrar Almacenes</button>
   </div>
 
   <div class="store-container">
-    <div class="store">
-      <div class="store-header">ALMACEN A</div>
-      <div class="store-body">
-        <img src="https://tecnosoluciones.com/wp-content/uploads/2023/01/sistema-de-gestion-de-almacenes-o-warehouses-WMS.jpg" alt="Imagen de Almacén" class="store-image">
-        <div class="store-actions">
-          <div class="icons">
-            <i class="fas fa-info-circle icon"></i>
+    @for(warehouse of warehouses; track warehouse.id) {
+      <div class="store">
+        <div class="store-header">{{warehouse.name}}</div>
+        <div class="store-body">
+          <img src={{warehouse.image}} alt={{warehouse.name}} class="store-image">
+          <div class="store-actions">
+            <div class="icons">
+              <a [routerLink]="['/dashboard', 'boss', 'warehouse-view', warehouse.id]"><i class="fas fa-info-circle icon"></i></a>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="store">
-      <div class="store-header">ALMACEN B</div>
-      <div class="store-body">
-        <img src="https://www.rajapack.es/blog-es/wp-content/uploads/2024/07/almacen-grande.jpg" alt="Imagen de Almacén" class="store-image">
-        <div class="store-actions">
-          <div class="icons">
-            <i class="fas fa-info-circle icon"></i>
-          </div>
-        </div>
-      </div>
-    </div>
+    }
   </div>
 </div>
