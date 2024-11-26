@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
-import { iUser } from '../../interfaces/user.interface';
-import { iWarehouse } from '../../interfaces/warehouse.interface';
+import { iUser } from '../../interfaces/user-view.interface';
+import { iWarehouse } from '../../interfaces/warehouse-user-view.interface';
 
 @Component({
   selector: 'app-employee-view',

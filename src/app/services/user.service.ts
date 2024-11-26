@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, switchMap } from 'rxjs';
-import { iUser } from '../interfaces/user.interface';
-import { iWarehouse } from '../interfaces/warehouse.interface';
+import { iUser } from '../interfaces/user-view.interface';
+import { iWarehouse } from '../interfaces/warehouse-user-view.interface';
 
 @Injectable({
   providedIn: 'root',
