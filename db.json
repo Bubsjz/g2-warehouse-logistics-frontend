@@ -1,0 +1,251 @@
+{
+  "delivery": [
+    {
+      "id": "1",
+      "id_delivery": 1,
+      "send_date": "2024-11-01 08:30:00",
+      "received_date": null,
+      "truck_id_truck": 1,
+      "origin_warehouse_id": 1,
+      "destination_warehouse_id": 2,
+      "status": "ready departure",
+      "comments": null
+    },
+    {
+      "id": "2",
+      "id_delivery": 2,
+      "send_date": "2024-11-02 09:00:00",
+      "received_date": null,
+      "truck_id_truck": 3,
+      "origin_warehouse_id": 2,
+      "destination_warehouse_id": 3,
+      "status": "in transit",
+      "comments": null
+    },
+    {
+      "id": "3",
+      "id_delivery": 3,
+      "send_date": "2024-11-03 10:00:00",
+      "received_date": "2024-11-03 15:30:00",
+      "truck_id_truck": 5,
+      "origin_warehouse_id": 3,
+      "destination_warehouse_id": 4,
+      "status": "accepted",
+      "comments": null
+    },
+    {
+      "id": "4",
+      "id_delivery": 4,
+      "send_date": "2024-11-12",
+      "received_date": "2024-11-27",
+      "truck_id_truck": 6,
+      "origin_warehouse_id": 3,
+      "destination_warehouse_id": 1,
+      "status": "pending",
+      "comments": null,
+      "products": [
+        {
+          "product_id": 2,
+          "quantity": 7
+        },
+        {
+          "product_id": 3,
+          "quantity": 9
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "id_delivery": 5,
+      "send_date": "2024-11-06 00:00:00",
+      "received_date": "2024-11-14 00:00:00",
+      "truck_id_truck": 4,
+      "origin_warehouse_id": 4,
+      "destination_warehouse_id": 3,
+      "status": "correction needed",
+      "comments": "Las cantidades no se ajustan al stock y falta la fecha de llegada esta semana",
+      "products": [
+        {
+          "product_id": 4,
+          "quantity": 30
+        }
+      ]
+    }
+  ],
+  "warehouse": [
+    {
+      "id_warehouse": 1,
+      "name": "Central Warehouse",
+      "locality": "Madrid",
+      "adress": "C. de Arboleda, 10, Puente de Vallecas, 28031 Madrid",
+      "image": null,
+      "id": "7ffb"
+    },
+    {
+      "id_warehouse": 2,
+      "name": "North Warehouse",
+      "locality": "Burgos",
+      "adress": "Ctra. Burgos, 32, 09001 Burgos",
+      "image": null,
+      "id": "1bec"
+    },
+    {
+      "id_warehouse": 3,
+      "name": "South Warehouse",
+      "locality": "Sevilla",
+      "adress": "C. Automoción, 38, Norte, 41007 Sevilla",
+      "image": null,
+      "id": "77b7"
+    },
+    {
+      "id_warehouse": 4,
+      "name": "East Warehouse",
+      "locality": "Girona",
+      "adress": "Carrer de la Indústria, 14, 17005 Girona",
+      "image": null,
+      "id": "4620"
+    }
+  ],
+  "product": [
+    {
+      "id_product": 5,
+      "name": "Pale bloques de hormigón",
+      "id": "b91e"
+    },
+    {
+      "id_product": 3,
+      "name": "Pale de ladrillos",
+      "id": "0813"
+    },
+    {
+      "id_product": 4,
+      "name": "Pale de tablones",
+      "id": "fe05"
+    },
+    {
+      "id_product": 2,
+      "name": "Saco de arena",
+      "id": "4f34"
+    },
+    {
+      "id_product": 1,
+      "name": "Saco de cemento",
+      "id": "4a3e"
+    }
+  ],
+  "delivery_products": [
+    {
+      "id_delivery_products": 1,
+      "product_id_product": 1,
+      "quantity": 10,
+      "delivery_id_delivery": 1,
+      "id": "d25a"
+    },
+    {
+      "id_delivery_products": 2,
+      "product_id_product": 2,
+      "quantity": 5,
+      "delivery_id_delivery": 1,
+      "id": "15c5"
+    },
+    {
+      "id_delivery_products": 3,
+      "product_id_product": 3,
+      "quantity": 20,
+      "delivery_id_delivery": 2,
+      "id": "e4ea"
+    },
+    {
+      "id_delivery_products": 4,
+      "product_id_product": 4,
+      "quantity": 15,
+      "delivery_id_delivery": 2,
+      "id": "f082"
+    },
+    {
+      "id_delivery_products": 5,
+      "product_id_product": 5,
+      "quantity": 8,
+      "delivery_id_delivery": 3,
+      "id": "a771"
+    },
+    {
+      "id_delivery_products": 6,
+      "product_id_product": 1,
+      "quantity": 12,
+      "delivery_id_delivery": 3,
+      "id": "c2c7"
+    },
+    {
+      "id_delivery_products": 7,
+      "product_id_product": 2,
+      "quantity": 7,
+      "delivery_id_delivery": 4,
+      "id": "4b8c"
+    },
+    {
+      "id_delivery_products": 8,
+      "product_id_product": 3,
+      "quantity": 9,
+      "delivery_id_delivery": 4,
+      "id": "9931"
+    },
+    {
+      "id_delivery_products": 9,
+      "product_id_product": 4,
+      "quantity": 30,
+      "delivery_id_delivery": 5,
+      "id": "028e"
+    }
+  ],
+  "truck": [
+    {
+      "id_truck": 1,
+      "plate": "8936-IDN",
+      "driver_id_user": 1,
+      "id": "bb42"
+    },
+    {
+      "id_truck": 2,
+      "plate": "9563-PBJ",
+      "driver_id_user": 2,
+      "id": "9049"
+    },
+    {
+      "id_truck": 3,
+      "plate": "1342-YGN",
+      "driver_id_user": 3,
+      "id": "d562"
+    },
+    {
+      "id_truck": 4,
+      "plate": "6290-RDF",
+      "driver_id_user": 4,
+      "id": "9df2"
+    },
+    {
+      "id_truck": 5,
+      "plate": "4756-JKL",
+      "driver_id_user": 5,
+      "id": "4f69"
+    },
+    {
+      "id_truck": 6,
+      "plate": "0874-UIO",
+      "driver_id_user": 6,
+      "id": "15e7"
+    },
+    {
+      "id_truck": 7,
+      "plate": "2345-RTY",
+      "driver_id_user": 7,
+      "id": "a029"
+    },
+    {
+      "id_truck": 8,
+      "plate": "1638-VRG",
+      "driver_id_user": 8,
+      "id": "71d2"
+    }
+  ]
+}
