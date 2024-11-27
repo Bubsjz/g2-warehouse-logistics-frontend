@@ -16,23 +16,22 @@ import { EmployeeViewComponent } from './pages/employee-view/employee-view.compo
 export const routes: Routes = [
     {path:'', pathMatch:'full', redirectTo:'login'},
     {path:'login', component:LoginComponent},
-    {path:'dashboard', component:DashboardComponent,children:[
-        {path:'operator',component:DashboardoperatorComponent,children:[
+    {path:'operator',component:DashboardoperatorComponent,children:[
             {path:'order-list',component:OrderTableComponent},
-            {path:'order-form/:id',component:OrderFormComponent},
+            {path:'create-order',component:OrderFormComponent},
+            {path:'modify-order/:id',component:OrderFormComponent},
         ]},
-        {path:'manager',component:DashboardmanagerComponent,children:[
+    {path:'manager',component:DashboardmanagerComponent,children:[
             {path:'order-list',component:OrderTableComponent},
-            {path:'order-form/:id',component:OrderFormComponent},
+            {path:'review-order/:id',component:OrderFormComponent},
         ]},
-        {path:'boss',component:DashboardbossComponent,children:[
+    {path:'boss',component:DashboardbossComponent,children:[
             {path:'warehouse-info',component: NavbarComponent},
             {path:'warehouse-view/:id',component:WarehouseViewComponent},
             {path:'warehouse-form',component:WarehouseFormComponent},
             {path:'w-userform',component:UserFormComponent},
             {path:'employee-view/:id',component:EmployeeViewComponent}
 
-        ]},  
-    ]},
+        ]},
     {path:'**', redirectTo:'login'}
 ];
