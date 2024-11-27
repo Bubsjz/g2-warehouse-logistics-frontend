@@ -4,6 +4,7 @@ export interface iUser {
     surname: string;
     email: string;
     password: string;
-    rol: 'administrator' | 'manager' | 'driver';
+    role: 'boss' | 'manager' | 'driver';
     asigned_id_warehouse: number;
+    token?: string;
   }

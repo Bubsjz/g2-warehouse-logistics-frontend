@@ -1,15 +1,19 @@
-
 {
- "users":
-    [
-        {
-            "id_user" : 1,
-            "name" : "Jaime",
-            "surname" : "Agüero",
-            "email" : "jaguero@gmail.com",
-            "password" : "A6aK2=n9x(#;",
-            "rol" : "driver",
-            "asigned_id_warehouse" : 1
-        }
-    ]
+  "users": [
+    {
+      "id_user": 1,
+      "name": "Jaime",
+      "surname": "Agüero",
+      "email": "jaguero@gmail.com",
+      "password": "A6aK2=n9x(#;",
+      "rol": "driver",
+      "asigned_id_warehouse": 1,
+      "id": "1781"
+    },
+    {
+      "id": "77a5",
+      "email": "jaguero@gmail.com",
+      "password": "A6aK2=n9x(#;"
+    }
+  ]
 }
