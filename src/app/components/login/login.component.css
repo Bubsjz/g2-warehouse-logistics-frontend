@@ -161,3 +161,21 @@ h2 {
   color: white;
   font-size: 14px;
 }
+
+
+@media (max-width: 600px) {
+
+  #login-form {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    text-align: center;
+    padding: 0;
+    margin: 20px;
+  }
+
+  .logo {
+    width: 150px;
+    height: auto;
+  }
+}

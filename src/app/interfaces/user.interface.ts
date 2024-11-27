@@ -13,3 +13,14 @@ export enum Rol {
     Driver = "driver",
     Manager = "manager",
 }
+
+export interface iUser {
+    id_user: number;
+    name: string;
+    surname: string;
+    email: string;
+    password: string;
+    role: 'boss' | 'manager' | 'driver';
+    asigned_id_warehouse: number;
+    token?: string;
+  }
