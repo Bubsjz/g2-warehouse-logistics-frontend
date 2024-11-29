@@ -1,13 +1,20 @@
 import { Component, inject } from "@angular/core";
 import { OrderFilterComponent } from "../../components/order-filter/order-filter.component";
-import { Delivery } from "../../interfaces/deliveri.interface";
-import { UserService } from "../../services/user.service";
-import { User } from "../../interfaces/user.interface";
+import { Delivery } from "../../interfaces/delivery.interface";
 import { NewOrderBtnComponent } from "../../components/new-order-btn/new-order-btn.component";
 import { RouterLink } from "@angular/router";
 import { DatePipe } from "@angular/common";
-import { Warehouse } from "../../interfaces/warehouser.interface";
-import { WarehouseService } from "../../services/warehouse.service";
+import { OperatorService } from "../../services/operator.service";
+import {jwtDecode} from 'jwt-decode';
+import { ManagerService } from "../../services/manager.service";
+
+type decodeToken = {
+  user_id: number;
+  user_role: string;
+  iat: number;
+  exp: number;
+}
+
 
 
 
@@ -20,44 +27,57 @@ import { WarehouseService } from "../../services/warehouse.service";
 })
 export class OrderTableComponent {
 
-  userService = inject(UserService);
-  warehouseService = inject(WarehouseService);
+  operatorService = inject(OperatorService)
+  managerService = inject(ManagerService)
 
-  loginUser!: any
-  w!: Warehouse
-  numberWarehouse!: number
-  DeliveriesWarehouse: Delivery[] = [];
-  
+  arrDeliveries:Delivery[]=[];
+  userLogin!:string
+  prueba!:decodeToken
+
 
   async ngOnInit() {
-
-    try {
-     const [response] = await this.userService.getById(9); // este es el usuario logado 
-      this.loginUser = response
-      this.numberWarehouse = this.loginUser.asigned_id_warehouse // este es el id del warehouse
-     const [res] = await this.warehouseService.getbyId(this.numberWarehouse) // este es el almacen con todos los pedidos
-      this.w = res
-      this.DeliveriesWarehouse = this.w.deliveries
-    } catch (error) {
-      console.log(error)
+// manager 
+    const token = localStorage.getItem('authToken')
+    if(token){
+      const decoded = jwtDecode(token) as decodeToken
+      this.prueba = decoded
+      const response3 = await this.managerService.getManagerById(this.prueba.user_id)
+      this.userLogin = response3[0].role
+      
     }
-  }
 
-  filterFather(event: Delivery[]) {
-  this.DeliveriesWarehouse = event
+//operator   
+     const response1 =  await this.operatorService.getAllDeliveryByUser()
+     this.arrDeliveries = response1
+     
+     const response2 = await this.operatorService.getUserById(this.arrDeliveries[0].id_user)
+     this.userLogin = response2[0].role
+
+
+
+     
+  }
+    
+
+
+  filterFather(event:Delivery[]) {
+    if(event.length <= 0 ){
+      alert('no hay productos con estas caracteristicas')
+    }else{
+
+      this.arrDeliveries = event
+    }
   }
   
 
   entryOrders() {
-    const pedidosEntrada = this.w.deliveries.filter(deliveries => deliveries.origin_warehouse.name !== this.w.name)
-    this.DeliveriesWarehouse = pedidosEntrada
+   
 
   }
 
   outputOrders() {
-    const pedidosSalida = this.w.deliveries.filter(deliveries => deliveries.origin_warehouse.name === this.w.name)
-    this.DeliveriesWarehouse = pedidosSalida
-  }
+   
 
+}
 
 }

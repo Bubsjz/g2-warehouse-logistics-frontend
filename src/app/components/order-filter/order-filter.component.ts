@@ -1,6 +1,6 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Delivery } from '../../interfaces/deliveri.interface';
+import { Delivery } from '../../interfaces/delivery.interface';
 
 
 
@@ -18,16 +18,19 @@ export class OrderFilterComponent {
   @Input() productos:Delivery[]= [];
 
   orders!:Delivery[]
-  filteredDeliveries:any;
+  filteredDeliveries!:Delivery[];
   selectedStatus: string = '';
 
   
   @Output() filteredDeliveriesChange:EventEmitter<Delivery[]> = new EventEmitter;
 
   async ngOnInit(){
-    
-    this.orders = this.productos;
-    this.filteredDeliveries = this.orders
+  
+
+     this.orders = this.productos;
+     this.filteredDeliveries = this.orders
+     console.log(this.filteredDeliveries)
+  
   }
 
 
@@ -36,13 +39,12 @@ filterByStatus(): void {
     this.filteredDeliveries = this.orders.filter(delivery => 
       delivery.status.toLowerCase() === this.selectedStatus.toLowerCase()
     );
+    
   } else {
     this.filteredDeliveries = this.orders;  // Si no hay filtro, mostramos todas las entregas
   }
-
-  //console.log(this.selectedStatus)
   this.filteredDeliveriesChange.emit(this.filteredDeliveries);
-  //console.log(this.filteredDeliveriesChange)
+  
 }
 
 

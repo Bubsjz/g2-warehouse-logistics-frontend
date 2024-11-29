@@ -1,10 +1,10 @@
 <div class="container">
-    @if(loginUser  && loginUser.rol ){
-        @if(loginUser.rol === "driver"){
-            <div class=" d-flex justify-content-start mb-4 ">
+    @if(userLogin){
+        @if(userLogin === "operator"){
+            <div class=" d-flex justify-content-start mb-4 mt-5 ">
                 <app-new-order-btn></app-new-order-btn>
             </div>
-        }@else if(loginUser.rol === "manager"){ 
+        }@else if(userLogin === "manager"){ 
             <div class="d-flex flex-row justify-content-center gap-5 mb-4 p-5">
                 <div class="w-25" >
                    <button class="btn btnreview2 w-100 " style="height: 80px;" (click)="entryOrders()">View entry orders</button> <!-- ver pedidos de entrada. origin es otro almacen, entrada es el almacen del usuario -->
@@ -18,14 +18,15 @@
     }@else{
         <p>Not found</p>
     }
+    @if(this.arrDeliveries.length >0){
         <div>
-            <app-order-filter [productos]="this.w.deliveries" (filteredDeliveriesChange)="filterFather($event)"></app-order-filter>
+            <app-order-filter [productos]="this.arrDeliveries" (filteredDeliveriesChange)="filterFather($event)"></app-order-filter>
         </div>
-  
+    }
     <section class="mt-5">
         <div class="table-responsive">
             <table class="table table-borderless table-hover  ">
-                <thead  [class]= "loginUser.rol === 'driver' ? 'driver' : 'manager'" >
+                <thead  [class]= "userLogin === 'operator' ? 'operator' : 'manager'" >
                     <tr>
                         <th scope="col">Orders</th>
                         <th scope="col" class="d-none d-md-table-cell">Date</th>
@@ -33,22 +34,22 @@
                         <th scope="col"class="d-none d-md-table-cell">Destination</th>
                         <th scope="col" >Number plate</th>
                         <th scope="col">Status</th>
-                        @if(loginUser.rol === "driver"){
+                        @if(userLogin === "operator"){
                         <th scope="col">Edit</th>
-                        }@else if(loginUser.rol === "manager"){
+                        }@else if(userLogin === "manager"){
                         <th scope="col">Review</th>
                         }
 
                     </tr>
                 </thead>
                 <tbody>
-                        @for(order of this.DeliveriesWarehouse; track order.id_delivery){
+                        @for(order of this.arrDeliveries; track [order.id_delivery]){
                             <tr>
-                                <th scope="row" [class]= "loginUser.rol === 'driver' ? 'text-primary' : 'text-manager'" class=" pointer" [routerLink]="['/dashboard','operator','order-form',order.id_delivery]">{{order.id_delivery}}</th>
+                                <th scope="row" [class]= "userLogin === 'operator' ? 'text-primary' : 'text-manager'" class=" pointer" [routerLink]="['/dashboard','operator','order-form',order.id_delivery]">{{order.id_delivery}}</th>
                                 <td class="d-none d-md-table-cell">{{order.send_date| date: 'fullDate'}}</td>
-                                <td class="d-none d-lg-table-cell">{{order.origin_warehouse.name}}({{order.origin_warehouse.locality}})</td>
-                                <td class="d-none d-md-table-cell">{{order.destination_warehouse.name}}({{order.destination_warehouse.locality}})</td>
-                                <td >{{order.truck.plate}}</td>
+                                <td class="d-none d-lg-table-cell">{{order.origin_warehouse_id}}</td>
+                                <td class="d-none d-md-table-cell">{{order.destination_warehouse_id}}</td>
+                                <td >{{order.plate}}</td>
                                 <td>
                                     <button class="btn btn-light">
                                         <div class="task-status">
@@ -59,26 +60,28 @@
                                             }@else if(order.status === "in transit"|| order.status === "accepted"){
                                             <p class="td-p text-success">{{order.status}}<i
                                                     class="fa-solid fa-truck-fast fa-lg"></i></p>
-                                            }@else if(order.status === "ready departure"){
+                                            }@else if(order.status === "ready for departure"){
                                             <span class="status-circle ready d-none d-lg-table-cell"></span>
                                             <p class="td-p text-success">{{order.status}}</p>
                                             }@else if(order.status === "pending"){
                                             <p class="td-p text-warning">{{order.status}}</p>
+                                            } @else if(order.status === "review"){
+                                                <p class="td-p text-warning">{{order.status}}</p>
+                                       
                                             }
                                         </div>
                                     </button>
                                 </td>
                                 <td>
-                                    @if(loginUser.rol === "driver"){
-                                        <button class="btn btn-outline-primary" [routerLink]="['/dashboard','operator','order-form',order.id_delivery]">
+                                    @if(userLogin === "operator"){
+                                        <button class="btn btn-outline-primary" [routerLink]="['/operator','modify-order',order.id_delivery]">
                                             <i class=" fa-regular fa-pen-to-square fa-xl"></i>
                                         </button>
-                                    }@else if (loginUser.rol === "manager") {
-                                        <button class="btnreview" [routerLink]="['/dashboard','operator','order-form',order.id_delivery]">
+                                    }@else if (userLogin === "manager") {
+                                        <button class="btnreview" [routerLink]="['/manager','review-order',order.id_delivery]">
                                             <i class=" fa-solid fa-eye fa-xl"></i>
                                         </button>
-                                    }
-                                    
+                                    } 
                                 </td>
                             </tr>
                             }@empty{
