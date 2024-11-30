@@ -6,6 +6,7 @@ import { lastValueFrom } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
+
 export class WarehousesService {
 
   private baseUrl: string = "http://localhost:3000/warehouses";
@@ -18,4 +19,5 @@ export class WarehousesService {
   getById(id: number): Promise<Iwarehouse[]> {
     return lastValueFrom(this.httpClient.get<Iwarehouse[]>(`${this.baseUrl}?id=${id}`))
   }
+
 }

@@ -31,8 +31,8 @@ export class WarehouseCardComponent {
 
     const res2 = await this.userServices.getByWarehouseId(this.warehouse_id)
 
-    this.managers = res2.filter(employee => employee.rol === 'manager')
-    this.operators = res2.filter(employee => employee.rol === 'operator')
+    this.managers = res2.filter(employee => employee.role === 'manager')
+    this.operators = res2.filter(employee => employee.role === 'operator')
     this.n_operators = this.operators!.length
     this.n_managers = this.managers!.length
     this.n_employees = this.n_managers + this.n_operators

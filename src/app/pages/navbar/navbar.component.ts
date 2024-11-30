@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { WarehousesService } from '../../services/warehouses.service';
 import { Iwarehouse } from '../../interfaces/iwarehouse.interface';
 import { RouterLink } from '@angular/router';
+import { WarehousesService } from '../../services/warehouses.service';
 
 @Component({
   selector: 'app-navbar',

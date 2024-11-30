@@ -6,10 +6,11 @@ import { lastValueFrom } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
+
 export class UsersService {
+
   private baseUrl: string = "http://localhost:3000/users";
   private httpClient = inject(HttpClient);
-
 
   getAll(): Promise<Iuser[]> {
     return lastValueFrom(this.httpClient.get<Iuser[]>(this.baseUrl))

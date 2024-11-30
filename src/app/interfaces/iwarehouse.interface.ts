@@ -1,5 +1,3 @@
-import { Iuser } from "./iuser.interface";
-
 export interface Iwarehouse {
     id: number;
     name: string;

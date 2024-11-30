@@ -1,74 +1,111 @@
 <section class="container mt-5">
   <div class="card shadow-lg p-4">
-    <h3 class="text-center my-4">Insert a user</h3>
+    <h3 class="text-center my-4">{{formType}} a user</h3>
     <hr />
-    <form>
+    <form [formGroup]="userForm">
       <div class="my-3">
-        <label class="form-label" for="name">Name</label>
+        <label class="form-label" for="name"><strong>Name</strong></label>
         <input
           class="form-control rounded-pill"
           type="text"
           id="name"
           formControlName="name"
-          placeholder="Enter the employee's name"
-        />
+          placeholder="Enter the employee's name">
+        @if(checkControl('name', 'required')) {
+          <p class="error">Name is required</p>
+      }
       </div>
+
       <div class="my-3">
-        <label class="form-label" for="surname">Surname</label>
+        <label class="form-label" for="surname"><strong>Surname</strong></label>
         <input
           class="form-control rounded-pill"
           type="text"
           id="surname"
           formControlName="surname"
-          placeholder="Enter the employee's surname"
-        />
+          placeholder="Enter the employee's surname">
+        @if(checkControl('surname', 'required')) {
+          <p class="error">Surname is required</p>
+        }
       </div>
+
       <div class="my-3">
-        <label class="form-label" for="email">Email</label>
+        <label class="form-label" for="email"><strong>Email</strong></label>
         <input
           class="form-control rounded-pill"
           type="text"
           id="email"
           formControlName="email"
-          placeholder="Enter the email"
-        />
+          placeholder="Enter the email">
+        @if(checkControl('email', 'required')) {
+          <p class="error">Email is required</p>
+        }
+        @if(checkControl('email', 'pattern')) {
+          <p class="error">Email is incorrect</p>
+          }
       </div>
+
       <div class="mb-3">
-        <label class="form-label" for="password">Password</label>
+        <label class="form-label" for="password"><strong>Password</strong></label>
         <input
           class="form-control rounded-pill"
           type="password"
           id="password"
           formControlName="password"
-          placeholder="Enter the password"
-        />
-      </div>
+          placeholder="Enter the password">
+        @if(checkControl('password', 'required')) {
+          <p class="error">Password is required</p>
+        }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="repeatpassword"><strong>Repeat Password</strong></label>
+          <input
+            class="form-control rounded-pill"
+            type="password"
+            id="repeatpassword"
+            formControlName="repeatpassword"
+            placeholder="Repeat the password">
+          @if(checkControl('password', 'required')) {
+            <p class="error">Password is required</p>
+          }
+          @if(userForm.hasError('checkpassword')) {
+            <p class="error">Both password values must coincide</p>
+          }
+          </div>
+  
       <div class="my-3">
-        <label class="form-label" for="rol">Rol</label>
-        <select class="form-select rounded-pill" id="rol" formControlName="rol">
-          <option value="">Select a rol</option>
+        <label class="form-label" for="role"><strong>Role</strong></label>
+        <select class="form-select rounded-pill" id="role" formControlName="role">
+          <option value="" selected>Select a role</option>
           <option value="operator">Operator</option>
           <option value="manager">Manager</option>
-          <option value="team leader">Team leader</option>
+          <option value="administrator">Administrator</option>
         </select>
+        @if(userForm.hasError('checkrole')) {
+          <p class="error">Choose one among available options</p>
+        }
       </div>
+
       <div class="my-3">
-        <label class="form-label" for="warehouse">Warehouse</label>
+        <label class="form-label" for="warehouse"><strong>Warehouse</strong></label>
         <select
           class="form-select rounded-pill"
           id="warehouse"
-          formControlName="warehouse"
-        >
-          <option value="">Select a warehouse</option>
-          <option value="warehouse A">Warehouse A</option>
-          <option value="warehouse B">Warehouse B</option>
-          <option value="warehouse C">Warehouse C</option>
+          formControlName="warehouse">
+          <option value="" selected>Select a warehouse</option>
+          @for(warehouse of warehouses; track warehouse.id) {
+            <option [value]="warehouse.name">{{warehouse.name}}</option>
+
+          }
         </select>
       </div>
+
       <div class="d-flex justify-content-center gap-2 my-3">
         <input
           type="submit"
-          value="Register"
+          [value]="(formType === 'Update') ? formType : 'Save'" 
+          [disabled]="!userForm.valid"
           class="btn btn-success rounded-pill btn-size"
         />
         <input

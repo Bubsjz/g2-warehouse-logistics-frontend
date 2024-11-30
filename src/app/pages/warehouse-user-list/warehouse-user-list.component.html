@@ -17,15 +17,16 @@
                 <tr>
                     <th scope="row" class="pointer"><strong class="text-info pointer ">{{ employee.name }}</strong></th>
                     <td class="d-none d-sm-table-cell">{{ employee.surname }}</td>
-                    <td>{{ employee.rol }}</td>
+                    <td>{{ employee.role }}</td>
                     <td class="d-none d-sm-table-cell"><a [href]="'mailto:' + employee.email">{{ employee.email }}</a></td>
                     <td>
-                        <button class="btn btn-outline-info">
+                        <a class="btn btn-outline-info" [routerLink]="['/boss', 'update-employee', employee?.id]">
                             <i class="fa-regular fa-pen-to-square fa-xl" style="color: #060606"></i>
-                        </button>
+                        </a>
                     </td>
                 </tr>
                 }
+
         </tbody>
     </table>
 </div>
