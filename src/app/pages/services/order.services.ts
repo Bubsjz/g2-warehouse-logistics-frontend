@@ -61,6 +61,7 @@ export class DeliveryService {
   createDeliveryProduct(deliveryProduct: DeliveryProduct): Observable<DeliveryProduct> {
     return this.http.post<DeliveryProduct>(`${this.baseUrl}/delivery_products`, deliveryProduct);
   }
+  
 }
 
 

@@ -3,11 +3,12 @@ export interface Delivery {
     id_delivery?: number;
     send_date: Date | null;
     received_date: Date | null;
-    truck_id_truck: number | null;
     origin_warehouse_id: number | null;
     destination_warehouse_id: number | null;
-    status: string;
-    comments?: string | null;
+    truck_id_truck: number | null;
+    comments: string;
+    products: { product_id: number; quantity: number }[]; // Productos asociados al envío
+    status: 'pending' | 'review' | 'correction needed' | 'ready departure' | 'in transit' | 'pending reception' | 'accepted' | 'send back';
   }
   
   export interface Warehouse {

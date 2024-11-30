@@ -20,7 +20,7 @@
           [ngModel]="delivery.send_date ? formatDateForInput(delivery.send_date) : ''"
           (ngModelChange)="onDateChange('send_date', $event)"
           name="send_date"
-          [disabled]="mode === 'review'"
+          [disabled]="!isEditable"
           required
         />
         <div *ngIf="submitted && !delivery.send_date" class="text-danger">
@@ -38,7 +38,7 @@
           [ngModel]="delivery.received_date ? formatDateForInput(delivery.received_date) : ''"
           (ngModelChange)="onDateChange('received_date', $event)"
           name="received_date"
-          [disabled]="mode === 'review'"
+          [disabled]="!isEditable"
           required
         />
         <div *ngIf="submitted && !delivery.received_date" class="text-danger">
@@ -54,7 +54,7 @@
           id="origin"
           [(ngModel)]="delivery.origin_warehouse_id"
           name="origin_warehouse_id"
-          [disabled]="mode === 'review'"
+          [disabled]="!isEditable"
           required
         >
           <option [ngValue]="null" disabled>Select the origin warehouse</option>
@@ -75,7 +75,7 @@
           id="destination"
           [(ngModel)]="delivery.destination_warehouse_id"
           name="destination_warehouse_id"
-          [disabled]="mode === 'review'"
+          [disabled]="!isEditable"
           required
         >
           <option [ngValue]="null" disabled>Select the destination warehouse</option>
@@ -96,7 +96,7 @@
           id="truck"
           [(ngModel)]="delivery.truck_id_truck"
           name="truck_id_truck"
-          [disabled]="mode === 'review'"
+          [disabled]="!isEditable"
           required
         >
           <option [ngValue]="null" disabled>Select the truck</option>
@@ -110,15 +110,15 @@
       </div>
 
       <!-- Productos -->
-      <p class="fw-bold mt-4">Order Details</p>
-      <div *ngFor="let detail of orderDetails; let i = index" class="my-3 d-flex align-items-center gap-3">
+        <p class="fw-bold mt-4">Order Details</p>
+        <div *ngFor="let detail of orderDetails; let i = index" class="my-3 d-flex align-items-center gap-3">
         <!-- Selector de tipo de producto -->
         <select
           class="form-select rounded-pill w-50"
           [(ngModel)]="detail.product_id"
           name="product-{{ i }}"
           [ngModelOptions]="{ standalone: true }"
-          [disabled]="mode === 'review'"
+          [disabled]="!isEditable"
           (change)="detail.touched = true"
           required
         >
@@ -140,7 +140,7 @@
           [(ngModel)]="detail.quantity"
           name="quantity-{{ i }}"
           [ngModelOptions]="{ standalone: true }"
-          [disabled]="mode === 'review'"
+          [disabled]="!isEditable"
           min="1"
           (blur)="detail.touched = true"
           required
@@ -151,27 +151,27 @@
         </div>
 
         <!-- Botón para eliminar producto -->
-        <button type="button" class="btn btn-danger" *ngIf="mode !== 'review'" (click)="removeProduct(i)">
+        <button type="button" class="btn btn-danger" *ngIf="isEditable" (click)="removeProduct(i)">
           &minus;
         </button>
       </div>
 
       <!-- Botón para agregar nuevos productos -->
       <div class="my-3">
-        <button type="button" class="btn btn-primary rounded-pill" *ngIf="mode !== 'review'" (click)="addProduct()">
+        <button type="button" class="btn btn-primary rounded-pill" *ngIf="isEditable" (click)="addProduct()">
           + Add Product
         </button>
       </div>
 
       <!-- Sección de comentarios solo visible en modo edit y review -->
-      <div class="my-3" *ngIf="mode !== 'create'">
+      <div class="my-3" *ngIf="mode !== 'create' && (delivery.status !== 'pending' || mode === 'review')">
         <label class="form-label" for="comments">Comments</label>
         <textarea
           class="form-control"
           id="comments"
           [(ngModel)]="delivery.comments"
           name="comments"
-          [disabled]="mode !== 'review'"
+          [disabled]="!isCommentEditable"
           placeholder="No comments"
           rows="3"
         ></textarea>
@@ -179,42 +179,85 @@
 
       <!-- Botones -->
       <div class="d-flex justify-content-center gap-2 my-4">
+        <!-- Botones en modo create -->
+        <ng-container *ngIf="mode === 'create' && areButtonsEnabled">
+          <button
+            type="button"
+            class="btn btn-warning rounded-pill"
+            (click)="saveAsDraft()"
+          >
+            Save as draft
+          </button>
+          <button
+            type="submit"
+            class="btn btn-success rounded-pill"
+            [disabled]="!validateForm()"
+          >
+            Create Order
+          </button>
+        </ng-container>
+      
+        <!-- Botones en modo edit -->
+        <ng-container *ngIf="mode === 'edit' && areButtonsEnabled">
+          <button
+            type="submit"
+            class="btn btn-success rounded-pill"
+            [disabled]="!validateForm()"
+          >
+            Save Changes
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger rounded-pill"
+            (click)="deleteDelivery()"
+          >
+            Delete Order
+          </button>
+        </ng-container>
+      
+        <!-- Botones en modo review -->
+        <ng-container *ngIf="mode === 'review' && areButtonsEnabled">
+          <button
+            class="btn btn-primary rounded-pill"
+            type="button"
+            (click)="submitReview()"
+            [disabled]="!isCommentEditable || !delivery.comments || delivery.comments.trim() === ''"
+          >
+            Send Comments
+          </button>
+          <button
+            class="btn btn-success rounded-pill"
+            type="button"
+            (click)="approveDelivery()"
+          >
+            Approve
+          </button>
+        </ng-container>
+      
+        <!-- Botón "Back" (siempre visible) -->
         <button
-          type="submit"
-          class="btn btn-success rounded-pill"
-          *ngIf="mode !== 'review'"
-          [disabled]="!validateForm()"
-        >
-          {{ mode === 'create' ? 'Create Order' : 'Save Changes' }}
-        </button>
-        <button
-          class="btn btn-primary rounded-pill"
           type="button"
-          (click)="submitReview()"
-          *ngIf="mode === 'review'"
-          [disabled]="!delivery.comments || delivery.comments.trim() === ''"
-        >
-          Send Comments
-        </button>
-        <button
-          class="btn btn-success rounded-pill"
-          type="button"
-          (click)="approveDelivery()"
-          *ngIf="mode === 'review'"
-        >
-          Approve
-        </button>
-        <button
-          type="button"
-          class="btn btn-danger rounded-pill"
+          class="btn btn-dark rounded-pill"
           (click)="cancel()"
         >
-          Cancel
+          Back
         </button>
       </div>
     </form>
   </div>
 </section>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <!-- <section class="container">

@@ -30,6 +30,7 @@
       destination_warehouse_id: null, // ID del almacén de destino
       status: 'pending', // Estado inicial del pedido
       comments: '', // Comentarios asociados
+      products: [], // Productos asociados al pedido
     };
   
     // Listas cargadas desde el back-end
@@ -47,6 +48,11 @@
   
     // Indica si el formulario ya fue enviado
     submitted: boolean = false;
+
+    // Indica si el envío es editable
+    isEditable: boolean = true;
+    areButtonsEnabled: boolean = true;
+    isCommentEditable: boolean = false;
   
     // Constructor para inyectar dependencias
     constructor(
@@ -119,28 +125,32 @@
     }
 
   //Carga los detalles del envío seleccionado (con ayuda de loadDeliveryProducts) y controla que las fechas sean de tipo Date
-    loadDelivery(id: number): void {
-      // Llama al servicio para obtener los detalles del pedido por su ID
-      this.deliveryService.getDeliveryById(id).subscribe({
-        next: (delivery) => {
-          // Asigna los valores del pedido recibido a la variable `this.delivery`
-          this.delivery = {
-            ...delivery, // Propaga todas las propiedades del pedido
-            // Convierte las fechas a objetos Date si existen, o asigna null
-            send_date: delivery.send_date ? new Date(delivery.send_date) : null,
-            received_date: delivery.received_date ? new Date(delivery.received_date) : null,
-          };
-          console.log('Delivery loaded:', this.delivery); // Muestra el pedido cargado en consola
-    
-          // Llama al método para cargar los productos asociados al pedido
-          this.loadDeliveryProducts(id);
-        },
-        error: () => {
-          // Manejo de errores: muestra un mensaje si no se puede cargar el pedido
-          this.errorMessage = 'Error loading delivery details.';
-        },
-      });
-    }
+  loadDelivery(id: number): void {
+    this.deliveryService.getDeliveryById(id).subscribe({
+      next: (delivery) => {
+        this.delivery = {
+          ...delivery,
+          send_date: delivery.send_date ? new Date(delivery.send_date) : null,
+          received_date: delivery.received_date ? new Date(delivery.received_date) : null,
+        };
+        console.log('Delivery loaded:', this.delivery);
+  
+        // Comprueba las condiciones de editabilidad
+        this.checkIfEditable();
+  
+        // Carga los productos relacionados al envío
+        this.loadDeliveryProducts(id);
+      },
+      error: (err) => {
+        if (err.status === 404) {
+          alert('The delivery you are trying to access does not exist.');
+          this.router.navigate(['/operator/order-list']);
+        } else {
+          this.errorMessage = 'An error occurred while loading the delivery. Please try again later.';
+        }
+      },
+    });
+  }
   
   //Carga los datos de los productos y cantidades, del pedido
     loadDeliveryProducts(deliveryId: number): void {
@@ -163,6 +173,28 @@
           this.errorMessage = 'Error loading delivery products.';
         },
       });
+    }
+
+    checkIfEditable(): void {
+      const editableStatuses = ['pending', 'correction needed'];
+      const reviewStatuses = ['review', 'pending reception'];
+    
+      // Control de editabilidad general (modo edit y estados permitidos)
+      this.isEditable = this.mode === 'edit' && editableStatuses.includes(this.delivery.status);
+    
+      // Botones habilitados
+      this.areButtonsEnabled =
+        (this.mode === 'edit' && editableStatuses.includes(this.delivery.status)) ||
+        (this.mode === 'review' && reviewStatuses.includes(this.delivery.status));
+    
+      // Campo de comentarios (editable solo en ciertos casos en modo review)
+      if (this.mode === 'edit') {
+        this.isCommentEditable = this.delivery.status === 'correction needed';
+      } else if (this.mode === 'review') {
+        this.isCommentEditable = reviewStatuses.includes(this.delivery.status);
+      } else {
+        this.isCommentEditable = false;
+      }
     }
 
 //------------------------------- 
@@ -277,118 +309,152 @@
       // Proceder a guardar los datos (crear o actualizar el envío)
       this.saveDelivery();
     }
-  
-  //Guardar los datos del formulario y adaptarlos a los campos de la base de datos
-    saveDelivery(): void {
-      // Preparar los datos para el backend
-      const deliveryWithProducts = {
+
+    private prepareDeliveryPayload(status: string): any {
+      return {
         ...this.delivery,
-        // Convertir las fechas a formato `datetime`
+        status, // Estado dinámico según el botón pulsado
         send_date: this.delivery.send_date
           ? `${this.formatDateForInput(this.delivery.send_date)} 00:00:00`
           : null,
         received_date: this.delivery.received_date
           ? `${this.formatDateForInput(this.delivery.received_date)} 00:00:00`
           : null,
-        // Convertir valores numéricos de los selectores a números explícitamente
         truck_id_truck: this.delivery.truck_id_truck ? +this.delivery.truck_id_truck : null,
         origin_warehouse_id: this.delivery.origin_warehouse_id ? +this.delivery.origin_warehouse_id : null,
         destination_warehouse_id: this.delivery.destination_warehouse_id ? +this.delivery.destination_warehouse_id : null,
-        // Formatear los productos seleccionados
         products: this.orderDetails.map((detail) => ({
-          product_id: detail.product_id!, // El signo `!` asegura que el valor no es `null`
+          product_id: detail.product_id!,
           quantity: detail.quantity,
         })),
       };
-    
-      // Registrar los datos preparados en la consola para depuración
-      console.log('Saving delivery with data:', deliveryWithProducts);
-    
-      // Determinar si se crea o actualiza el envío
-      if (this.mode === 'create') {
-        // Enviar solicitud al backend para crear el envío
-        this.deliveryService.createDelivery(deliveryWithProducts).subscribe({
+    }
+
+      saveAsDraft(): void {
+        const deliveryPayload = this.prepareDeliveryPayload('pending');
+        console.log('Saving draft with data:', deliveryPayload);
+      
+        this.deliveryService.createDelivery(deliveryPayload).subscribe({
           next: () => {
-            // Notificar éxito y redirigir a la lista de pedidos
-            alert('Order created successfully!');
+            alert('Draft saved successfully!');
             this.router.navigate(['/operator/order-list']);
           },
           error: () => {
-            // Manejar errores y mostrar mensaje al usuario
-            this.errorMessage = 'Failed to create order.';
-          },
-        });
-      } else if (this.mode === 'edit') {
-        // Enviar solicitud al backend para actualizar el envío existente
-        this.deliveryService.updateDelivery(this.delivery.id_delivery!, deliveryWithProducts).subscribe({
-          next: () => {
-            // Notificar éxito y redirigir a la lista de pedidos
-            alert('Order updated successfully!');
-            this.router.navigate(['/operator/order-list']);
-          },
-          error: () => {
-            // Manejar errores y mostrar mensaje al usuario
-            this.errorMessage = 'Failed to update order.';
+            this.errorMessage = 'Failed to save draft.';
           },
         });
       }
-    }
+
+      saveDelivery(): void {
+        const deliveryPayload = this.prepareDeliveryPayload('review'); // Cambiar el status a 'review'
+        console.log('Saving delivery with data:', deliveryPayload);
+      
+        if (this.mode === 'create') {
+          this.deliveryService.createDelivery(deliveryPayload).subscribe({
+            next: () => {
+              alert('Order created successfully!');
+              this.router.navigate(['/operator/order-list']);
+            },
+            error: () => {
+              this.errorMessage = 'Failed to create order.';
+            },
+          });
+        } else if (this.mode === 'edit') {
+          this.deliveryService.updateDelivery(this.delivery.id_delivery!, deliveryPayload).subscribe({
+            next: () => {
+              alert('Order updated successfully!');
+              this.router.navigate(['/operator/order-list']);
+            },
+            error: () => {
+              this.errorMessage = 'Failed to update order.';
+            },
+          });
+        }
+      }
   
   //Envío de comentarios en modo review
     submitReview(): void {
-      // Verificar si el envío tiene un ID definido
       if (!this.delivery.id_delivery) return;
     
-      // Crear un objeto con los datos actualizados, incluyendo el cambio de estado
-      const updatedDelivery = { 
-        ...this.delivery, 
-        status: 'correction needed' // Cambiar estado a "correction needed"
+      let newStatus = '';
+      if (this.delivery.status === 'review') {
+        newStatus = 'correction needed';
+      } else if (this.delivery.status === 'pending reception') {
+        newStatus = 'send back';
+      }
+    
+      const updatedDelivery = {
+        ...this.delivery,
+        status: newStatus,
       };
     
-      // Registrar en la consola los datos que se enviarán al backend para depuración
       console.log('Submitting review with data:', updatedDelivery);
     
-      // Enviar solicitud al backend para actualizar el estado y los comentarios
       this.deliveryService.updateDelivery(this.delivery.id_delivery, updatedDelivery).subscribe({
         next: () => {
-          // Notificar éxito al usuario y redirigir a la lista de pedidos
           alert('Comments sent successfully.');
           this.router.navigate(['/manager/order-list']);
         },
         error: () => {
-          // Manejar errores y mostrar mensaje al usuario
           this.errorMessage = 'Failed to send comments.';
+        },
+      });
+    }
+
+    deleteDelivery(): void {
+      // Confirmación del usuario antes de proceder con el borrado
+      const confirmDelete = confirm(
+        'Are you sure you want to delete this order? This action cannot be undone.'
+      );
+    
+      if (!confirmDelete) {
+        return; // Si el usuario cancela, no se hace nada
+      }
+    
+      // Llama al servicio para borrar el envío
+      this.deliveryService.deleteDelivery(this.delivery.id_delivery!).subscribe({
+        next: () => {
+          // Notificación de éxito y redirección
+          alert('Order deleted successfully!');
+          this.router.navigate(['/operator/order-list']);
+        },
+        error: () => {
+          // Manejo de errores
+          this.errorMessage = 'Failed to delete the order. Please try again later.';
         },
       });
     }
   
   //Aprobación de envíos en modo review
     approveDelivery(): void {
-      // Verificar si el envío tiene un ID definido
       if (!this.delivery.id_delivery) return;
     
-      // Crear un objeto con los datos actualizados, incluyendo el cambio de estado
-      const updatedDelivery = { 
-        ...this.delivery, 
-        status: 'ready departure' // Cambiar estado a "ready departure"
+      let newStatus = '';
+      if (this.delivery.status === 'review') {
+        newStatus = 'ready departure';
+      } else if (this.delivery.status === 'pending reception') {
+        newStatus = 'accepted';
+      }
+    
+      const updatedDelivery = {
+        ...this.delivery,
+        status: newStatus,
       };
     
-      // Registrar en la consola los datos que se enviarán al backend para depuración
       console.log('Approving delivery with data:', updatedDelivery);
     
-      // Enviar solicitud al backend para aprobar el pedido
       this.deliveryService.updateDelivery(this.delivery.id_delivery, updatedDelivery).subscribe({
         next: () => {
-          // Notificar éxito al usuario y redirigir a la lista de pedidos
           alert('Delivery approved successfully.');
           this.router.navigate(['/manager/order-list']);
         },
         error: () => {
-          // Manejar errores y mostrar mensaje al usuario
           this.errorMessage = 'Failed to approve delivery.';
         },
       });
     }
+
+
 
 //-------------------------------
 //PROCESADO DE DATOS
@@ -436,3 +502,4 @@
     }
 
   }
+
