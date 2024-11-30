@@ -4,6 +4,7 @@
   import { FormsModule } from '@angular/forms'; // Funcionalidades para trabajar con formularios
   import { CommonModule } from '@angular/common'; // Funcionalidades comunes de Angular
   import { NgForm } from '@angular/forms'; // Tipo para formularios reactivos
+  import { firstValueFrom } from 'rxjs';
   import dayjs from 'dayjs';
 
   // Importaciones del proyecto
@@ -24,20 +25,20 @@
   
     // Objeto que contiene los datos del pedido actual
     delivery: Delivery = {
-      send_date: null, // Fecha de envío
-      received_date: null, // Fecha de recepción
-      truck_id_truck: null, // ID del camión
-      origin_warehouse_id: null, // ID del almacén de origen
-      destination_warehouse_id: null, // ID del almacén de destino
-      status: 'pending', // Estado inicial del pedido
-      comments: '', // Comentarios asociados
-      products: [], // Productos asociados al pedido
+      send_date: null,
+      received_date: null,
+      truck_id_truck: null,
+      origin_warehouse_id: null,
+      destination_warehouse_id: null,
+      status: 'pending',
+      comments: '',
+      products: [],
     };
   
     // Listas cargadas desde el back-end
-    warehouses: Warehouse[] = []; // Lista de almacenes disponibles
-    trucks: Truck[] = []; // Lista de camiones disponibles
-    products: Product[] = []; // Lista de productos disponibles
+    warehouses: Warehouse[] = [];
+    trucks: Truck[] = [];
+    products: Product[] = [];
   
     // Detalles de los productos seleccionados para el pedido
     orderDetails: { product_id: number | null; quantity: number; touched: boolean }[] = [
@@ -57,9 +58,9 @@
   
     // Constructor para inyectar dependencias
     constructor(
-      private route: ActivatedRoute, // Manejo de parámetros de la ruta actual
-      private router: Router, // Navegación entre rutas
-      private deliveryService: DeliveryService // Servicio para interactuar con el back-end
+      private route: ActivatedRoute,
+      private router: Router,
+      private deliveryService: DeliveryService
     ) {}
 
 //-------------------------------
@@ -96,12 +97,11 @@
           async loadInitialData(): Promise<void> {
             try {
               const [warehouses, trucks, products] = await Promise.all([
-                this.deliveryService.getWarehouses().toPromise(),
-                this.deliveryService.getTrucks().toPromise(),
-                this.deliveryService.getProducts().toPromise(),
+                firstValueFrom(this.deliveryService.getWarehouses()),
+                firstValueFrom(this.deliveryService.getTrucks()),
+                firstValueFrom(this.deliveryService.getProducts()),
               ]);
           
-              // Validación explícita para asegurarse de que no sean undefined
               this.warehouses = warehouses || [];
               this.trucks = trucks || [];
               this.products = products || [];
@@ -117,8 +117,8 @@
           async loadDeliveryWithProducts(id: number): Promise<void> {
             try {
               const [rawDelivery, products] = await Promise.all([
-                this.deliveryService.getDeliveryById(id).toPromise(),
-                this.deliveryService.getDeliveryProducts().toPromise(),
+                firstValueFrom(this.deliveryService.getDeliveryById(id)),
+                firstValueFrom(this.deliveryService.getDeliveryProducts()),
               ]);
           
               this.delivery = this.normalizeDeliveryFromBackend(rawDelivery);
