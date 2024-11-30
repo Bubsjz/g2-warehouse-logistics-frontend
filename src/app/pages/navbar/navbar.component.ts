@@ -15,8 +15,12 @@ export class NavbarComponent {
   warehouseServices = inject(WarehousesService)
   warehouses: Iwarehouse[] | undefined = [];
 
-  ngOnInit() {
-
-    this.warehouses = this.warehouseServices.getAll()
+  async ngOnInit() {
+    try {
+      const res = await this.warehouseServices.getAll();
+      this.warehouses = res
+    } catch (error) {
+      console.log(error)
+    }
   }
 }

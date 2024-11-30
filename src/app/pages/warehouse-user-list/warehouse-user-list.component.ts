@@ -10,16 +10,17 @@ import { Iuser } from '../../interfaces/iuser.interface';
   templateUrl: './warehouse-user-list.component.html',
   styleUrl: './warehouse-user-list.component.css'
 })
+
 export class WarehouseUserListComponent {
   @Input() warehouse_id!: number;
   warehouseServices = inject(WarehousesService);
   warehouse: Iwarehouse | undefined;
   employees: Iuser[] | undefined;
 
-  ngOnInit() {
+  async ngOnInit() {
 
-    this.warehouse = this.warehouseServices.getById(this.warehouse_id)
-    console.log(this.warehouse)
+    const res = await this.warehouseServices.getById(this.warehouse_id)
+    this.warehouse = res[0]
     this.employees = this.warehouse?.employees
   }
 

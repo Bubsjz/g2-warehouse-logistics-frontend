@@ -19,11 +19,12 @@ export class WarehouseCardComponent {
   n_operators: number = 0;
   n_managers: number = 0;
 
-  ngOnInit() {
+  async ngOnInit() {
 
-    this.warehouse = this.warehouseServices.getById(this.warehouse_id)
-    this.managers = this.warehouse?.employees.filter(employee => employee.rol === 'manager')
-    this.operators = this.warehouse?.employees.filter(employee => employee.rol === 'operator')
+    const res = await this.warehouseServices.getById(this.warehouse_id)
+    this.warehouse = res[0]
+    this.managers = this.warehouse.employees.filter(employee => employee.rol === 'manager')
+    this.operators = this.warehouse.employees.filter(employee => employee.rol === 'operator')
     this.n_operators = this.operators!.length
     this.n_managers = this.managers!.length
   }
