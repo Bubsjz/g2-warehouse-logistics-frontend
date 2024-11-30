@@ -16,7 +16,8 @@ export class DeliveryService {
     return this.http.get<Delivery>(`${this.baseUrl}/delivery/${id}`);
   }
 
-  createDelivery(delivery: any): Observable<Delivery> {
+  createDelivery(delivery: any): Observable<any> {
+    console.log('Data received by createDelivery:', delivery);
     return this.http.post<Delivery>(`${this.baseUrl}/delivery`, delivery);
   }
 

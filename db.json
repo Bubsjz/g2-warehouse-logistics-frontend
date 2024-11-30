@@ -1,15 +1,13 @@
 {
   "delivery": [
     {
-      "id": "2",
-      "id_delivery": 2,
-      "send_date": "2024-11-02 09:00:00",
+      "send_date": "2024-11-02T08:00:00.000Z",
       "received_date": null,
-      "truck_id_truck": 3,
       "origin_warehouse_id": 2,
       "destination_warehouse_id": 3,
-      "status": "pending reception",
-      "comments": null,
+      "truck_id_truck": 3,
+      "comments": "a",
+      "status": "correction needed",
       "products": [
         {
           "product_id": 4,
@@ -19,18 +17,18 @@
           "product_id": 5,
           "quantity": 11
         }
-      ]
+      ],
+      "id": "2",
+      "id_delivery": 2
     },
     {
-      "id": "3",
-      "id_delivery": 3,
-      "send_date": "2024-11-03 10:00:00",
-      "received_date": "2024-11-03 15:30:00",
-      "truck_id_truck": 5,
+      "send_date": "2024-11-03T09:00:00.000Z",
+      "received_date": "2024-11-03T14:30:00.000Z",
       "origin_warehouse_id": 3,
       "destination_warehouse_id": 4,
-      "status": "accepted",
-      "comments": null,
+      "truck_id_truck": 5,
+      "comments": "a",
+      "status": "correction needed",
       "products": [
         {
           "product_id": 1,
@@ -40,18 +38,18 @@
           "product_id": 5,
           "quantity": 1
         }
-      ]
+      ],
+      "id": "3",
+      "id_delivery": 3
     },
     {
-      "id": "4",
-      "id_delivery": 4,
-      "send_date": "2024-11-12",
-      "received_date": "2024-11-27",
-      "truck_id_truck": 6,
-      "origin_warehouse_id": 3,
-      "destination_warehouse_id": 1,
-      "status": "pending",
-      "comments": null,
+      "send_date": "2024-11-11T23:00:00.000Z",
+      "received_date": "2024-11-26T23:00:00.000Z",
+      "origin_warehouse_id": 1,
+      "destination_warehouse_id": 2,
+      "truck_id_truck": 1,
+      "comments": "fsdfds",
+      "status": "correction needed",
       "products": [
         {
           "product_id": 2,
@@ -61,7 +59,9 @@
           "product_id": 3,
           "quantity": 9
         }
-      ]
+      ],
+      "id": "4",
+      "id_delivery": 4
     },
     {
       "id": "5",
@@ -130,6 +130,70 @@
         {
           "product_id": null,
           "quantity": 0
+        }
+      ]
+    },
+    {
+      "id": "32f1",
+      "send_date": "2024-11-05 00:00:00",
+      "received_date": "2024-11-21 00:00:00",
+      "truck_id_truck": 1,
+      "origin_warehouse_id": 2,
+      "destination_warehouse_id": 3,
+      "status": "pending",
+      "comments": "",
+      "products": [
+        {
+          "product_id": "5",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "id": "deab",
+      "send_date": "2024-11-05 00:00:00",
+      "received_date": "2024-11-21 00:00:00",
+      "truck_id_truck": 1,
+      "origin_warehouse_id": 1,
+      "destination_warehouse_id": 3,
+      "status": "pending",
+      "comments": "",
+      "products": [
+        {
+          "product_id": "5",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": "8e3e",
+      "send_date": "2024-11-13 00:00:00",
+      "received_date": "2024-11-21 00:00:00",
+      "truck_id_truck": null,
+      "origin_warehouse_id": "1",
+      "destination_warehouse_id": "2",
+      "status": "pending",
+      "comments": "",
+      "products": [
+        {
+          "product_id": null,
+          "quantity": 0
+        }
+      ]
+    },
+    {
+      "id": "f0ee",
+      "send_date": "2024-11-12 00:00:00",
+      "received_date": "2024-11-14 00:00:00",
+      "truck_id_truck": 4,
+      "origin_warehouse_id": 1,
+      "destination_warehouse_id": 2,
+      "status": "pending",
+      "comments": "",
+      "products": [
+        {
+          "product_id": 3,
+          "quantity": 2
         }
       ]
     }
