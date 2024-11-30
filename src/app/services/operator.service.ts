@@ -9,13 +9,16 @@ import { User } from '../interfaces/user.interface';
 })
 export class OperatorService {
 
-  private baseUrl: string = "http://localhost:3000/operator"
+  //private baseUrl: string = "http://localhost:3000/operator"
+  private baseUrl:string = 'https://4415-79-157-9-69.ngrok-free.app/operator'
 
   private httpClient = inject(HttpClient)
 
   getAllDeliveryByUser(){
 
-   return lastValueFrom(this.httpClient.get<Delivery[]>(`${this.baseUrl}/order-list`)) 
+   const prueba = lastValueFrom(this.httpClient.get<Delivery[]>(`${this.baseUrl}/order-list`)) 
+    return prueba
+  
 
   }
 

@@ -2,7 +2,7 @@ import { Component, inject } from "@angular/core";
 import { OrderFilterComponent } from "../../components/order-filter/order-filter.component";
 import { Delivery } from "../../interfaces/delivery.interface";
 import { NewOrderBtnComponent } from "../../components/new-order-btn/new-order-btn.component";
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { DatePipe } from "@angular/common";
 import { OperatorService } from "../../services/operator.service";
 import {jwtDecode} from 'jwt-decode';
@@ -15,9 +15,6 @@ type decodeToken = {
   exp: number;
 }
 
-
-
-
 @Component({
   selector: 'app-order-table',
   standalone: true,
@@ -29,42 +26,57 @@ export class OrderTableComponent {
 
   operatorService = inject(OperatorService)
   managerService = inject(ManagerService)
+  router = inject(Router)
 
   arrDeliveries:Delivery[]=[];
   userLogin!:string
-  prueba!:decodeToken
+  idUser!:decodeToken
 
 
   async ngOnInit() {
-// manager 
+    
+    // manager 
     const token = localStorage.getItem('authToken')
     if(token){
       const decoded = jwtDecode(token) as decodeToken
-      this.prueba = decoded
-      const response3 = await this.managerService.getManagerById(this.prueba.user_id)
-      this.userLogin = response3[0].role
+      this.idUser = decoded
+     
+
+      if(this.idUser.user_role === "manager"){
+        
+        //const response2 = await this.managerService.getManagerById(this.idUser.user_id)
+        this.userLogin = this.idUser.user_role
+
+        const response1 = await this.managerService.getEntryOrders()
+        this.arrDeliveries = response1
+       
+        
+
+
+      }else{
+        //operator   
+        //const response2 = await this.operatorService.getUserById(this.idUser.user_id)
+        this.userLogin = this.idUser.user_role
+        const response1 =  await this.operatorService.getAllDeliveryByUser()
+        this.arrDeliveries = response1
+       
       
+      }
+
+      
+      
+    }else{
+      alert('Token is missing')
+      this.router.navigateByUrl('/login')
     }
-
-//operator   
-     const response1 =  await this.operatorService.getAllDeliveryByUser()
-     this.arrDeliveries = response1
-     
-     const response2 = await this.operatorService.getUserById(this.arrDeliveries[0].id_user)
-     this.userLogin = response2[0].role
-
-
-
-     
   }
     
 
 
   filterFather(event:Delivery[]) {
     if(event.length <= 0 ){
-      alert('no hay productos con estas caracteristicas')
+      alert('no products')
     }else{
-
       this.arrDeliveries = event
     }
   }

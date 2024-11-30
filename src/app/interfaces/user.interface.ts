@@ -4,14 +4,14 @@ export interface User {
     surname:              string;
     email:                string;
     password:             string;
-    rol:                  Rol;
+    role:                  role;
     asigned_id_warehouse: number;
 }
 
-export enum Rol {
-    Administrator = "administrator",
-    Driver = "driver",
-    Manager = "manager",
+export enum role {
+    administrator = "administrator",
+    operator = "operator",
+    manager = "manager",
 }
 
 export interface iUser {
@@ -20,7 +20,7 @@ export interface iUser {
     surname: string;
     email: string;
     password: string;
-    role: 'boss' | 'manager' | 'driver';
+    role: 'boss' | 'manager' | 'operator';
     asigned_id_warehouse: number;
     token?: string;
   }
