@@ -7,5 +7,4 @@ export interface Iwarehouse {
     address: string;
     email: string;
     image: string;
-    employees: Iuser[];
 }
