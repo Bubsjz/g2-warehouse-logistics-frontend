@@ -7,7 +7,7 @@
       "destination_warehouse_id": 3,
       "truck_id_truck": 3,
       "comments": "a",
-      "status": "correction needed",
+      "status": "review",
       "products": [
         {
           "product_id": 4,
@@ -28,7 +28,7 @@
       "destination_warehouse_id": 4,
       "truck_id_truck": 5,
       "comments": "a",
-      "status": "correction needed",
+      "status": "ready for departure",
       "products": [
         {
           "product_id": 1,
@@ -78,7 +78,7 @@
           "quantity": 30
         }
       ],
-      "status": "ready departure"
+      "status": "pending"
     },
     {
       "id": "6",
@@ -186,6 +186,38 @@
       "send_date": "2024-11-12 00:00:00",
       "received_date": "2024-11-14 00:00:00",
       "truck_id_truck": 4,
+      "origin_warehouse_id": 1,
+      "destination_warehouse_id": 2,
+      "status": "pending",
+      "comments": "",
+      "products": [
+        {
+          "product_id": 3,
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "id": "12c7",
+      "send_date": "2024-12-03 00:00:00",
+      "received_date": "2024-12-11 00:00:00",
+      "truck_id_truck": 1,
+      "origin_warehouse_id": 1,
+      "destination_warehouse_id": 2,
+      "status": "pending",
+      "comments": "",
+      "products": [
+        {
+          "product_id": 5,
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": "7457",
+      "send_date": "2024-12-02 00:00:00",
+      "received_date": "2024-12-19 00:00:00",
+      "truck_id_truck": 1,
       "origin_warehouse_id": 1,
       "destination_warehouse_id": 2,
       "status": "pending",

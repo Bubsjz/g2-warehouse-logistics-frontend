@@ -8,8 +8,8 @@
   import dayjs from 'dayjs';
 
   // Importaciones del proyecto
-  import { DeliveryService } from '../services/order.services'; // Servicio para gestionar entregas
-  import { Delivery, Warehouse, Truck, Product } from '../interfaces/interfaces'; // Interfaces para modelar los datos principales
+  import { DeliveryService } from '../../services/order.services'; // Servicio para gestionar entregas
+  import { Delivery, Warehouse, Truck, Product } from '../../interfaces/order.interfaces'; // Interfaces para modelar los datos principales
   
   @Component({
     selector: 'app-order-form',
@@ -80,6 +80,7 @@
 //-------------------------------
 
         //Determina el modo del formulario y carga los datos correspondientes
+// !!!! MODIFICAR RUTA REVIEW-ORDER PARA QUE COJA CON MODIFY-ORDER Y EL DIRECTORIO PREVIO (/MANAGER), TAMBIÉN MODIFICAR EL DIRECTORIO DEL ORDER-LIST
           async detectMode(): Promise<void> {
             const id = +this.route.snapshot.paramMap.get('id')!;
             if (this.route.snapshot.url.some((segment) => segment.path === 'create-order')) {
@@ -312,10 +313,10 @@
           
             try {
               if (this.mode === 'create') {
-                await this.deliveryService.createDelivery(deliveryPayload).toPromise();
+                await firstValueFrom(this.deliveryService.createDelivery(deliveryPayload));
                 alert(status === 'pending' ? 'Draft saved successfully!' : 'Order created successfully!');
               } else if (this.mode === 'edit') {
-                await this.deliveryService.updateDelivery(this.delivery.id_delivery!, deliveryPayload).toPromise();
+                await firstValueFrom(this.deliveryService.updateDelivery(this.delivery.id_delivery!, deliveryPayload));
                 alert(status === 'review' ? 'Order updated successfully!' : 'Draft updated successfully!');
               }
               this.router.navigate(['/operator/order-list']);
@@ -337,6 +338,7 @@
             try {
               // Reutiliza `updateDeliveryStatus` para actualizar el estado y comentarios
               await this.updateDeliveryStatus(newStatus, this.delivery.comments);
+              console.log(newStatus, this.delivery.comments);
               alert('Comments sent successfully.');
             } catch (error) {
               this.errorMessage = `Failed to update delivery comments.`;
@@ -346,7 +348,8 @@
       
         //Aprobación de envíos en modo review
           async approveDelivery(): Promise<void> {
-            const newStatus = this.delivery.status === 'review' ? 'ready departure' : 'accepted';
+            const newStatus = this.delivery.status === 'review' ? 'ready for departure' : 'accepted';
+            console.log(newStatus);
             await this.updateDeliveryStatus(newStatus);
           }
 
@@ -365,7 +368,7 @@
             };
           
             try {
-              await this.deliveryService.updateDelivery(this.delivery.id_delivery, updatedDelivery).toPromise();
+              await firstValueFrom(this.deliveryService.updateDelivery(this.delivery.id_delivery, updatedDelivery));
               alert(`Delivery status updated to ${newStatus}`);
               this.router.navigate(['/manager/order-list']);
             } catch (error) {

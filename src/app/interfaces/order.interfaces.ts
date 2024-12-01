@@ -7,8 +7,8 @@ export interface Delivery {
     destination_warehouse_id: number | null;
     truck_id_truck: number | null;
     comments: string;
-    products: { product_id: number; quantity: number }[]; // Productos asociados al envío
-    status: 'pending' | 'review' | 'correction needed' | 'ready departure' | 'in transit' | 'pending reception' | 'accepted' | 'send back';
+    products: { product_id: number; quantity: number }[];
+    status: 'pending' | 'review' | 'correction needed' | 'ready for departure' | 'in transit' | 'pending reception' | 'accepted' | 'send back';
   }
   
   export interface Warehouse {

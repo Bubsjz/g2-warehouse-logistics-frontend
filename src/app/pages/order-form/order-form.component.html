@@ -204,7 +204,7 @@
             class="btn btn-success rounded-pill"
             [disabled]="!validateForm()"
           >
-            Save Changes
+            Create Order
           </button>
           <button
             type="button"
@@ -218,7 +218,7 @@
         <!-- Botones en modo review -->
         <ng-container *ngIf="mode === 'review' && areButtonsEnabled">
           <button
-            class="btn btn-primary rounded-pill"
+            class="btn btn-danger rounded-pill"
             type="button"
             (click)="submitReview()"
             [disabled]="!isCommentEditable || !delivery.comments || delivery.comments.trim() === ''"
