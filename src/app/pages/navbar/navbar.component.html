@@ -1,13 +1,10 @@
-<div class="search-bar">
-  <input type="text" class="search-input" placeholder="Buscar almacenes...">
-  <button class="search-button">Buscar</button>
-</div>
+<app-search-engine></app-search-engine>
 
 <div class="layout-grid">
 
   <div class="card-container">
-    <button class="btn registrar-empleados">Registrar Empleados</button>
-    <button class="btn registrar-almacenes">Registrar Almacenes</button>
+    <a class="btn registrar-empleados" [routerLink]="['/boss', 'new-employee']">Registrar Empleados</a>
+    <a class="btn registrar-almacenes" [routerLink]="['/boss', 'warehouse-form']">Registrar Almacenes</a>
   </div>
 
   <div class="store-container">
@@ -18,7 +15,7 @@
           <img src={{warehouse.image}} alt={{warehouse.name}} class="store-image">
           <div class="store-actions">
             <div class="icons">
-              <a [routerLink]="['/dashboard', 'boss', 'warehouse-view', warehouse.id]"><i class="fas fa-info-circle icon"></i></a>
+              <a [routerLink]="['/boss', 'warehouse-view', warehouse.id]"><i class="fas fa-info-circle icon"></i></a>
             </div>
           </div>
         </div>

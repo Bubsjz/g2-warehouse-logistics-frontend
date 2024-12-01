@@ -4,6 +4,6 @@ export interface Iuser {
     surname: string;
     email: string;
     password: string;
-    rol: string;
-    warehouse_id?: number;
+    role: string;
+    warehouse_id: number;
 }

@@ -1,0 +1,131 @@
+{
+    "warehouses": [
+        {
+            "id": 1,
+            "name": "Central Warehouse",
+            "locality": "Madrid",
+            "address": "C. de Arboleda, 10, Puente de Vallecas, 28031 Madrid",
+            "email": "central_warehouse@warehouse.com",
+            "image": "https://images.ctfassets.net/ksxncq3aj87t/1dD7ZLyLxS4OuprJPfGCVK/8c31e984a8bf346d0b66ff9342f62604/warehouse_setup_1.png?w=892&h=595&q=50&fm=png"
+        },
+        {
+            "id": 2,
+            "name": "North Warehouse",
+            "locality": "Burgos",
+            "address": "Ctra. Burgos, 32, 09001 Burgos",
+            "email": "north_warehouse@warehouse.com",
+            "image": "https://www.avantauk.com/wp-content/uploads/2023/10/Image1.jpg.pagespeed.ce.EJaVPuYsVc.jpg"
+        }
+    ],
+
+    "users": [
+        {
+            "id": 1,
+            "name": "Jaime",
+            "surname": "Agüero",
+            "email": "jaguero@gmail.com",
+            "password": "A6aK2=n9x(#;",
+            "role": "operator",
+            "warehouse_id": 1
+        },
+        {
+            "id": 2,
+            "name": "María",
+            "surname": "Nieves",
+            "email": "marinieves@hotmail.com",
+            "password": "2FM:;tDi>1A4",
+            "role": "operator",
+            "warehouse_id": 1
+        },
+        {
+            "id": 3,
+            "name": "Lucía",
+            "surname": "Martinez",
+            "email": "luciamar@gmail.com",
+            "password": "m\\i5]36WK^0m",
+            "role": "operator",
+            "warehouse_id": 2
+        },
+        {
+            "id": 4,
+            "name": "Iván",
+            "surname": "Campos",
+            "email": "icamp@hotmail.com",
+            "password": "ZvEI43A8>`P(",
+            "role": "operator",
+            "warehouse_id": 2
+        },
+        {
+            "id": 5,
+            "name": "Miguel",
+            "surname": "Hernandez",
+            "email": "miguelhernan@hotmail.com",
+            "password": "G/;dP.5yr8f1",
+            "role": "operator",
+            "warehouse_id": 3
+        },
+        {
+            "id": 6,
+            "name": "Mónica",
+            "surname": "Sánchez",
+            "email": "monsan@hotmail.com",
+            "password": "\"1E50,}Ib>b|",
+            "role": "operator",
+            "warehouse_id": 3
+        },
+        {
+            "id": 7,
+            "name": "Antonio",
+            "surname": "Muñiz",
+            "email": "amuniz@hotmail.com",
+            "password": "38\\|`Lk3ON)t",
+            "role": "operator",
+            "warehouse_id": 4
+        },
+        {
+            "id": 8,
+            "name": "Cristina",
+            "surname": "Alastra",
+            "email": "crisa@hotmail.com",
+            "password": ">^xJzJ957Pob",
+            "role": "operator",
+            "warehouse_id": 4
+        },
+        {
+            "id": 9,
+            "name": "Daniel",
+            "surname": "Frutos",
+            "email": "dafrut@gmail.com",
+            "password": "OH6[<u9G0Na^",
+            "role": "manager",
+            "warehouse_id": 3
+        },
+        {
+            "id": 10,
+            "name": "Eugenia",
+            "surname": "Rodríguez",
+            "email": "eugeniarod@gmail.com",
+            "password": "vDl[1_4Uqd6-",
+            "role": "manager",
+            "warehouse_id": 2
+        },
+        {
+            "id": 11,
+            "name": "Pedro",
+            "surname": "Garcia",
+            "email": "pegarcia@gmail.com",
+            "password": "1DbNr5[2t]5s",
+            "role": "manager",
+            "warehouse_id": 1
+        },
+        {
+            "id": 12,
+            "name": "Roberto",
+            "surname": "Marín",
+            "email": "roberin@gmail.com",
+            "password": "£H(d2%A33+51",
+            "role": "manager",
+            "warehouse_id": 4
+        }
+    ]
+}

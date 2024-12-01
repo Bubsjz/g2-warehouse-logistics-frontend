@@ -1,5 +1,3 @@
-import { Iuser } from "./iuser.interface";
-
 export interface Iwarehouse {
     id: number;
     name: string;
@@ -7,5 +5,4 @@ export interface Iwarehouse {
     address: string;
     email: string;
     image: string;
-    employees: Iuser[];
 }
