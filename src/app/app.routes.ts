@@ -28,7 +28,8 @@ export const routes: Routes = [
     {path:'boss',component:DashboardbossComponent,children:[
             {path:'warehouse-info',component: NavbarComponent},
             {path:'warehouse-view/:id',component:WarehouseViewComponent},
-            {path:'warehouse-form',component:WarehouseFormComponent},
+            {path:'update-warehouse/:id',component:WarehouseFormComponent},
+            {path:'new-warehouse',component:WarehouseFormComponent},
             {path:'update-employee/:id',component:UserFormComponent},
             {path:'new-employee',component:UserFormComponent},
             {path:'employee-view/:id',component:EmployeeViewComponent}

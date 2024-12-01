@@ -3,11 +3,12 @@ import { WarehousesService } from '../../services/warehouses.service';
 import { Iwarehouse } from '../../interfaces/iwarehouse.interface';
 import { Iuser } from '../../interfaces/iuser.interface';
 import { UsersService } from '../../services/users.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-warehouse-card',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './warehouse-card.component.html',
   styleUrl: './warehouse-card.component.css'
 })

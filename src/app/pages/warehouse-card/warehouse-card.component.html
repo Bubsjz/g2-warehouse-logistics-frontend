@@ -25,9 +25,9 @@
             <a [href]="'mailto:' + warehouse?.email">{{ warehouse?.email}}</a>
         </p>
         <div class="d-flex mt-5">
-            <a class="btn btn-outline-success m-2 p-2 px-4">Update</a>
-            <a class="btn btn-outline-danger m-2 p-2 px-4">Delete</a>
-            <a class="btn btn-outline-secondary m-2 p-2 px-4">Home</a>
+          <a class="btn btn-outline-success m-2 p-2 px-4" [routerLink]="['/boss', 'update-warehouse', warehouse_id]">Update</a>
+          <a class="btn btn-outline-danger m-2 p-2 px-4">Delete</a>
+          <a class="btn btn-outline-secondary m-2 p-2 px-4" [routerLink]="['/boss', 'warehouse-info']">Home</a>
         </div>
       </div>
       
