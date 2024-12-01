@@ -1,72 +1,48 @@
+
 <section class="container mt-5">
   <div class="card shadow-lg p-4">
-    <h3 class="text-center my-4">Creation of warehouse</h3>
+    <h3 class="text-center my-4">Create Warehouse</h3>
     <hr />
-    <form>
+    <form [formGroup]="warehouseForm" (ngSubmit)="onSubmit()">
       <div class="my-3">
-        <label class="form-label" for="name">Warehouse name</label>
+        <label class="form-label" for="name"><strong>Warehouse Name</strong></label>
         <input
           class="form-control rounded-pill"
           type="text"
           id="name"
           formControlName="name"
-          placeholder="Enter the name of the warehouse"
+          placeholder="Enter the warehouse name"
         />
+        <small class="text-danger" *ngIf="checkControl('name', 'required')">Name is required.</small>
+        <small class="text-danger" *ngIf="checkControl('name', 'minlength')">Name must be at least 3 characters.</small>
       </div>
+
       <div class="my-3">
-        <label class="form-label" for="locality">Locality</label>
+        <label class="form-label" for="location"><strong>Location</strong></label>
         <input
           class="form-control rounded-pill"
           type="text"
-          id="locality"
-          formControlName="locality"
-          placeholder="Enter the locality of the warehouse"
+          id="location"
+          formControlName="location"
+          placeholder="Enter the location"
         />
+        <small class="text-danger" *ngIf="checkControl('location', 'required')">Location is required.</small>
       </div>
+
       <div class="my-3">
-        <label class="form-label" for="address">Address</label>
+        <label class="form-label" for="capacity"><strong>Capacity</strong></label>
         <input
           class="form-control rounded-pill"
           type="text"
-          id="address"
-          formControlName="address"
-          placeholder="Enter the street of the warehouse"
+          id="capacity"
+          formControlName="capacity"
+          placeholder="Enter the capacity"
         />
+        <small class="text-danger" *ngIf="checkControl('capacity', 'required')">Capacity is required.</small>
+        <small class="text-danger" *ngIf="checkControl('capacity', 'pattern')">Capacity must be a valid number.</small>
       </div>
-      <div class="my-3">
-        <label class="form-label" for="image">Upload image</label>
-        <div class="image-upload">
-          <input
-            class="form-control rounded-pill"
-            type="file"
-            id="image"
-            formControlName="image"
-            accept="image/*"
-            style="display: none"
-            onchange="document.getElementById('file-name').innerText = this.files[0] ? this.files[0].name : 'No file selected';"
-          />
-          <button
-            type="button"
-            onclick="document.getElementById('image').click()"
-            class="btn btn-secondary"
-          >
-            Select image
-          </button>
-          <span id="image-name" class="ms-2">No image selected</span>
-        </div>
-      </div>
-      <div class="d-flex justify-content-center gap-2 my-3">
-        <input
-          type="submit"
-          value="Create"
-          class="btn btn-success rounded-pill btn-size"
-        />
-        <input
-          type="submit"
-          value="Delete"
-          class="btn btn-danger rounded-pill btn-size"
-        />
-      </div>
+
+      <button class="btn btn-primary rounded-pill w-100 mt-4" type="submit">Save Warehouse</button>
     </form>
   </div>
 </section>
