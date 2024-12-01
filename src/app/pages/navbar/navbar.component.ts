@@ -2,11 +2,12 @@ import { Component, inject } from '@angular/core';
 import { Iwarehouse } from '../../interfaces/iwarehouse.interface';
 import { RouterLink } from '@angular/router';
 import { WarehousesService } from '../../services/warehouses.service';
+import { SearchEngineComponent } from '../../components/search-engine/search-engine.component';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, SearchEngineComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
