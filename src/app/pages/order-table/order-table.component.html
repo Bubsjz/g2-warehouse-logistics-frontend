@@ -14,14 +14,19 @@
                    <button class=" btn btnreview2 w-100 " style="height: 80px;" (click)="outputOrders()">View output orders</button> <!-- ver pedidos de salida. origin es el almacen del usuario, salida es otro almacen-->
                </div>
             </div>
+
+            <h3>{{ arrDeliveries === arrDeliveriesEntry ? 'Pedidos de Entrada' : 'Pedidos de Salida' }}</h3>
+
         }
     }@else{
         <p>Not found</p>
     }
-    @if(this.arrDeliveries.length >0){
+    @if(this.arrDeliveries.length > 0){
         <div>
-            <app-order-filter [productos]="this.arrDeliveries" (filteredDeliveriesChange)="filterFather($event)"></app-order-filter>
+            <app-order-filter [productos]="this.arrDeliveries || this.arrDeliveriesOutput"  (filteredDeliveriesChange)="filterFather($event)"></app-order-filter>
         </div>
+    }@else{
+        <p>Not found orders</p>
     }
     <section class="mt-5">
         <div class="table-responsive">
@@ -46,9 +51,13 @@
                         @for(order of this.arrDeliveries; track [order.id_delivery]){
                             <tr>
                                 <th scope="row" [class]= "userLogin === 'operator' ? 'text-primary' : 'text-manager'" class=" pointer" [routerLink]="['/dashboard','operator','order-form',order.id_delivery]">{{order.id_delivery}}</th>
-                                <td class="d-none d-md-table-cell">{{order.send_date| date: 'fullDate'}}</td>
-                                <td class="d-none d-lg-table-cell">{{order.origin_warehouse_id}}</td>
-                                <td class="d-none d-md-table-cell">{{order.destination_warehouse_id}}</td>
+                                @if(order.send_date === null){
+                                    <td class="d-none d-md-table-cell">!</td>
+                                }@else{
+                                    <td class="d-none d-md-table-cell">{{order.send_date| date: 'mediumDate'}}</td>
+                                }
+                                <td class="d-none d-lg-table-cell">{{order.origin_warehouse_name}} ({{order.origin_warehouse_locality}})</td>
+                                <td class="d-none d-md-table-cell">{{order.destination_warehouse_name}}({{order.destination_warehouse_locality}})</td>
                                 <td >{{order.plate}}</td>
                                 <td>
                                     <button class="btn btn-light">
@@ -57,17 +66,18 @@
                                             <span class="status-circle corrections d-none d-lg-table-cell"></span>
                                             <p class="td-p text-danger">{{order.status}} <i
                                                     class="fa-solid fa-circle-exclamation"></i></p>
+                                            }@else if (order.status === "delivered") {
+                                                <p class="td-p text-success">{{order.status}} <i class="fa-solid fa-check fa-lg"></i></p>
+                                                   
                                             }@else if(order.status === "in transit"|| order.status === "accepted"){
-                                            <p class="td-p text-success">{{order.status}}<i
+                                                <p class="td-p text-success">{{order.status}} <i
                                                     class="fa-solid fa-truck-fast fa-lg"></i></p>
-                                            }@else if(order.status === "ready for departure"){
+                                            }@else if(order.status === "ready for departure" ){
                                             <span class="status-circle ready d-none d-lg-table-cell"></span>
                                             <p class="td-p text-success">{{order.status}}</p>
-                                            }@else if(order.status === "pending"){
-                                            <p class="td-p text-warning">{{order.status}}</p>
-                                            } @else if(order.status === "review"){
-                                                <p class="td-p text-warning">{{order.status}}</p>
-                                       
+                                            }@else if(order.status === "pending" || order.status === "review"){
+                                            <p class="td-p orderStatusYellow">{{order.status}}</p>
+                                        
                                             }
                                         </div>
                                     </button>

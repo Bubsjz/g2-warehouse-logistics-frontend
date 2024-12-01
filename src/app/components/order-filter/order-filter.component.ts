@@ -25,12 +25,10 @@ export class OrderFilterComponent {
   @Output() filteredDeliveriesChange:EventEmitter<Delivery[]> = new EventEmitter;
 
   async ngOnInit(){
-  
-
+    console.log(this.productos)
      this.orders = this.productos;
      this.filteredDeliveries = this.orders
-     console.log(this.filteredDeliveries)
-  
+     
   }
 
 

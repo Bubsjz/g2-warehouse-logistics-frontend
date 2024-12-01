@@ -12,8 +12,8 @@ import { iUser } from '../interfaces/user.interface';
 export class LoginService {
 
  
-  //private apiUrl = 'http://localhost:3000/login';
-  private apiUrl = "https://4415-79-157-9-69.ngrok-free.app/login"
+  private apiUrl = 'http://localhost:3000/login';
+  
 
   constructor(private http: HttpClient) {}
 

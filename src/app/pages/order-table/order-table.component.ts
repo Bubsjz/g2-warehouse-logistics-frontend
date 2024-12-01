@@ -29,6 +29,8 @@ export class OrderTableComponent {
   router = inject(Router)
 
   arrDeliveries:Delivery[]=[];
+  arrDeliveriesOutput:Delivery[] =[];
+  arrDeliveriesEntry:Delivery[] =[];
   userLogin!:string
   idUser!:decodeToken
 
@@ -46,12 +48,13 @@ export class OrderTableComponent {
         
         //const response2 = await this.managerService.getManagerById(this.idUser.user_id)
         this.userLogin = this.idUser.user_role
-
-        const response1 = await this.managerService.getEntryOrders()
-        this.arrDeliveries = response1
-       
         
+        const response1 = await this.managerService.getEntryOrders()
+        this.arrDeliveriesEntry = response1
 
+        const response2 = await this.managerService.getOutputOrders()
+        this.arrDeliveriesOutput = response2
+        this.arrDeliveries = (response1 && response1.length > 0) ? response1 : response2;
 
       }else{
         //operator   
@@ -59,8 +62,8 @@ export class OrderTableComponent {
         this.userLogin = this.idUser.user_role
         const response1 =  await this.operatorService.getAllDeliveryByUser()
         this.arrDeliveries = response1
-       
-      
+        console.log(this.arrDeliveries)
+        
       }
 
       
@@ -83,13 +86,13 @@ export class OrderTableComponent {
   
 
   entryOrders() {
-   
+    
+   this.arrDeliveries = this.arrDeliveriesEntry
 
   }
 
   outputOrders() {
-   
-
+   this.arrDeliveries = this.arrDeliveriesOutput
 }
 
 }

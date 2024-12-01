@@ -8,8 +8,8 @@ import { Delivery } from '../interfaces/delivery.interface';
   providedIn: 'root'
 })
 export class ManagerService {
-  //private baseUrl: string = "http://localhost:3000/manager"
-  private baseUrl: string = 'https://4415-79-157-9-69.ngrok-free.ap/manager'
+  private baseUrl: string = "http://localhost:3000/manager"
+ 
   private httpClient = inject(HttpClient)
 
   getManagerById(id:number){
