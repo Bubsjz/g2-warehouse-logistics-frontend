@@ -1,5 +1,5 @@
 export interface Delivery {
-  /* solo para json-server */ id?: number;  
+  /* solo para json-server id?: number; */
     id_delivery?: number;
     send_date: Date | null;
     received_date: Date | null;
@@ -8,7 +8,7 @@ export interface Delivery {
     truck_id_truck: number | null;
     comments: string;
     products: { product_id: number; quantity: number }[];
-    status: 'pending' | 'review' | 'correction needed' | 'ready for departure' | 'in transit' | 'pending reception' | 'accepted' | 'send back';
+    status: 'pending' | 'under review' | 'corrections needed' | 'ready for departure' | 'in transit' | 'pending reception' | 'approved' | 'not approved';
   }
   
   export interface Warehouse {

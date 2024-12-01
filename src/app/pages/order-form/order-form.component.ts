@@ -8,7 +8,7 @@
   import dayjs from 'dayjs';
 
   // Importaciones del proyecto
-  import { DeliveryService } from '../../services/order.services'; // Servicio para gestionar entregas
+  import { DeliveryService } from '../../services/order.service'; // Servicio para gestionar entregas
   import { Delivery, Warehouse, Truck, Product } from '../../interfaces/order.interfaces'; // Interfaces para modelar los datos principales
   
   @Component({
@@ -179,8 +179,8 @@
 
         //Comprueba las condiciones de editabilidad
           checkIfEditable(): void {
-            const editableStatuses = ['pending', 'correction needed'];
-            const reviewStatuses = ['review', 'pending reception'];
+            const editableStatuses = ['pending', 'corrections needed'];
+            const reviewStatuses = ['under review', 'pending reception'];
           
             // Control de editabilidad general (modo edit y estados permitidos)
             this.isEditable = this.mode === 'edit' && editableStatuses.includes(this.delivery.status);
@@ -192,7 +192,7 @@
           
             // Campo de comentarios (editable solo en ciertos casos en modo review)
             if (this.mode === 'edit') {
-              this.isCommentEditable = this.delivery.status === 'correction needed';
+              this.isCommentEditable = this.delivery.status === 'corrections needed';
             } else if (this.mode === 'review') {
               this.isCommentEditable = reviewStatuses.includes(this.delivery.status);
             } else {
@@ -211,7 +211,7 @@
               comments: data?.comments ?? '',
               status: data?.status ?? 'pending',
               products: data?.products ?? [],
-              id: data?.id ?? undefined,
+                      /*De json-server id: data?.id ?? undefined, */
               id_delivery: data?.id_delivery ?? undefined,
             };
           }
@@ -303,7 +303,7 @@
 
         //Guarda un pedido con el status 'review'
           async saveDelivery(): Promise<void> {
-            await this.saveDeliveryByStatus('review'); // Cambia el status a 'review'
+            await this.saveDeliveryByStatus('under review'); // Cambia el status a 'review'
           }
 
         //Guarda un pedido con un status específico
@@ -317,7 +317,7 @@
                 alert(status === 'pending' ? 'Draft saved successfully!' : 'Order created successfully!');
               } else if (this.mode === 'edit') {
                 await firstValueFrom(this.deliveryService.updateDelivery(this.delivery.id_delivery!, deliveryPayload));
-                alert(status === 'review' ? 'Order updated successfully!' : 'Draft updated successfully!');
+                alert(status === 'under review' ? 'Order updated successfully!' : 'Draft updated successfully!');
               }
               this.router.navigate(['/operator/order-list']);
             } catch (error) {
@@ -333,7 +333,7 @@
               return;
             }
           
-            const newStatus = this.delivery.status === 'review' ? 'correction needed' : 'send back';
+            const newStatus = this.delivery.status === 'under review' ? 'corrections needed' : 'not approved';
           
             try {
               // Reutiliza `updateDeliveryStatus` para actualizar el estado y comentarios
@@ -348,7 +348,7 @@
       
         //Aprobación de envíos en modo review
           async approveDelivery(): Promise<void> {
-            const newStatus = this.delivery.status === 'review' ? 'ready for departure' : 'accepted';
+            const newStatus = this.delivery.status === 'under review' ? 'ready for departure' : 'approved';
             console.log(newStatus);
             await this.updateDeliveryStatus(newStatus);
           }
