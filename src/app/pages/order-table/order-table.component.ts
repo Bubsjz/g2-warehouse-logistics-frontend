@@ -1,15 +1,19 @@
 import { Component, inject } from "@angular/core";
 import { OrderFilterComponent } from "../../components/order-filter/order-filter.component";
-import { Delivery } from "../../interfaces/deliveri.interface";
-import { UserService } from "../../services/user.service";
-import { User } from "../../interfaces/user.interface";
+import { Delivery } from "../../interfaces/delivery.interface";
 import { NewOrderBtnComponent } from "../../components/new-order-btn/new-order-btn.component";
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { DatePipe } from "@angular/common";
-import { Warehouse } from "../../interfaces/warehouser.interface";
-import { WarehouseService } from "../../services/warehouse.service";
+import { OperatorService } from "../../services/operator.service";
+import {jwtDecode} from 'jwt-decode';
+import { ManagerService } from "../../services/manager.service";
 
-
+type decodeToken = {
+  user_id: number;
+  user_role: string;
+  iat: number;
+  exp: number;
+}
 
 @Component({
   selector: 'app-order-table',
@@ -20,44 +24,75 @@ import { WarehouseService } from "../../services/warehouse.service";
 })
 export class OrderTableComponent {
 
-  userService = inject(UserService);
-  warehouseService = inject(WarehouseService);
+  operatorService = inject(OperatorService)
+  managerService = inject(ManagerService)
+  router = inject(Router)
 
-  loginUser!: any
-  w!: Warehouse
-  numberWarehouse!: number
-  DeliveriesWarehouse: Delivery[] = [];
-  
+  arrDeliveries:Delivery[]=[];
+  arrDeliveriesOutput:Delivery[] =[];
+  arrDeliveriesEntry:Delivery[] =[];
+  userLogin!:string
+  idUser!:decodeToken
+
 
   async ngOnInit() {
+    
+    // manager 
+    const token = localStorage.getItem('authToken')
+    if(token){
+      const decoded = jwtDecode(token) as decodeToken
+      this.idUser = decoded
+     
 
-    try {
-     const [response] = await this.userService.getById(9); // este es el usuario logado 
-      this.loginUser = response
-      this.numberWarehouse = this.loginUser.asigned_id_warehouse // este es el id del warehouse
-     const [res] = await this.warehouseService.getbyId(this.numberWarehouse) // este es el almacen con todos los pedidos
-      this.w = res
-      this.DeliveriesWarehouse = this.w.deliveries
-    } catch (error) {
-      console.log(error)
+      if(this.idUser.user_role === "manager"){
+        
+        //const response2 = await this.managerService.getManagerById(this.idUser.user_id)
+        this.userLogin = this.idUser.user_role
+        
+        const response1 = await this.managerService.getEntryOrders()
+        this.arrDeliveriesEntry = response1
+
+        const response2 = await this.managerService.getOutputOrders()
+        this.arrDeliveriesOutput = response2
+        this.arrDeliveries = (response1 && response1.length > 0) ? response1 : response2;
+
+      }else{
+        //operator   
+        //const response2 = await this.operatorService.getUserById(this.idUser.user_id)
+        this.userLogin = this.idUser.user_role
+        const response1 =  await this.operatorService.getAllDeliveryByUser()
+        this.arrDeliveries = response1
+        console.log(this.arrDeliveries)
+        
+      }
+
+      
+      
+    }else{
+      alert('Token is missing')
+      this.router.navigateByUrl('/login')
     }
   }
+    
 
-  filterFather(event: Delivery[]) {
-  this.DeliveriesWarehouse = event
+
+  filterFather(event:Delivery[]) {
+    if(event.length <= 0 ){
+      alert('no products')
+    }else{
+      this.arrDeliveries = event
+    }
   }
   
 
   entryOrders() {
-    const pedidosEntrada = this.w.deliveries.filter(deliveries => deliveries.origin_warehouse.name !== this.w.name)
-    this.DeliveriesWarehouse = pedidosEntrada
+    
+   this.arrDeliveries = this.arrDeliveriesEntry
 
   }
 
   outputOrders() {
-    const pedidosSalida = this.w.deliveries.filter(deliveries => deliveries.origin_warehouse.name === this.w.name)
-    this.DeliveriesWarehouse = pedidosSalida
-  }
-
+   this.arrDeliveries = this.arrDeliveriesOutput
+}
 
 }

@@ -46,9 +46,9 @@ export class LoginComponent {
   token: string = '';
 
   rolRedirectMap: Record<iUser['role'], string> = {
-    'boss': '/dashboard/boss/warehouse-info',
-    'manager': '/dashboard/manager/order-list',
-    'driver': '/dashboard/operator/order-list',
+    'boss': '/boss/warehouse-info',
+    'manager': '/manager/order-list',
+    'operator': '/operator/order-list',
   };
 
   constructor(private loginService: LoginService, private router: Router) {}

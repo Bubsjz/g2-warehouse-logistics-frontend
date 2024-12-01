@@ -18,7 +18,7 @@ thead tr th{
 
 /* Para el driver/operario color de cabecera*/
 
-table.table.table-hover > thead.driver > tr > th {
+table.table.table-hover > thead.operator > tr > th {
   background-color: #026dde ; /* Fondo azul */
   color: white ; /* Texto blanco */
   text-align: center ;
@@ -96,6 +96,12 @@ td button {
   .ready {
     background-color: #5cb85c; /* Color verde más vivo (Ready) */
     animation: pulse 2s infinite; /* Añade la animación */
+
+  }
+
+  .orderStatusYellow{
+
+    color: rgba(188, 158, 4, 0.888)
 
   }
 
