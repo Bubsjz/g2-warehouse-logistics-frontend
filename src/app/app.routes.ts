@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { DashboardoperatorComponent } from './pages/dashboardoperator/dashboardoperator.component';
 import { OrderTableComponent } from './pages/order-table/order-table.component';
 import { OrderFormComponent } from './pages/order-form/order-form.component';

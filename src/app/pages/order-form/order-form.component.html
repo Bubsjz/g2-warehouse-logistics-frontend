@@ -1,148 +1,250 @@
-<section class="container">
+<section class="container mt-4">
   <div class="card shadow-lg p-4">
-    <h3 class="text-center my-4">Insert a order</h3>
+    <h3 class="text-center my-4">
+      {{ mode === 'create' ? 'Create Order' : mode === 'edit' ? 'Edit Order' : 'Review Order' }}
+    </h3>
     <hr />
-    <form>
+    <form (ngSubmit)="mode === 'review' ? submitReview() : saveDelivery()" #orderForm="ngForm">
+      <!-- Mostrar mensaje de error -->
+      <div *ngIf="submitted && errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Fecha de envío -->
       <div class="my-3">
-        <label class="form-label" for="send-date">Send date</label>
+        <label class="form-label" for="send-date">Send Date</label>
         <input
           class="form-control rounded-pill"
           type="date"
           id="send-date"
-          formControlName="send-date"
-          placeholder="Enter the send date"
+          [ngModel]="delivery.send_date ? formatDateForInput(delivery.send_date) : ''"
+          (ngModelChange)="onDateChange('send_date', $event)"
+          name="send_date"
+          [disabled]="!isEditable"
+          required
         />
+        <div *ngIf="submitted && !delivery.send_date" class="text-danger">
+          Send date is required.
+        </div>
       </div>
+
+      <!-- Fecha de recepción -->
       <div class="my-3">
-        <label class="form-label" for="received-date">Received date</label>
+        <label class="form-label" for="received-date">Received Date</label>
         <input
           class="form-control rounded-pill"
           type="date"
           id="received-date"
-          formControlName="received-date"
-          placeholder="Enter the received date"
+          [ngModel]="delivery.received_date ? formatDateForInput(delivery.received_date) : ''"
+          (ngModelChange)="onDateChange('received_date', $event)"
+          name="received_date"
+          [disabled]="!isEditable"
+          required
         />
+        <div *ngIf="submitted && !delivery.received_date" class="text-danger">
+          Received date is required.
+        </div>
       </div>
+
+      <!-- Almacén de origen -->
       <div class="my-3">
-        <label class="form-label" for="truck-id">Truck license plate</label>
-        <input
-          class="form-control rounded-pill"
-          type="text"
-          id="truck-id"
-          formControlName="truck-id"
-          placeholder="Enter the truck license plate"
-        />
-      </div>
-      <div class="my-3">
-        <label class="form-label" for="origin">Origin</label>
+        <label class="form-label" for="origin">Origin Warehouse</label>
         <select
           class="form-select rounded-pill"
           id="origin"
-          formControlName="origin"
+          [(ngModel)]="delivery.origin_warehouse_id"
+          name="origin_warehouse_id"
+          [disabled]="!isEditable"
+          required
         >
-          <option value="">Select the origin</option>
-          <option value="warehouse A">Warehouse A</option>
-          <option value="warehouse B">Warehouse B</option>
-          <option value="warehouse C">Warehouse C</option>
+          <option [ngValue]="null" disabled>Select the origin warehouse</option>
+          <option *ngFor="let warehouse of warehouses" [value]="warehouse.id_warehouse">
+            {{ warehouse.name }}
+          </option>
         </select>
+        <div *ngIf="orderForm.submitted && !orderForm.controls['origin_warehouse_id']?.valid" class="text-danger">
+          Origin warehouse is required.
+        </div>
       </div>
+
+      <!-- Almacén de destino -->
       <div class="my-3">
-        <label class="form-label" for="destination">Destination</label>
+        <label class="form-label" for="destination">Destination Warehouse</label>
         <select
           class="form-select rounded-pill"
           id="destination"
-          formControlName="destination"
+          [(ngModel)]="delivery.destination_warehouse_id"
+          name="destination_warehouse_id"
+          [disabled]="!isEditable"
+          required
         >
-          <option value="">Select the destination</option>
-          <option value="warehouse A">Warehouse A</option>
-          <option value="warehouse B">Warehouse B</option>
-          <option value="warehouse C">Warehouse C</option>
+          <option [ngValue]="null" disabled>Select the destination warehouse</option>
+          <option *ngFor="let warehouse of warehouses" [value]="warehouse.id_warehouse">
+            {{ warehouse.name }}
+          </option>
         </select>
+        <div *ngIf="orderForm.submitted && !orderForm.controls['destination_warehouse_id']?.valid" class="text-danger">
+          Destination warehouse is required.
+        </div>
       </div>
+
+      <!-- Matrícula del camión -->
       <div class="my-3">
-        <label class="form-label" for="status-sending">Status sending</label>
+        <label class="form-label" for="truck">Truck License Plate</label>
         <select
           class="form-select rounded-pill"
-          id="status-sending"
-          formControlName="status-sending"
+          id="truck"
+          [(ngModel)]="delivery.truck_id_truck"
+          name="truck_id_truck"
+          [disabled]="!isEditable"
+          required
         >
-          <option value="">Select a status sending</option>
-          <option value="pending">Pending</option>
-          <option value="review">Review</option>
-          <option value="correction-needed">Correction needed</option>
-          <option value="ready-departure">Ready departure</option>
-          <option value="in-transit">In transit</option>
-          <option value="delivered">Delivered</option>
+          <option [ngValue]="null" disabled>Select the truck</option>
+          <option *ngFor="let truck of trucks" [value]="truck.id_truck">
+            {{ truck.plate }}
+          </option>
         </select>
+        <div *ngIf="orderForm.submitted && !orderForm.controls['truck_id_truck']?.valid" class="text-danger">
+          Truck is required.
+        </div>
       </div>
-      <div class="my-3">
-        <label class="form-label" for="status-reception"
-          >Status reception</label
-        >
+
+      <!-- Productos -->
+        <p class="fw-bold mt-4">Order Details</p>
+        <div *ngFor="let detail of orderDetails; let i = index" class="my-3 d-flex align-items-center gap-3">
+        <!-- Selector de tipo de producto -->
         <select
-          class="form-select rounded-pill"
-          id="status-reception"
-          formControlName="status-reception"
+          class="form-select rounded-pill w-50"
+          [(ngModel)]="detail.product_id"
+          name="product-{{ i }}"
+          [ngModelOptions]="{ standalone: true }"
+          [disabled]="!isEditable"
+          (change)="detail.touched = true"
+          required
         >
-          <option value="">Select a status reception</option>
-          <option value="arriving">Arriving</option>
-          <option value="arrived">Arrived</option>
-          <option value="review">Review</option>
-          <option value="send-back">Send back</option>
-          <option value="accepted">Accepted</option>
+          <option [ngValue]="null" disabled>Select a product</option>
+          <option *ngFor="let product of products" [value]="product.id_product">
+            {{ product.name }}
+          </option>
         </select>
-      </div>
-      <p class="fw-bold mt-4">Order Details Information</p>
-      <div class="my-3">
-        <label class="product" for="product">Product</label>
-        <select
-          class="form-select rounded-pill"
-          id="product"
-          formControlName="product"
-        >
-          <option value="">Select the product</option>
-          <option value="fruit">Fruit</option>
-          <option value="vegetable">Vegetable</option>
-          <option value="dairy-product">Dairy product</option>
-          <option value="meat">Meat</option>
-          <option value="fish">Fish</option>
-        </select>
-      </div>
-      <div class="my-3">
-        <label class="form-label" for="quantity">Quantity</label>
+        <!-- Validación -->
+        <div *ngIf="detail.touched && !detail.product_id" class="text-danger">
+          Product is required.
+        </div>
+
+        <!-- Campo de cantidad -->
         <input
-          class="form-control rounded-pill"
           type="number"
-          id="quantity"
-          formControlName="quantity"
-          placeholder="Enter the quantity in kg"
-          min="0"
-          step="0.1"
+          class="form-control rounded-pill w-25"
+          placeholder="Quantity"
+          [(ngModel)]="detail.quantity"
+          name="quantity-{{ i }}"
+          [ngModelOptions]="{ standalone: true }"
+          [disabled]="!isEditable"
+          min="1"
+          (blur)="detail.touched = true"
+          required
         />
+        <!-- Validación -->
+        <div *ngIf="detail.touched && (!detail.quantity || detail.quantity <= 0)" class="text-danger">
+          Quantity must be greater than 0.
+        </div>
+
+        <!-- Botón para eliminar producto -->
+        <button type="button" class="btn btn-danger" *ngIf="isEditable" (click)="removeProduct(i)">
+          &minus;
+        </button>
       </div>
-      <hr />
+
+      <!-- Botón para agregar nuevos productos -->
       <div class="my-3">
-        <label class="form-label" for="comments">Comments</label>
-        <input
-          class="form-control rounded-pill"
-          type="text"
-          id="comments"
-          formControlName="comments"
-          placeholder="Add a comment"
-        />
+        <button type="button" class="btn btn-primary rounded-pill" *ngIf="isEditable" (click)="addProduct()">
+          + Add Product
+        </button>
       </div>
-      <div class="d-flex justify-content-center gap-2 my-3">
-        <input
-          type="submit"
-          value="Create"
-          class="btn btn-success rounded-pill btn-size"
-        />
-        <input
-          type="submit"
-          value="Back to home"
-          class="btn btn-danger rounded-pill btn-size"
-        />
+
+      <!-- Sección de comentarios solo visible en modo edit y review -->
+      <div class="my-3" *ngIf="mode !== 'create' && (delivery.status !== 'pending' || mode === 'review')">
+        <label class="form-label" for="comments">Comments</label>
+        <textarea
+          class="form-control"
+          id="comments"
+          [(ngModel)]="delivery.comments"
+          name="comments"
+          [disabled]="!isCommentEditable"
+          placeholder="No comments"
+          rows="3"
+        ></textarea>
+      </div>
+
+      <!-- Botones -->
+      <div class="d-flex justify-content-center gap-2 my-4">
+        <!-- Botones en modo create -->
+        <ng-container *ngIf="mode === 'create' && areButtonsEnabled">
+          <button
+            type="button"
+            class="btn btn-warning rounded-pill"
+            (click)="saveAsDraft()"
+          >
+            Save as draft
+          </button>
+          <button
+            type="submit"
+            class="btn btn-success rounded-pill"
+            [disabled]="!validateForm()"
+          >
+            Create Order
+          </button>
+        </ng-container>
+      
+        <!-- Botones en modo edit -->
+        <ng-container *ngIf="mode === 'edit' && areButtonsEnabled">
+          <button
+            type="submit"
+            class="btn btn-success rounded-pill"
+            [disabled]="!validateForm()"
+          >
+            Create Order
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger rounded-pill"
+            (click)="deleteDelivery()"
+          >
+            Delete Order
+          </button>
+        </ng-container>
+      
+        <!-- Botones en modo review -->
+        <ng-container *ngIf="mode === 'review' && areButtonsEnabled">
+          <button
+            class="btn btn-danger rounded-pill"
+            type="button"
+            (click)="submitReview()"
+            [disabled]="!isCommentEditable || !delivery.comments || delivery.comments.trim() === ''"
+          >
+            Send Comments
+          </button>
+          <button
+            class="btn btn-success rounded-pill"
+            type="button"
+            (click)="approveDelivery()"
+          >
+            Approve
+          </button>
+        </ng-container>
+      
+        <!-- Botón "Back" (siempre visible) -->
+        <button
+          type="button"
+          class="btn btn-dark rounded-pill"
+          (click)="cancel()"
+        >
+          Back
+        </button>
       </div>
     </form>
   </div>
 </section>
+
+
