@@ -8,8 +8,8 @@
   import dayjs from 'dayjs';
 
   // Importaciones del proyecto
-  import { DeliveryService } from '../../services/order.service'; // Servicio para gestionar entregas
-  import { Delivery, Warehouse, Truck, Product } from '../../interfaces/order.interfaces'; // Interfaces para modelar los datos principales
+  import { DeliveryService } from '../../services/order.service';
+  import { Delivery, Warehouse, Truck, Product } from '../../interfaces/order.interfaces';
   
   @Component({
     selector: 'app-order-form',
@@ -55,6 +55,9 @@
     isEditable: boolean = true;
     areButtonsEnabled: boolean = true;
     isCommentEditable: boolean = false;
+
+    // Variable para almacenar el rol
+    role: string = 'operator';
   
     // Constructor para inyectar dependencias
     constructor(
@@ -81,75 +84,81 @@
 
         //Determina el modo del formulario y carga los datos correspondientes
 // !!!! MODIFICAR RUTA REVIEW-ORDER PARA QUE COJA CON MODIFY-ORDER Y EL DIRECTORIO PREVIO (/MANAGER), TAMBIÉN MODIFICAR EL DIRECTORIO DEL ORDER-LIST
-          async detectMode(): Promise<void> {
-            const id = +this.route.snapshot.paramMap.get('id')!;
-            if (this.route.snapshot.url.some((segment) => segment.path === 'create-order')) {
-              this.mode = 'create';
-            } else if (this.route.snapshot.url.some((segment) => segment.path === 'modify-order')) {
-              this.mode = 'edit';
-              await this.loadDeliveryWithProducts(id);
-            } else if (this.route.snapshot.url.some((segment) => segment.path === 'review-order')) {
-              this.mode = 'review';
-              await this.loadDeliveryWithProducts(id);
-            }
+        async detectMode(): Promise<void> {
+          const id = +this.route.snapshot.paramMap.get('id')!;
+        
+          // Detectar el rol en base a la URL
+          this.role = this.route.snapshot.url[0]?.path === 'operator' ? 'operator' : 'manager';
+        
+          // Usar el rol detectado para decidir el modo
+          if (this.route.snapshot.url.some((segment) => segment.path === 'create-order')) {
+            this.mode = 'create';
+          } else if (this.route.snapshot.url.some((segment) => segment.path === 'modify-order')) {
+            this.mode = 'edit';
+            await this.loadDeliveryWithProducts(id, this.role);
+          } else if (this.route.snapshot.url.some((segment) => segment.path === 'review-order')) {
+            this.mode = 'review';
+            await this.loadDeliveryWithProducts(id, this.role);
           }
+        }
 
         //Carga los datos básicos para el funcionamiento del formulario
-          async loadInitialData(): Promise<void> {
-            try {
-              const [warehouses, trucks, products] = await Promise.all([
-                firstValueFrom(this.deliveryService.getWarehouses()),
-                firstValueFrom(this.deliveryService.getTrucks()),
-                firstValueFrom(this.deliveryService.getProducts()),
-              ]);
-          
-              this.warehouses = warehouses || [];
-              this.trucks = trucks || [];
-              this.products = products || [];
-          
-              console.log('Initial data loaded:', { warehouses, trucks, products });
-            } catch (error) {
-              this.errorMessage = 'Error loading initial data.';
+        async loadInitialData(): Promise<void> {
+          try {
+            // Obtener el rol de la URL o de algún servicio
+            const [warehouses, trucks, products] = await Promise.all([
+              firstValueFrom(this.deliveryService.getWarehouses(this.role)),
+              firstValueFrom(this.deliveryService.getTrucks(this.role)),
+              firstValueFrom(this.deliveryService.getProducts(this.role)),
+            ]);
+      
+            this.warehouses = warehouses || [];
+            this.trucks = trucks || [];
+            this.products = products || [];
+      
+            console.log('Initial data loaded:', { warehouses, trucks, products });
+          } catch (error) {
+            this.errorMessage = 'Error loading initial data.';
+            console.error(error);
+          }
+        }
+
+        //Carga los detalles del envío seleccionado (con ayuda de loadDeliveryProducts) y controla que las fechas sean de tipo Date
+        async loadDeliveryWithProducts(id: number, role: string): Promise<void> {
+          try {
+            const [rawDelivery, products] = await Promise.all([
+              firstValueFrom(this.deliveryService.getDeliveryById(id, role)),
+              firstValueFrom(this.deliveryService.getDeliveryProducts(id, role)),
+            ]);
+        
+            this.delivery = this.normalizeDeliveryFromBackend(rawDelivery);
+        
+            this.orderDetails = (products || [])
+              .filter((product) => product.delivery_id_delivery === id)
+              .map((product) => ({
+                product_id: product.product_id_product,
+                quantity: product.quantity,
+                touched: false,
+              }));
+        
+            this.checkIfEditable();
+            console.log('Delivery and products loaded:', this.delivery, this.orderDetails);
+          } catch (error: unknown) {
+            if (error && typeof error === 'object' && 'status' in error) {
+              const httpError = error as { status: number };
+              if (httpError.status === 404) {
+                alert('The delivery you are trying to access does not exist.');
+                this.router.navigate(['/operator/order-list']);
+              } else {
+                this.errorMessage = 'An error occurred while loading the delivery. Please try again later.';
+                console.error(error);
+              }
+            } else {
+              this.errorMessage = 'An unexpected error occurred.';
               console.error(error);
             }
           }
-
-        //Carga los detalles del envío seleccionado (con ayuda de loadDeliveryProducts) y controla que las fechas sean de tipo Date
-          async loadDeliveryWithProducts(id: number): Promise<void> {
-            try {
-              const [rawDelivery, products] = await Promise.all([
-                firstValueFrom(this.deliveryService.getDeliveryById(id)),
-                firstValueFrom(this.deliveryService.getDeliveryProducts()),
-              ]);
-          
-              this.delivery = this.normalizeDeliveryFromBackend(rawDelivery);
-          
-              this.orderDetails = (products || [])
-                .filter((product) => product.delivery_id_delivery === id)
-                .map((product) => ({
-                  product_id: product.product_id_product,
-                  quantity: product.quantity,
-                  touched: false,
-                }));
-          
-              this.checkIfEditable();
-              console.log('Delivery and products loaded:', this.delivery, this.orderDetails);
-            } catch (error: unknown) {
-              if (error && typeof error === 'object' && 'status' in error) {
-                const httpError = error as { status: number };
-                if (httpError.status === 404) {
-                  alert('The delivery you are trying to access does not exist.');
-                  this.router.navigate(['/operator/order-list']);
-                } else {
-                  this.errorMessage = 'An error occurred while loading the delivery. Please try again later.';
-                  console.error(error);
-                }
-              } else {
-                this.errorMessage = 'An unexpected error occurred.';
-                console.error(error);
-              }
-            }
-          }
+        }
 
 //-------------------------------
 //FUNCIONES DE PROCESAMIENTO DE DATOS
@@ -211,30 +220,10 @@
               comments: data?.comments ?? '',
               status: data?.status ?? 'pending',
               products: data?.products ?? [],
-                      /*De json-server id: data?.id ?? undefined, */
               id_delivery: data?.id_delivery ?? undefined,
             };
           }
 
-        //Normaliza los datos de un pedido para enviar al back-end
-          prepareDeliveryForBackend(data: Delivery): any {
-            return {
-              ...data,
-              send_date: data.send_date
-                ? dayjs(data.send_date).format('YYYY-MM-DD HH:mm:ss')
-                : null,
-              received_date: data.received_date
-                ? dayjs(data.received_date).format('YYYY-MM-DD HH:mm:ss')
-                : null,
-              truck_id_truck: data.truck_id_truck ?? null,
-              origin_warehouse_id: data.origin_warehouse_id ?? null,
-              destination_warehouse_id: data.destination_warehouse_id ?? null,
-              products: data.products.map((product) => ({
-                product_id: product.product_id!,
-                quantity: product.quantity,
-              })),
-            };
-          }
 
 //-------------------------------
 //VALIDACIONES
@@ -253,7 +242,7 @@
               !this.delivery.truck_id_truck // ID del camión válido
             ) {
               this.errorMessage = 'Please fill in all required fields with valid data.';
-              console.log('Form validation failed: Missing required fields.'); // Registrar error
+              console.log('Form validation failed: Missing required fields.');
               return false; // Formulario no válido
             }
           
@@ -264,7 +253,7 @@
           
             if (invalidProducts) {
               this.errorMessage = 'All products must have a valid type and quantity greater than 0.';
-              console.log('Form validation failed: Invalid products.', this.orderDetails); // Registrar error
+              console.log('Form validation failed: Invalid products.', this.orderDetails);
               return false; // Formulario no válido
             }
           
@@ -284,9 +273,8 @@
           
             // Validar los datos del formulario antes de proceder
             if (!this.validateForm()) {
-              // Mostrar un mensaje en la consola si la validación falla
               console.log('Form submission blocked due to validation errors.');
-              return; // Detener la ejecución si hay errores
+              return;
             }
           
             // Mostrar en la consola los datos que se enviarán si el formulario es válido
@@ -307,24 +295,27 @@
           }
 
         //Guarda un pedido con un status específico
-          async saveDeliveryByStatus(status: string): Promise<void> {
-            const deliveryPayload = this.prepareDeliveryPayload(status);
-            console.log('Payload to be sent:', deliveryPayload);
-          
-            try {
-              if (this.mode === 'create') {
-                await firstValueFrom(this.deliveryService.createDelivery(deliveryPayload));
-                alert(status === 'pending' ? 'Draft saved successfully!' : 'Order created successfully!');
-              } else if (this.mode === 'edit') {
-                await firstValueFrom(this.deliveryService.updateDelivery(this.delivery.id_delivery!, deliveryPayload));
-                alert(status === 'under review' ? 'Order updated successfully!' : 'Draft updated successfully!');
-              }
-              this.router.navigate(['/operator/order-list']);
-            } catch (error) {
-              this.errorMessage = `Failed to ${status === 'pending' ? 'save draft' : 'save order'}.`;
-              console.error(error);
+        async saveDeliveryByStatus(status: string): Promise<void> {
+          const deliveryPayload = this.prepareDeliveryPayload(status);
+          console.log('Payload to be sent:', deliveryPayload);
+        
+          try {
+            // Obtener el rol de la URL o de algún servicio
+            const role = this.role; // Usamos el `role` que ya está asignado
+        
+            if (this.mode === 'create') {
+              await firstValueFrom(this.deliveryService.createDelivery(deliveryPayload));
+              alert(status === 'pending' ? 'Draft saved successfully!' : 'Order created successfully!');
+            } else if (this.mode === 'edit') {
+              await firstValueFrom(this.deliveryService.updateDelivery(this.delivery.id_delivery!, deliveryPayload));
+              alert(status === 'under review' ? 'Order updated successfully!' : 'Draft updated successfully!');
             }
+            this.router.navigate(['/operator/order-list']);
+          } catch (error) {
+            this.errorMessage = `Failed to ${status === 'pending' ? 'save draft' : 'save order'}.`;
+            console.error(error);
           }
+        }
 
         //Envío de comentarios en modo review
           async submitReview(): Promise<void> {
@@ -354,28 +345,30 @@
           }
 
         //Actualiza el estado de un pedido en modo review
-          async updateDeliveryStatus(newStatus: string, comments?: string | null): Promise<void> {
-            if (!this.delivery.id_delivery) {
-              console.error('Delivery ID is missing.');
-              return;
-            }
-          
-            // Crea el payload dinámicamente, incluyendo comentarios si se proporcionan
-            const updatedDelivery = {
-              ...this.delivery,
-              status: newStatus,
-              comments: comments?.trim() || this.delivery.comments, // Prioriza comentarios pasados al método
-            };
-          
-            try {
-              await firstValueFrom(this.deliveryService.updateDelivery(this.delivery.id_delivery, updatedDelivery));
-              alert(`Delivery status updated to ${newStatus}`);
-              this.router.navigate(['/manager/order-list']);
-            } catch (error) {
-              this.errorMessage = `Failed to update delivery status to ${newStatus}.`;
-              console.error(error);
-            }
+        async updateDeliveryStatus(newStatus: "corrections needed" | "ready for departure" | "approved" | "not approved", comments?: string | null): Promise<void> {
+          if (!this.delivery.id_delivery) {
+            console.error('Delivery ID is missing.');
+            return;
           }
+        
+          // Crea el payload dinámicamente, incluyendo comentarios si se proporcionan
+          const updatedDelivery = {
+            ...this.delivery,
+            status: newStatus, // Se asegura de que el nuevo estado sea uno de los valores válidos
+            comments: comments?.trim() || this.delivery.comments, // Prioriza comentarios pasados al método
+          };
+        
+          try {
+            // Obtener el rol de la URL o de algún servicio
+            const role = this.role;
+            await firstValueFrom(this.deliveryService.updateDelivery(this.delivery.id_delivery, updatedDelivery));
+            alert(`Delivery status updated to ${newStatus}`);
+            this.router.navigate(['/manager/order-list']);
+          } catch (error) {
+            this.errorMessage = `Failed to update delivery status to ${newStatus}.`;
+            console.error(error);
+          }
+        }
         
         //Elimina un pedido
           deleteDelivery(): void {
@@ -391,12 +384,11 @@
             // Llama al servicio para borrar el envío
             this.deliveryService.deleteDelivery(this.delivery.id_delivery!).subscribe({
               next: () => {
-                // Notificación de éxito y redirección
                 alert('Order deleted successfully!');
                 this.router.navigate(['/operator/order-list']);
               },
               error: () => {
-                // Manejo de errores
+
                 this.errorMessage = 'Failed to delete the order. Please try again later.';
               },
             });
@@ -410,12 +402,10 @@
           addProduct(): void {
             // Inserta un nuevo producto con valores iniciales en la lista de detalles
             this.orderDetails.push({ 
-              product_id: null,  // Producto no seleccionado inicialmente
-              quantity: 0,       // Cantidad inicial en 0
-              touched: false,    // Marcado como no interactuado
+              product_id: null,
+              quantity: 0,
+              touched: false,
             });
-            
-            // Consola para verificar el estado actual de los detalles del pedido
             console.log('Product added. Current details:', this.orderDetails);
           }
         
@@ -423,9 +413,7 @@
           removeProduct(index: number): void {
             // Verificar si hay más de un producto en la lista
             if (this.orderDetails.length > 1) {
-              // Eliminar el producto en el índice proporcionado
               this.orderDetails.splice(index, 1);
-              // Consola para verificar el estado actual de los detalles del pedido
               console.log('Product removed. Current details:', this.orderDetails);
             } else {
               // Mostrar alerta si el usuario intenta eliminar el último producto
@@ -456,9 +444,8 @@
 // NAVEGACIÓN
 //-------------------------------
 
-        //Acción de salida sin enviar el formulario
+        //Salida sin enviar el formulario
           cancel(): void {
-            // Navega a la ruta relativa '../order-list' desde la ruta actual
             this.router.navigate(['../order-list'], { relativeTo: this.route });
           }
 
