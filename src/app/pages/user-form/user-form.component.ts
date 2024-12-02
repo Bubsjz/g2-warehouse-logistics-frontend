@@ -65,7 +65,7 @@ export class UserFormComponent {
           password: new FormControl(res[0].password, [Validators.required]),
           repeatpassword: new FormControl(res[0].password, [Validators.required]),
           role: new FormControl(res[0].role),
-          warehouse: new FormControl(res2[0].name),
+          warehouse: new FormControl(res2.name),
         }, [this.checkPassword])
       }
     })

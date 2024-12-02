@@ -94,7 +94,7 @@
           id="warehouse"
           formControlName="warehouse">
           <option value="" selected>Select a warehouse</option>
-          @for(warehouse of warehouses; track warehouse.id) {
+          @for(warehouse of warehouses; track warehouse.id_warehouse) {
             <option [value]="warehouse.name">{{warehouse.name}}</option>
 
           }
