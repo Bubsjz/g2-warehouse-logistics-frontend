@@ -23,7 +23,7 @@
     }
     @if(this.arrDeliveries.length > 0){
         <div>
-            <app-order-filter [productos]="this.arrDeliveries || this.arrDeliveriesOutput"  (filteredDeliveriesChange)="filterFather($event)"></app-order-filter>
+            <app-order-filter [productos]="this.arrDeliveries "  (filteredDeliveriesChange)="filterFather($event)"></app-order-filter>
         </div>
     }@else{
         <p>Not found orders</p>
@@ -52,7 +52,7 @@
                             <tr>
                                 <th scope="row" [class]= "userLogin === 'operator' ? 'text-primary' : 'text-manager'" class=" pointer" [routerLink]="['/dashboard','operator','order-form',order.id_delivery]">{{order.id_delivery}}</th>
                                 @if(order.send_date === null){
-                                    <td class="d-none d-md-table-cell">!</td>
+                                    <td class="d-none d-md-table-cell">-</td>
                                 }@else{
                                     <td class="d-none d-md-table-cell">{{order.send_date| date: 'mediumDate'}}</td>
                                 }
@@ -75,7 +75,7 @@
                                             }@else if(order.status === "ready for departure" ){
                                             <span class="status-circle ready d-none d-lg-table-cell"></span>
                                             <p class="td-p text-success">{{order.status}}</p>
-                                            }@else if(order.status === "pending" || order.status === "review"){
+                                            }@else if(order.status === "pending" || order.status === "review" || order.status === "pending reception"){
                                             <p class="td-p orderStatusYellow">{{order.status}}</p>
                                         
                                             }

@@ -37,13 +37,13 @@ export class OrderTableComponent {
 
   async ngOnInit() {
     
-    // manager 
+    
     const token = localStorage.getItem('authToken')
     if(token){
       const decoded = jwtDecode(token) as decodeToken
       this.idUser = decoded
      
-
+    // manager 
       if(this.idUser.user_role === "manager"){
         
         //const response2 = await this.managerService.getManagerById(this.idUser.user_id)
@@ -54,7 +54,8 @@ export class OrderTableComponent {
 
         const response2 = await this.managerService.getOutputOrders()
         this.arrDeliveriesOutput = response2
-        this.arrDeliveries = (response1 && response1.length > 0) ? response1 : response2;
+        
+        this.arrDeliveries = (response1 && response1.length > 0) ? this.arrDeliveriesEntry : this.arrDeliveriesOutput;
 
       }else{
         //operator   

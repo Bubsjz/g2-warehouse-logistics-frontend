@@ -3,16 +3,17 @@
     <p class="h1 fw-bold pb-3 pt-2">Rountravel Logistics</p>
     <div class="d-flex justify-content-center">
       <div class="bg-white bg-opacity-75 rounded w-50 pt-2">
-        <p class="text-dark fw-bold">Welcome {{userRol}} {{userName}}</p>
+        <h4 class="text-dark fw-bold">  Welcome back, {{userName}} {{userSurname}} ({{userRol}})  </h4> 
       </div>
     </div>
   </div>
   <div class="row">
     <div class="col-auto ms-auto me-5">
-      <a type="button" class="btn btn-primary fw-bold border-white me-2 text-uppercase" href="/operator/order-list">
-        home
-      </a>
-      <a class="btn btn-danger fw-bold border-white text-uppercase" href="/login">log out</a>
+      <button class="btn btn-primary fw-bold me-2 text-uppercase" href="/operator/order-list"> home </button>
+      <button class="btn btn-danger fw-bold  text-uppercase" (click)="logOut()" [routerLink]="['/login']">
+       log out <i class="fa-solid fa-right-from-bracket fa-lg"></i>
+      </button>
+     
     </div>
   </div>
 </header>
