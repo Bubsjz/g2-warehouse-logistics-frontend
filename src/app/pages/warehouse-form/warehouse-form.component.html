@@ -43,7 +43,7 @@
             formControlName="image"
             accept="image/*"
             style="display: none"
-            onchange="document.getElementById('file-name').innerText = this.files[0] ? this.files[0].name : 'No file selected';"
+            onchange="document.getElementById('image-name').innerText = this.files[0] ? this.files[0].name : 'No image selected';"
           />
           <button
             type="button"
@@ -62,11 +62,13 @@
           class="btn btn-success rounded-pill btn-size"
         />
         <input
-          type="submit"
+          type="button"
           value="Delete"
           class="btn btn-danger rounded-pill btn-size"
+          onclick="deleteWarehouse()"
         />
       </div>
     </form>
   </div>
 </section>
+
