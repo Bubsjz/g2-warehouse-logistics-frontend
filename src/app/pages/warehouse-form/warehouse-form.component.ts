@@ -1,7 +1,6 @@
-
-import { Component, inject } from '@angular/core';
-import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import { WarehousesService } from '../../services/warehouses.service';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-warehouse-form',
@@ -11,31 +10,31 @@ import { WarehousesService } from '../../services/warehouses.service';
   styleUrls: ['./warehouse-form.component.css'],
 })
 export class WarehouseFormComponent {
-  warehouseForm: FormGroup;
+  warehouseForm: FormGroup; // Declarac de form
 
-  private warehousesService = inject(WarehousesService);
-
-  constructor() {
-    this.warehouseForm = new FormGroup({
-      name: new FormControl('', [Validators.required, Validators.minLength(3)]),
-      location: new FormControl('', [Validators.required]),
-      capacity: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]+$/)]),
+  constructor(private fb: FormBuilder) {
+    // Inicialización del form
+    this.warehouseForm = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      locality: ['', Validators.required],
+      address: ['', Validators.required],
+      image: [null],
     });
   }
 
-  checkControl(controlName: string, errorType: string): boolean {
-    const control = this.warehouseForm.get(controlName);
-    return control ? control.hasError(errorType) && control.touched : false;
-  }
-
+  // Manejo del envío del form
   onSubmit(): void {
     if (this.warehouseForm.valid) {
-      this.warehousesService.createWarehouse(this.warehouseForm.value).subscribe({
-        next: (response) => console.log('Warehouse created:', response),
-        error: (err) => console.error('Error creating warehouse:', err),
-      });
+      console.log('Form Submitted:', this.warehouseForm.value);
+      alert('Warehouse successfully created!');
     } else {
-      this.warehouseForm.markAllAsTouched();
+      alert('Please fill all required fields correctly.');
     }
+  }
+
+  // Método para limpiar form
+  deleteWarehouse(): void {
+    this.warehouseForm.reset();
+    alert('Form has been cleared.');
   }
 }
