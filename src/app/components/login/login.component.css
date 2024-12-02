@@ -86,7 +86,7 @@ h2 {
   padding-left: 45px;
 }
 
-.password-container ::before {
+.password-container::before {
   content: "\f023";
   font-family: "Font Awesome 5 Free";
   font-weight: 600;
@@ -99,17 +99,20 @@ h2 {
   color: rgb(128, 128, 128);
 }
 
-.password-container ::after {
-  content: "\f06e";
-  font-family: "Font Awesome 5 Free";
-  font-weight: 600;
+.toggle-eye {
   position: absolute;
   right: 50px;
   top: 57%;
   transform: translateY(-50%);
+  font-family: "Font Awesome 5 Free";
+  font-weight: 600;
   font-size: 18px;
-  pointer-events: none; /*para que no interfiera con el input */
+  cursor: pointer;
   color: rgb(128, 128, 128);
+}
+
+.toggle-eye.fas {
+  color: rgb(61, 60, 60);
 }
 
 .label-text{

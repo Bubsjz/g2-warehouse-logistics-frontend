@@ -41,6 +41,7 @@ export class LoginComponent {
   token: string = '';
   errorBoolean:boolean =false
   errormsg!:string
+  isPasswordVisible = false
 
   rolRedirectMap: Record<iUser['role'], string> = {
     'boss': '/boss/warehouse-info',
@@ -66,6 +67,7 @@ export class LoginComponent {
   } */
 
     ngOnInit(){
+      localStorage.removeItem('authToken')
       this.route.queryParams.subscribe((params:any) => {
         if(params.status === '1'){
           this.errorBoolean = true
@@ -98,6 +100,10 @@ onSubmit() {
      
     }
   });
+}
+
+togglePasswordVisibility() {
+  this.isPasswordVisible = !this.isPasswordVisible;
 }
 
 }
