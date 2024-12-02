@@ -33,6 +33,9 @@ export class OrderTableComponent {
   arrDeliveriesEntry:Delivery[] =[];
   userLogin!:string
   idUser!:decodeToken
+  originWarehouseName!:string;
+  originWarehouseLocality!:String;
+  isSelected:string= 'entry'
 
 
   async ngOnInit() {
@@ -50,12 +53,15 @@ export class OrderTableComponent {
         this.userLogin = this.idUser.user_role
         
         const response1 = await this.managerService.getEntryOrders()
+        this.originWarehouseName = response1[0].destination_warehouse_name
+        this.originWarehouseLocality =  response1[0].destination_warehouse_locality
         this.arrDeliveriesEntry = response1
 
         const response2 = await this.managerService.getOutputOrders()
         this.arrDeliveriesOutput = response2
         
         this.arrDeliveries = (response1 && response1.length > 0) ? this.arrDeliveriesEntry : this.arrDeliveriesOutput;
+        
 
       }else{
         //operator   
@@ -86,13 +92,14 @@ export class OrderTableComponent {
   }
   
 
-  entryOrders() {
-    
+  entryOrders(entry:string) {
+    this.isSelected = entry;
    this.arrDeliveries = this.arrDeliveriesEntry
 
   }
 
-  outputOrders() {
+  outputOrders(output:string) {
+    this.isSelected = output;
    this.arrDeliveries = this.arrDeliveriesOutput
 }
 

@@ -7,26 +7,26 @@
         }@else if(userLogin === "manager"){ 
             <div class="d-flex flex-row justify-content-center gap-5 mb-4 p-5">
                 <div class="w-25" >
-                   <button class="btn btnreview2 w-100 " style="height: 80px;" (click)="entryOrders()">View entry orders</button> <!-- ver pedidos de entrada. origin es otro almacen, entrada es el almacen del usuario -->
+                   <button class="btn btnreview2 w-100  " [class.active]='isSelected ==="entry" ' style="height: 80px;" (click)="entryOrders('entry')">View entry orders</button> <!-- ver pedidos de entrada. origin es otro almacen, entrada es el almacen del usuario -->
     
                 </div>
                <div class="w-25 ">
-                   <button class=" btn btnreview2 w-100 " style="height: 80px;" (click)="outputOrders()">View output orders</button> <!-- ver pedidos de salida. origin es el almacen del usuario, salida es otro almacen-->
+                   <button class=" btn btnreview2 w-100 " [class.active]='isSelected ==="output" ' style="height: 80px;" (click)="outputOrders('output')">View output orders</button> <!-- ver pedidos de salida. origin es el almacen del usuario, salida es otro almacen-->
                </div>
             </div>
+            @if(this.isSelected === 'entry'){
+                <h4>My Warehouse : <strong>{{originWarehouseName}}({{this.originWarehouseLocality}})</strong></h4>
 
-            <h3>{{ arrDeliveries === arrDeliveriesEntry ? 'Pedidos de Entrada' : 'Pedidos de Salida' }}</h3>
+            }
 
         }
     }@else{
         <p>Not found</p>
     }
-    @if(this.arrDeliveries.length > 0){
+    @if(this.arrDeliveries.length > 0 && this.userLogin === 'operator'){
         <div>
             <app-order-filter [productos]="this.arrDeliveries "  (filteredDeliveriesChange)="filterFather($event)"></app-order-filter>
         </div>
-    }@else{
-        <p>Not found orders</p>
     }
     <section class="mt-5">
         <div class="table-responsive">
