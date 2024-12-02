@@ -1,8 +1,15 @@
 export interface Iwarehouse {
-    id: number;
+    id_warehouse: number;
     name: string;
     locality: string;
     address: string;
-    email: string;
     image: string;
 }
+// export interface Iwarehouse {
+//     id: number;
+//     name: string;
+//     locality: string;
+//     address: string;
+//     email: string;
+//     image: string;
+// }

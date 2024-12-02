@@ -28,6 +28,7 @@ export class WarehouseCardComponent {
   async ngOnInit() {
 
     const res = await this.warehouseServices.getById(this.warehouse_id)
+    console.log(res)
     this.warehouse = res[0]
 
     const res2 = await this.userServices.getByWarehouseId(this.warehouse_id)
