@@ -13,14 +13,14 @@
         </thead>
         <tbody>
 
-            @for(employee of employees; track employee.id){
+            @for(employee of employees; track employee.id_user){
                 <tr>
                     <th scope="row" class="pointer"><strong class="text-info pointer ">{{ employee.name }}</strong></th>
                     <td class="d-none d-sm-table-cell">{{ employee.surname }}</td>
                     <td>{{ employee.role }}</td>
                     <td class="d-none d-sm-table-cell"><a [href]="'mailto:' + employee.email">{{ employee.email }}</a></td>
                     <td>
-                        <a class="btn btn-outline-info" [routerLink]="['/boss', 'update-employee', employee?.id]">
+                        <a class="btn btn-outline-info" [routerLink]="['/boss', 'update-employee', employee?.id_user]">
                             <i class="fa-regular fa-pen-to-square fa-xl" style="color: #060606"></i>
                         </a>
                     </td>

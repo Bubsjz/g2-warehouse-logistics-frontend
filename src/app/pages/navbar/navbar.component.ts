@@ -19,7 +19,6 @@ export class NavbarComponent {
   async ngOnInit() {
     try {
       const res = await this.warehouseServices.getAll();
-      console.log(res)
       this.warehouses = res
     } catch (error) {
       console.log(error)
