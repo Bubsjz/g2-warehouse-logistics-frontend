@@ -10,21 +10,22 @@ import { WarehouseViewComponent } from './pages/warehouse-view/warehouse-view.co
 import { NavbarComponent } from './pages/navbar/navbar.component';
 import { UserFormComponent } from './pages/user-form/user-form.component';
 import { EmployeeViewComponent } from './pages/employee-view/employee-view.component';
+import { loginGuard } from './guards/login.guard';
 
 
 export const routes: Routes = [
     {path:'', pathMatch:'full', redirectTo:'login'},
     {path:'login', component:LoginComponent},
-    {path:'operator',component:DashboardoperatorComponent,children:[
+    {path:'operator',component:DashboardoperatorComponent,canActivate:[loginGuard],children:[
             {path:'order-list',component:OrderTableComponent},
             {path:'create-order',component:OrderFormComponent},
             {path:'modify-order/:id',component:OrderFormComponent},
         ]},
-    {path:'manager',component:DashboardmanagerComponent,children:[
+    {path:'manager',component:DashboardmanagerComponent,canActivate:[loginGuard],children:[
             {path:'order-list',component:OrderTableComponent},
             {path:'review-order/:id',component:OrderFormComponent},
         ]},
-    {path:'boss',component:DashboardbossComponent,children:[
+    {path:'boss',component:DashboardbossComponent,canActivate:[loginGuard],children:[
             {path:'warehouse-info',component: NavbarComponent},
             {path:'warehouse-view/:id',component:WarehouseViewComponent},
             {path:'update-warehouse/:id',component:WarehouseFormComponent},

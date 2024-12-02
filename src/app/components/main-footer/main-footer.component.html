@@ -13,13 +13,22 @@
         </div>
         <div class="col-6 col-md-2">
           <p class="h6 fw-bold">LINKS</p>
-          <p class="mb-2"><a href="/dashboard/operator/order-list" class="link-offset-2">Home</a></p>
-          <p class="mb-2"><a href="/login" class="link-offset-2">Log out</a></p>
+          <p class="mb-2">
+            @if(this.UserRole === "operator"){
+              <a [routerLink]="['/operator','order-list']" class="link-offset-2"><i class="fa-solid fa-house fa-lg"></i></a>
+            }@else if(this.UserRole === "manager"){
+              <a [routerLink]="['/manager','order-list']" class="link-offset-2"><i class="fa-solid fa-house fa-lg"></i></a>
+            }@else{
+              <a [routerLink]="['/boss','warehouse-info']" class="link-offset-2"><i class="fa-solid fa-house fa-lg"></i></a>
+            }
+            
+          </p>
+          <p class="mb-2"><a href="/login" class="link-offset-2" (click)="logOutFooter()"> <i class="fa-solid fa-right-from-bracket fa-lg" style="color: #ff0033;"></i></a></p>
         </div>
         <div class="col-6 col-md-3">
           <p class="h6 fw-bold">CONTACT</p>
-          <p class="mb-2"><a href="tel:93806409609" class="link-offset-2">93 806 409 609</a></p>
-          <p class="text-truncate mb-2"><a href="mailto:incidencias@roundtravel.com" class="link-offset-2">{{adminEmail}}</a></p>
+          <p class="mb-2"><a href="tel:93806409609" class="link-offset-2">93 806 409 609 </a> <i class="fa-solid fa-phone fa-lg"></i></p>
+          <p class="text-truncate mb-2"><a href="mailto:incidencias@roundtravel.com" class="link-offset-2">{{adminEmail}} </a> <i class="fa-solid fa-shield-halved fa-lg"></i></p>
         </div>
       </div>
       <div class="border-top pt-3 mt-3 text-center">

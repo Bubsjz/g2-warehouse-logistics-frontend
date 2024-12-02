@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { LoginService } from '../../services/login.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { iUser } from '../../interfaces/user.interface';
 import Swal from 'sweetalert2';
@@ -35,15 +35,12 @@ export class LoginComponent {
   
   
   
-  
-  
-
-  
-  
   // Forma con json-server
   email: string = '';
   password: string = '';
   token: string = '';
+  errorBoolean:boolean =false
+  errormsg!:string
 
   rolRedirectMap: Record<iUser['role'], string> = {
     'boss': '/boss/warehouse-info',
@@ -51,7 +48,7 @@ export class LoginComponent {
     'operator': '/operator/order-list',
   };
 
-  constructor(private loginService: LoginService, private router: Router) {}
+  constructor(private loginService: LoginService, private router: Router, private route:ActivatedRoute) {}
 
 /*   onSubmit() {
     this.loginService.login(this.email, this.password).subscribe(result => {
@@ -68,6 +65,16 @@ export class LoginComponent {
     });
   } */
 
+    ngOnInit(){
+      this.route.queryParams.subscribe((params:any) => {
+        if(params.status === '1'){
+          this.errorBoolean = true
+          this.errormsg = "Access denied. You do not have the necessary permissions."
+
+        }
+      })
+    }
+
 onSubmit() {
   this.loginService.login(this.email, this.password).subscribe(result => {
     if (result) {
@@ -83,7 +90,12 @@ onSubmit() {
         alert('User role not recognized');
       }
     } else {
-      alert('Login failed: Wrong email or password');
+      Swal.fire({
+        title: "Login failed",
+        text: "Wrong email or password!",
+        icon: "error",
+      }); 
+     
     }
   });
 }

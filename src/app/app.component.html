@@ -1,5 +1,5 @@
 <div class="footer-down">
-    <div *ngIf="router.url !== '/login'"><app-main-header></app-main-header></div>
+    <div *ngIf="router.url !== '/login' && router.url !== '/login?status=1'"><app-main-header></app-main-header></div>
   <main><router-outlet></router-outlet></main>
-    <div *ngIf="router.url !== '/login'"><app-main-footer></app-main-footer></div>
+    <div *ngIf="router.url !== '/login' && router.url !== '/login?status=1'"><app-main-footer></app-main-footer></div>
 </div>

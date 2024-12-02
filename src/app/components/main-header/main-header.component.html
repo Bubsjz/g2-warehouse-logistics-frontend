@@ -9,7 +9,13 @@
   </div>
   <div class="row">
     <div class="col-auto ms-auto me-5">
-      <button class="btn btn-primary fw-bold me-2 text-uppercase" href="/operator/order-list"> home </button>
+      @if(userRol === "operator"){
+        <button class="btn btn-primary fw-bold me-2 text-uppercase" [routerLink]="['/operator','order-list']"> home </button>
+      }@else if(userRol === "manager"){
+        <button class="btn btn-primary fw-bold me-2 text-uppercase" [routerLink]="['/manager','order-list']"> home </button>
+      }@else{
+        <button class="btn btn-primary fw-bold me-2 text-uppercase" [routerLink]="['/boss','warehouse-info']"> home </button>
+      }
       <button class="btn btn-danger fw-bold  text-uppercase" (click)="logOut()" [routerLink]="['/login']">
        log out <i class="fa-solid fa-right-from-bracket fa-lg"></i>
       </button>

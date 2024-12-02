@@ -1,12 +1,9 @@
 import { Component } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { WarehouseCardComponent } from "./pages/warehouse-card/warehouse-card.component";
-import { WarehouseUserListComponent } from "./pages/warehouse-user-list/warehouse-user-list.component";
-import { WarehouseViewComponent } from "./pages/warehouse-view/warehouse-view.component";
 import { MainHeaderComponent } from './components/main-header/main-header.component';
 import { MainFooterComponent } from './components/main-footer/main-footer.component';
 import { CommonModule } from '@angular/common';
-import { LoginComponent } from './components/login/login.component';
+
 
 
 
@@ -14,7 +11,7 @@ import { LoginComponent } from './components/login/login.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, WarehouseCardComponent, WarehouseUserListComponent, WarehouseViewComponent, LoginComponent, MainHeaderComponent, MainFooterComponent],
+  imports: [RouterOutlet, CommonModule, MainHeaderComponent, MainFooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

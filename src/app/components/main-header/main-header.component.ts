@@ -40,8 +40,6 @@ export class MainHeaderComponent implements OnInit {
       
     }
 
-
-
     logOut(){
       localStorage.removeItem('authToken')
      
