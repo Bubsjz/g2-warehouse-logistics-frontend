@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Delivery, Warehouse, Truck, Product, DeliveryProduct } from '../interfaces/order.interfaces';
+import { Delivery, Warehouse, Truck, Product, DeliveryProduct, CombinedResponse } from '../interfaces/order.interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -13,11 +13,12 @@ export class DeliveryService {
 
 
   // Obtener envío por ID
-  getDeliveryById(id: number, role: string): Observable<Delivery> {
+  getDeliveryById(id: number, role: string): Observable<CombinedResponse> {
     const url = role === 'operator'
       ? `${this.baseUrl}/operator/modify-order/${id}`
       : `${this.baseUrl}/manager/review-order/${id}`;
-    return this.http.get<Delivery>(url);
+    console.log('Fetching delivery data from URL:', url);
+    return this.http.get<CombinedResponse>(url);
   }
 
   // Relación entre envíos y productos
@@ -34,9 +35,10 @@ export class DeliveryService {
     return this.http.post<Delivery>(`${this.baseUrl}/create-order`, delivery);
   }
 
-  // Actualizar envío
-  updateDelivery(id: number, delivery: Delivery): Observable<Delivery> {
-    return this.http.put<Delivery>(`${this.baseUrl}/modify-order/${id}`, delivery);
+  updateDelivery(id: number, delivery: Delivery): Observable<any> {
+    const url = `${this.baseUrl}/operator/modify-order/${id}`;
+    console.log('PUT URL:', url);
+    return this.http.put(url, delivery);
   }
 
   // Eliminar envío
@@ -46,42 +48,21 @@ export class DeliveryService {
 
   // Cambiar estado de un envío
   updateDeliveryStatus(id: number, comments: string): Observable<Delivery> {
-    return this.http.patch<Delivery>(`${this.baseUrl}/manager/review-order/${id}`, { comments });
+    return this.http.put<Delivery>(`${this.baseUrl}/manager/review-order/${id}`, { comments });
   }
 
   // Actualizar comentarios de un envío
   updateDeliveryComments(id: number, comments: string): Observable<Delivery> {
-    return this.http.patch<Delivery>(`${this.baseUrl}/manager/review-order/${id}`, { comments });
+    return this.http.put<Delivery>(`${this.baseUrl}/manager/review-order/${id}`, { comments });
   }
 
 // OBTENER DATOS FUNCIONAMIENTO FORMULARIO
-  // Almacenes
-  getWarehouses(role: string): Observable<Warehouse[]> {
-    const url = role === 'operator'
-      ? `${this.baseUrl}/operator/modify-order`
-      : `${this.baseUrl}/manager/review-order`;
+    getCombinedData(): Observable<{ warehouse: Warehouse[]; truck: Truck[]; productNames: Product[] }> {
+      const url = `${this.baseUrl}/operator/creation-data`;
+      return this.http.get<{ warehouse: Warehouse[]; truck: Truck[]; productNames: Product[] }>(url);
+    }
 
-    return this.http.get<Warehouse[]>(url);
-  }
 
-  // Camiones
-  getTrucks(role: string): Observable<Truck[]> {
-    const url = role === 'operator'
-      ? `${this.baseUrl}/operator/modify-order`
-      : `${this.baseUrl}/manager/review-order`;
-
-    return this.http.get<Truck[]>(url);
-  }
-
-  // Productos
-  getProducts(role: string): Observable<Product[]> {
-    const url = role === 'operator'
-      ? `${this.baseUrl}/operator/modify-order`
-      : `${this.baseUrl}/manager/review-order`;
-
-    return this.http.get<Product[]>(url);
-  }
-  
 }
 
 

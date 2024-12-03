@@ -48,63 +48,63 @@
 
       <!-- Almacén de origen -->
       <div class="my-3">
-        <label class="form-label" for="origin">Origin Warehouse</label>
+        <label class="form-label" for="originWarehouse">Origin Warehouse</label>
         <select
           class="form-select rounded-pill"
-          id="origin"
-          [(ngModel)]="delivery.origin_warehouse_id"
-          name="origin_warehouse_id"
+          [(ngModel)]="delivery.origin_warehouse_name"
+          name="origin_warehouse_name"
+          id="originWarehouse"
           [disabled]="!isEditable"
           required
         >
           <option [ngValue]="null" disabled>Select the origin warehouse</option>
-          <option *ngFor="let warehouse of warehouses" [value]="warehouse.id_warehouse">
+          <option *ngFor="let warehouse of warehouses" [value]="warehouse.name">
             {{ warehouse.name }}
           </option>
         </select>
-        <div *ngIf="orderForm.submitted && !orderForm.controls['origin_warehouse_id']?.valid" class="text-danger">
+        <div *ngIf="submitted && !delivery.origin_warehouse_name" class="text-danger">
           Origin warehouse is required.
         </div>
       </div>
 
       <!-- Almacén de destino -->
       <div class="my-3">
-        <label class="form-label" for="destination">Destination Warehouse</label>
+        <label class="form-label" for="destinationWarehouse">Destination Warehouse</label>
         <select
           class="form-select rounded-pill"
-          id="destination"
-          [(ngModel)]="delivery.destination_warehouse_id"
-          name="destination_warehouse_id"
+          [(ngModel)]="delivery.destination_warehouse_name"
+          name="destination_warehouse_name"
+          id="destinationWarehouse"
           [disabled]="!isEditable"
           required
         >
           <option [ngValue]="null" disabled>Select the destination warehouse</option>
-          <option *ngFor="let warehouse of warehouses" [value]="warehouse.id_warehouse">
+          <option *ngFor="let warehouse of warehouses" [value]="warehouse.name">
             {{ warehouse.name }}
           </option>
         </select>
-        <div *ngIf="orderForm.submitted && !orderForm.controls['destination_warehouse_id']?.valid" class="text-danger">
+        <div *ngIf="submitted && !delivery.destination_warehouse_name" class="text-danger">
           Destination warehouse is required.
         </div>
       </div>
 
       <!-- Matrícula del camión -->
       <div class="my-3">
-        <label class="form-label" for="truck">Truck License Plate</label>
+        <label class="form-label" for="plate">Truck License Plate</label>
         <select
           class="form-select rounded-pill"
-          id="truck"
-          [(ngModel)]="delivery.truck_id_truck"
-          name="truck_id_truck"
+          [(ngModel)]="delivery.plate"
+          name="truck_plate"
+          id="plate"
           [disabled]="!isEditable"
           required
         >
           <option [ngValue]="null" disabled>Select the truck</option>
-          <option *ngFor="let truck of trucks" [value]="truck.id_truck">
+          <option *ngFor="let truck of trucks" [value]="truck.plate">
             {{ truck.plate }}
           </option>
         </select>
-        <div *ngIf="orderForm.submitted && !orderForm.controls['truck_id_truck']?.valid" class="text-danger">
+        <div *ngIf="submitted && !delivery.plate" class="text-danger">
           Truck is required.
         </div>
       </div>
@@ -117,6 +117,7 @@
           class="form-select rounded-pill w-50"
           [(ngModel)]="detail.product_id"
           name="product-{{ i }}"
+          id="product{{ i }}"
           [ngModelOptions]="{ standalone: true }"
           [disabled]="!isEditable"
           (change)="detail.touched = true"
@@ -139,6 +140,7 @@
           placeholder="Quantity"
           [(ngModel)]="detail.quantity"
           name="quantity-{{ i }}"
+          id="quantity{{ i }}"
           [ngModelOptions]="{ standalone: true }"
           [disabled]="!isEditable"
           min="1"
