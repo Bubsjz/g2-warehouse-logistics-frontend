@@ -21,3 +21,15 @@ export class WarehousesService {
   }
 
 }
+
+
+  // Function to save or update a warehouse
+  saveWarehouse(warehouse: any): Observable<any> {
+    if (warehouse.id) {
+      // Update existing warehouse
+      return this.http.put(`${this.baseUrl}/warehouses/${warehouse.id}`, warehouse);
+    } else {
+      // Create new warehouse
+      return this.http.post(`${this.baseUrl}/warehouses`, warehouse);
+    }
+  }
