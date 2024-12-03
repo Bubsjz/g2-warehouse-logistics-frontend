@@ -8,8 +8,8 @@
   import dayjs from 'dayjs';
 
   // Importaciones del proyecto
-  import { DeliveryService } from '../../services/order.services'; // Servicio para gestionar entregas
-  import { Delivery, Warehouse, Truck, Product } from '../../interfaces/order.interfaces'; // Interfaces para modelar los datos principales
+  import { DeliveryService } from '../../services/order.service';
+  import { Delivery, Warehouse, Truck, Product, CombinedResponse } from '../../interfaces/order.interfaces';
   
   @Component({
     selector: 'app-order-form',
@@ -27,9 +27,9 @@
     delivery: Delivery = {
       send_date: null,
       received_date: null,
-      truck_id_truck: null,
-      origin_warehouse_id: null,
-      destination_warehouse_id: null,
+      plate: null,
+      origin_warehouse_name: null,
+      destination_warehouse_name: null,
       status: 'pending',
       comments: '',
       products: [],
@@ -41,8 +41,13 @@
     products: Product[] = [];
   
     // Detalles de los productos seleccionados para el pedido
-    orderDetails: { product_id: number | null; quantity: number; touched: boolean }[] = [
-      { product_id: null, quantity: 0, touched: false }, // Producto vacío inicial
+    orderDetails: { 
+      product_id: number | null; 
+      product_name?: string;
+      quantity: number; 
+      touched: boolean; 
+    }[] = [
+      { product_id: null, quantity: 0, touched: false },
     ];
   
     // Mensaje de error para mostrar en caso de validación fallida o error del servidor
@@ -51,10 +56,16 @@
     // Indica si el formulario ya fue enviado
     submitted: boolean = false;
 
+    // Indica si el rol puede gestionar productos
+    canManageProducts: boolean = true;
+
     // Indica si el envío es editable
     isEditable: boolean = true;
     areButtonsEnabled: boolean = true;
     isCommentEditable: boolean = false;
+
+    // Variable para almacenar el rol
+    role: string = 'operator';
   
     // Constructor para inyectar dependencias
     constructor(
@@ -67,87 +78,100 @@
 //ARRANQUE
 //-------------------------------
 
-          ngOnInit(): void {
-            // Determina el modo del formulario basado en la ruta activa
-            this.detectMode();
+    ngOnInit(): void {
+      this.detectMode()
+      this.loadInitialData();
+    }
 
-            // Carga los datos iniciales necesarios para rellenar los selectores del formulario
-            this.loadInitialData();
-          }
 
 //-------------------------------
 //DETECCIÓN DE MODO Y CARGA DE DATOS
 //-------------------------------
 
         //Determina el modo del formulario y carga los datos correspondientes
-// !!!! MODIFICAR RUTA REVIEW-ORDER PARA QUE COJA CON MODIFY-ORDER Y EL DIRECTORIO PREVIO (/MANAGER), TAMBIÉN MODIFICAR EL DIRECTORIO DEL ORDER-LIST
           async detectMode(): Promise<void> {
+            const fullUrl = this.router.url;
+          
+            if (fullUrl.includes('/operator/')) {
+              this.role = 'operator';
+            } else if (fullUrl.includes('/manager/')) {
+              this.role = 'manager';
+            } else {
+              console.error('Role not detected in the URL. Defaulting to operator.');
+              this.role = 'operator';
+            }
+          
+            console.log(`Detected role: ${this.role}`);
+          
             const id = +this.route.snapshot.paramMap.get('id')!;
-            if (this.route.snapshot.url.some((segment) => segment.path === 'create-order')) {
+            if (!id) {
+              console.error('ID not found in the URL');
+              return;
+            }
+            console.log(`Detected ID: ${id}`);
+          
+            if (fullUrl.includes('create-order')) {
               this.mode = 'create';
-            } else if (this.route.snapshot.url.some((segment) => segment.path === 'modify-order')) {
+            } else if (fullUrl.includes('modify-order')) {
               this.mode = 'edit';
-              await this.loadDeliveryWithProducts(id);
-            } else if (this.route.snapshot.url.some((segment) => segment.path === 'review-order')) {
-              this.mode = 'review';
-              await this.loadDeliveryWithProducts(id);
+              await this.loadDeliveryWithProducts(id, this.role);
+            } else if (fullUrl.includes('review-order')) {
+              this.mode = 'review'; // Asegúrate de que esto sea válido
+              await this.loadDeliveryWithProducts(id, this.role);
             }
           }
+
+        
 
         //Carga los datos básicos para el funcionamiento del formulario
-          async loadInitialData(): Promise<void> {
-            try {
-              const [warehouses, trucks, products] = await Promise.all([
-                firstValueFrom(this.deliveryService.getWarehouses()),
-                firstValueFrom(this.deliveryService.getTrucks()),
-                firstValueFrom(this.deliveryService.getProducts()),
-              ]);
-          
-              this.warehouses = warehouses || [];
-              this.trucks = trucks || [];
-              this.products = products || [];
-          
-              console.log('Initial data loaded:', { warehouses, trucks, products });
-            } catch (error) {
-              this.errorMessage = 'Error loading initial data.';
-              console.error(error);
-            }
+        async loadInitialData(): Promise<void> {
+          if (this.mode !== 'create') {
+            console.log('Skipping data loading as the mode is not "create".');
+            return;
           }
+        
+          try {
+            const combinedData = await firstValueFrom(this.deliveryService.getCombinedData());
+        
+            this.warehouses = combinedData.warehouse || [];
+            this.trucks = combinedData.truck || [];
+            this.products = combinedData.productNames || [];
+        
+            console.log('Combined data loaded:', combinedData);
+          } catch (error) {
+            this.errorMessage = 'Error loading combined initial data.';
+            console.error(error);
+          }
+        }
+
 
         //Carga los detalles del envío seleccionado (con ayuda de loadDeliveryProducts) y controla que las fechas sean de tipo Date
-          async loadDeliveryWithProducts(id: number): Promise<void> {
+          async loadDeliveryWithProducts(id: number, role: string): Promise<void> {
             try {
-              const [rawDelivery, products] = await Promise.all([
-                firstValueFrom(this.deliveryService.getDeliveryById(id)),
-                firstValueFrom(this.deliveryService.getDeliveryProducts()),
-              ]);
+              const response = await firstValueFrom(this.deliveryService.getDeliveryById(id, role));
+              console.log('Response from backend:', response);
+              const data = Array.isArray(response) ? response[0] : response;
           
-              this.delivery = this.normalizeDeliveryFromBackend(rawDelivery);
+              // Normalizar los datos recibidos del backend
+              this.delivery = this.normalizeDeliveryFromBackend(data);
+              console.log('Mapped delivery:', this.delivery);
           
-              this.orderDetails = (products || [])
-                .filter((product) => product.delivery_id_delivery === id)
-                .map((product) => ({
-                  product_id: product.product_id_product,
-                  quantity: product.quantity,
-                  touched: false,
-                }));
+              // Configurar los productos, asegurando que la cantidad se asigna correctamente
+              this.orderDetails = (data.products || []).map((product: { product_name: string; product_quantity: number }) => ({
+                product_name: product.product_name || '', // Asegurar que siempre haya un nombre
+                quantity: product.product_quantity ?? 0, // Cambiar de `quantity` a `product_quantity`
+                touched: false,
+              }));
           
+              // Verificar condiciones de editabilidad del formulario
               this.checkIfEditable();
-              console.log('Delivery and products loaded:', this.delivery, this.orderDetails);
-            } catch (error: unknown) {
-              if (error && typeof error === 'object' && 'status' in error) {
-                const httpError = error as { status: number };
-                if (httpError.status === 404) {
-                  alert('The delivery you are trying to access does not exist.');
-                  this.router.navigate(['/operator/order-list']);
-                } else {
-                  this.errorMessage = 'An error occurred while loading the delivery. Please try again later.';
-                  console.error(error);
-                }
-              } else {
-                this.errorMessage = 'An unexpected error occurred.';
-                console.error(error);
-              }
+          
+              // Depuración en consola
+              console.log('Order details:', this.orderDetails);
+            } catch (error) {
+              // Manejo de errores
+              console.error('Failed to load delivery data:', error);
+              this.errorMessage = 'Error loading delivery data.';
             }
           }
 
@@ -156,85 +180,67 @@
 //-------------------------------
         
         //Genera un objeto con los datos del pedido para enviar al back-end
-          prepareDeliveryPayload(status: string): any {
-            return {
-              ...this.delivery,
-              status, // Estado dinámico según el botón pulsado
-              send_date: this.delivery.send_date
-                ? dayjs(this.delivery.send_date).format('YYYY-MM-DD HH:mm:ss')
-                : null,
-              received_date: this.delivery.received_date
-                ? dayjs(this.delivery.received_date).format('YYYY-MM-DD HH:mm:ss')
-                : null,
-              // Convierte los campos ID explícitamente a números
-              truck_id_truck: this.delivery.truck_id_truck ? Number(this.delivery.truck_id_truck) : null,
-              origin_warehouse_id: this.delivery.origin_warehouse_id ? Number(this.delivery.origin_warehouse_id) : null,
-              destination_warehouse_id: this.delivery.destination_warehouse_id ? Number(this.delivery.destination_warehouse_id) : null,
-              products: this.orderDetails.map((detail) => ({
-                product_id: detail.product_id ? Number(detail.product_id) : null,
-                quantity: detail.quantity,
-              })),
-            };
-          }
+            prepareDeliveryPayload(status: string): any {
+              return {
+                ...this.delivery,
+                status,
+                send_date: this.delivery.send_date
+                  ? dayjs(this.delivery.send_date).format('YYYY-MM-DD HH:mm:ss')
+                  : null,
+                received_date: this.delivery.received_date
+                  ? dayjs(this.delivery.received_date).format('YYYY-MM-DD HH:mm:ss')
+                  : null,
+                products: this.orderDetails.map((detail) => ({
+                  product_name: detail.product_name || '',
+                  product_quantity: detail.quantity, // Cambiar `quantity` a `product_quantity` para el backend
+                })),
+              };
+            }
+        
+        
 
         //Comprueba las condiciones de editabilidad
           checkIfEditable(): void {
-            const editableStatuses = ['pending', 'correction needed'];
+            const editableStatuses = ['pending', 'corrections needed'];
             const reviewStatuses = ['review', 'pending reception'];
           
-            // Control de editabilidad general (modo edit y estados permitidos)
-            this.isEditable = this.mode === 'edit' && editableStatuses.includes(this.delivery.status);
+            // General editability: no editable in review mode, otherwise depends on status
+            this.isEditable = this.mode !== 'review' && editableStatuses.includes(this.delivery.status);
           
-            // Botones habilitados
+            // Enable buttons: only for edit mode with specific statuses or review mode for specific statuses
             this.areButtonsEnabled =
               (this.mode === 'edit' && editableStatuses.includes(this.delivery.status)) ||
               (this.mode === 'review' && reviewStatuses.includes(this.delivery.status));
           
-            // Campo de comentarios (editable solo en ciertos casos en modo review)
-            if (this.mode === 'edit') {
-              this.isCommentEditable = this.delivery.status === 'correction needed';
-            } else if (this.mode === 'review') {
+            // Comment field editable only in review mode for specific statuses
+            if (this.mode === 'review') {
               this.isCommentEditable = reviewStatuses.includes(this.delivery.status);
             } else {
               this.isCommentEditable = false;
             }
+          
+            // Buttons for adding/removing products only in create or edit modes
+            this.canManageProducts = this.mode !== 'review' && this.isEditable;
           }
-
+          
         //Normaliza los datos de un pedido para mostrarlos en la interfaz
           normalizeDeliveryFromBackend(data: any): Delivery {
             return {
-              send_date: data?.send_date ? new Date(data.send_date) : null,
-              received_date: data?.received_date ? new Date(data.received_date) : null,
-              origin_warehouse_id: data?.origin_warehouse_id ?? null,
-              destination_warehouse_id: data?.destination_warehouse_id ?? null,
-              truck_id_truck: data?.truck_id_truck ?? null,
-              comments: data?.comments ?? '',
-              status: data?.status ?? 'pending',
-              products: data?.products ?? [],
-              id: data?.id ?? undefined,
-              id_delivery: data?.id_delivery ?? undefined,
-            };
-          }
-
-        //Normaliza los datos de un pedido para enviar al back-end
-          prepareDeliveryForBackend(data: Delivery): any {
-            return {
-              ...data,
-              send_date: data.send_date
-                ? dayjs(data.send_date).format('YYYY-MM-DD HH:mm:ss')
-                : null,
-              received_date: data.received_date
-                ? dayjs(data.received_date).format('YYYY-MM-DD HH:mm:ss')
-                : null,
-              truck_id_truck: data.truck_id_truck ?? null,
-              origin_warehouse_id: data.origin_warehouse_id ?? null,
-              destination_warehouse_id: data.destination_warehouse_id ?? null,
-              products: data.products.map((product) => ({
-                product_id: product.product_id!,
-                quantity: product.quantity,
+              id_delivery: data.id_delivery,
+              send_date: data.send_date ? new Date(data.send_date) : null,
+              received_date: data.received_date ? new Date(data.received_date) : null,
+              comments: data.comments || '',
+              status: data.status || 'pending',
+              origin_warehouse_name: data.origin_warehouse_name || null,
+              destination_warehouse_name: data.destination_warehouse_name || null,
+              plate: data.plate || null,
+              products: (data.products || []).map((product: { product_name: string; product_quantity: number }) => ({
+                product_name: product.product_name,
+                quantity: product.product_quantity ?? 0, // Ajustar al nuevo campo `product_quantity`
               })),
             };
           }
+
 
 //-------------------------------
 //VALIDACIONES
@@ -242,35 +248,28 @@
 
         //Validar campos cumplimentados y productos mayores a 0
           validateForm(): boolean {
-            // Validar campos principales (fechas y selectores obligatorios)
             if (
-              !this.delivery.send_date || // Verifica que no sea null
-              !dayjs(this.delivery.send_date).isValid() || // Verifica que sea una fecha válida
-              !this.delivery.received_date || // Verifica que no sea null
-              !dayjs(this.delivery.received_date).isValid() || // Verifica que sea una fecha válida
-              !this.delivery.origin_warehouse_id || // ID del almacén de origen válido
-              !this.delivery.destination_warehouse_id || // ID del almacén de destino válido
-              !this.delivery.truck_id_truck // ID del camión válido
+              !this.delivery.send_date ||
+              !dayjs(this.delivery.send_date).isValid() ||
+              !this.delivery.origin_warehouse_id ||
+              !this.delivery.destination_warehouse_id ||
+              !this.delivery.truck_id_truck
             ) {
               this.errorMessage = 'Please fill in all required fields with valid data.';
-              console.log('Form validation failed: Missing required fields.'); // Registrar error
-              return false; // Formulario no válido
+              return false;
             }
           
-            // Validar productos (todos deben tener un tipo y cantidad mayor a 0)
             const invalidProducts = this.orderDetails.some(
-              (detail) => !detail.product_id || detail.quantity <= 0
+              (detail) => !detail.product_name || detail.quantity <= 0
             );
           
             if (invalidProducts) {
-              this.errorMessage = 'All products must have a valid type and quantity greater than 0.';
-              console.log('Form validation failed: Invalid products.', this.orderDetails); // Registrar error
-              return false; // Formulario no válido
+              this.errorMessage = 'All products must have a valid name and quantity greater than 0.';
+              return false;
             }
           
-            // Si todos los datos son válidos, limpiar el mensaje de error y retornar true
             this.errorMessage = '';
-            return true; // Formulario válido
+            return true;
           }
 
 //-------------------------------
@@ -284,9 +283,8 @@
           
             // Validar los datos del formulario antes de proceder
             if (!this.validateForm()) {
-              // Mostrar un mensaje en la consola si la validación falla
               console.log('Form submission blocked due to validation errors.');
-              return; // Detener la ejecución si hay errores
+              return;
             }
           
             // Mostrar en la consola los datos que se enviarán si el formulario es válido
@@ -312,6 +310,9 @@
             console.log('Payload to be sent:', deliveryPayload);
           
             try {
+              // Obtener el rol de la URL o de algún servicio
+              const role = this.role; // Usamos el `role` que ya está asignado
+          
               if (this.mode === 'create') {
                 await firstValueFrom(this.deliveryService.createDelivery(deliveryPayload));
                 alert(status === 'pending' ? 'Draft saved successfully!' : 'Order created successfully!');
@@ -333,7 +334,7 @@
               return;
             }
           
-            const newStatus = this.delivery.status === 'review' ? 'correction needed' : 'send back';
+            const newStatus = this.delivery.status === 'review' ? 'corrections needed' : 'not approved';
           
             try {
               // Reutiliza `updateDeliveryStatus` para actualizar el estado y comentarios
@@ -348,13 +349,13 @@
       
         //Aprobación de envíos en modo review
           async approveDelivery(): Promise<void> {
-            const newStatus = this.delivery.status === 'review' ? 'ready for departure' : 'accepted';
+            const newStatus = this.delivery.status === 'review' ? 'ready for departure' : 'approved';
             console.log(newStatus);
             await this.updateDeliveryStatus(newStatus);
           }
 
         //Actualiza el estado de un pedido en modo review
-          async updateDeliveryStatus(newStatus: string, comments?: string | null): Promise<void> {
+          async updateDeliveryStatus(newStatus: "corrections needed" | "ready for departure" | "approved" | "not approved", comments?: string | null): Promise<void> {
             if (!this.delivery.id_delivery) {
               console.error('Delivery ID is missing.');
               return;
@@ -363,11 +364,13 @@
             // Crea el payload dinámicamente, incluyendo comentarios si se proporcionan
             const updatedDelivery = {
               ...this.delivery,
-              status: newStatus,
+              status: newStatus, // Se asegura de que el nuevo estado sea uno de los valores válidos
               comments: comments?.trim() || this.delivery.comments, // Prioriza comentarios pasados al método
             };
           
             try {
+              // Obtener el rol de la URL o de algún servicio
+              const role = this.role;
               await firstValueFrom(this.deliveryService.updateDelivery(this.delivery.id_delivery, updatedDelivery));
               alert(`Delivery status updated to ${newStatus}`);
               this.router.navigate(['/manager/order-list']);
@@ -391,12 +394,11 @@
             // Llama al servicio para borrar el envío
             this.deliveryService.deleteDelivery(this.delivery.id_delivery!).subscribe({
               next: () => {
-                // Notificación de éxito y redirección
                 alert('Order deleted successfully!');
                 this.router.navigate(['/operator/order-list']);
               },
               error: () => {
-                // Manejo de errores
+
                 this.errorMessage = 'Failed to delete the order. Please try again later.';
               },
             });
@@ -410,12 +412,10 @@
           addProduct(): void {
             // Inserta un nuevo producto con valores iniciales en la lista de detalles
             this.orderDetails.push({ 
-              product_id: null,  // Producto no seleccionado inicialmente
-              quantity: 0,       // Cantidad inicial en 0
-              touched: false,    // Marcado como no interactuado
+              product_id: null,
+              quantity: 0,
+              touched: false,
             });
-            
-            // Consola para verificar el estado actual de los detalles del pedido
             console.log('Product added. Current details:', this.orderDetails);
           }
         
@@ -423,12 +423,9 @@
           removeProduct(index: number): void {
             // Verificar si hay más de un producto en la lista
             if (this.orderDetails.length > 1) {
-              // Eliminar el producto en el índice proporcionado
               this.orderDetails.splice(index, 1);
-              // Consola para verificar el estado actual de los detalles del pedido
               console.log('Product removed. Current details:', this.orderDetails);
             } else {
-              // Mostrar alerta si el usuario intenta eliminar el último producto
               alert('You must have at least one product in the order.');
             }
           }
@@ -456,10 +453,9 @@
 // NAVEGACIÓN
 //-------------------------------
 
-        //Acción de salida sin enviar el formulario
+        //Salida sin enviar el formulario
           cancel(): void {
-            // Navega a la ruta relativa '../order-list' desde la ruta actual
-            this.router.navigate(['../order-list'], { relativeTo: this.route });
+            this.router.navigate([`/${this.role}/order-list`]);
           }
 
 }
