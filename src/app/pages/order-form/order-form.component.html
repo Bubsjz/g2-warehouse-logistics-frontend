@@ -20,7 +20,7 @@
           [ngModel]="delivery.send_date ? formatDateForInput(delivery.send_date) : ''"
           (ngModelChange)="onDateChange('send_date', $event)"
           name="send_date"
-          [disabled]="!isEditable"
+          [disabled]="mode === 'review' || !isEditable"
           required
         />
         <div *ngIf="submitted && !delivery.send_date" class="text-danger">
@@ -38,7 +38,7 @@
           [ngModel]="delivery.received_date ? formatDateForInput(delivery.received_date) : ''"
           (ngModelChange)="onDateChange('received_date', $event)"
           name="received_date"
-          [disabled]="!isEditable"
+          [disabled]="mode === 'review' || !isEditable"
           required
         />
         <div *ngIf="submitted && !delivery.received_date" class="text-danger">
@@ -49,118 +49,139 @@
       <!-- Almacén de origen -->
       <div class="my-3">
         <label class="form-label" for="originWarehouse">Origin Warehouse</label>
-        <select
-          class="form-select rounded-pill"
-          [(ngModel)]="delivery.origin_warehouse_name"
-          name="origin_warehouse_name"
-          id="originWarehouse"
-          [disabled]="!isEditable"
-          required
-        >
-          <option [ngValue]="null" disabled>Select the origin warehouse</option>
-          <option *ngFor="let warehouse of warehouses" [value]="warehouse.name">
-            {{ warehouse.name }}
-          </option>
-        </select>
-        <div *ngIf="submitted && !delivery.origin_warehouse_name" class="text-danger">
-          Origin warehouse is required.
-        </div>
+        <ng-container *ngIf="mode === 'edit'; else staticOriginWarehouse">
+          <select
+            class="form-select rounded-pill"
+            [(ngModel)]="delivery.origin_warehouse_name"
+            name="origin_warehouse_name"
+            id="originWarehouse"
+            required
+          >
+            <option [ngValue]="null" disabled>Select the origin warehouse</option>
+            <option *ngFor="let warehouse of warehouses" [value]="warehouse.name">
+              {{ warehouse.name }}
+            </option>
+          </select>
+          <div *ngIf="submitted && !delivery.origin_warehouse_name" class="text-danger">
+            Origin warehouse is required.
+          </div>
+        </ng-container>
+        <ng-template #staticOriginWarehouse>
+          <span class="form-control rounded-pill">{{ delivery.origin_warehouse_name || 'N/A' }}</span>
+        </ng-template>
       </div>
 
       <!-- Almacén de destino -->
       <div class="my-3">
         <label class="form-label" for="destinationWarehouse">Destination Warehouse</label>
-        <select
-          class="form-select rounded-pill"
-          [(ngModel)]="delivery.destination_warehouse_name"
-          name="destination_warehouse_name"
-          id="destinationWarehouse"
-          [disabled]="!isEditable"
-          required
-        >
-          <option [ngValue]="null" disabled>Select the destination warehouse</option>
-          <option *ngFor="let warehouse of warehouses" [value]="warehouse.name">
-            {{ warehouse.name }}
-          </option>
-        </select>
-        <div *ngIf="submitted && !delivery.destination_warehouse_name" class="text-danger">
-          Destination warehouse is required.
-        </div>
+        <ng-container *ngIf="mode === 'edit'; else staticDestinationWarehouse">
+          <select
+            class="form-select rounded-pill"
+            [(ngModel)]="delivery.destination_warehouse_name"
+            name="destination_warehouse_name"
+            id="destinationWarehouse"
+            required
+          >
+            <option [ngValue]="null" disabled>Select the destination warehouse</option>
+            <option *ngFor="let warehouse of warehouses" [value]="warehouse.name">
+              {{ warehouse.name }}
+            </option>
+          </select>
+          <div *ngIf="submitted && !delivery.destination_warehouse_name" class="text-danger">
+            Destination warehouse is required.
+          </div>
+        </ng-container>
+        <ng-template #staticDestinationWarehouse>
+          <span class="form-control rounded-pill">{{ delivery.destination_warehouse_name || 'N/A' }}</span>
+        </ng-template>
       </div>
 
       <!-- Matrícula del camión -->
       <div class="my-3">
         <label class="form-label" for="plate">Truck License Plate</label>
-        <select
-          class="form-select rounded-pill"
-          [(ngModel)]="delivery.plate"
-          name="truck_plate"
-          id="plate"
-          [disabled]="!isEditable"
-          required
-        >
-          <option [ngValue]="null" disabled>Select the truck</option>
-          <option *ngFor="let truck of trucks" [value]="truck.plate">
-            {{ truck.plate }}
-          </option>
-        </select>
-        <div *ngIf="submitted && !delivery.plate" class="text-danger">
-          Truck is required.
-        </div>
+        <ng-container *ngIf="mode === 'edit'; else staticPlate">
+          <select
+            class="form-select rounded-pill"
+            [(ngModel)]="delivery.plate"
+            name="truck_plate"
+            id="plate"
+            required
+          >
+            <option [ngValue]="null" disabled>Select the truck</option>
+            <option *ngFor="let truck of trucks" [value]="truck.plate">
+              {{ truck.plate }}
+            </option>
+          </select>
+          <div *ngIf="submitted && !delivery.plate" class="text-danger">
+            Truck is required.
+          </div>
+        </ng-container>
+        <ng-template #staticPlate>
+          <span class="form-control rounded-pill">{{ delivery.plate || 'N/A' }}</span>
+        </ng-template>
       </div>
 
       <!-- Productos -->
         <p class="fw-bold mt-4">Order Details</p>
         <div *ngFor="let detail of orderDetails; let i = index" class="my-3 d-flex align-items-center gap-3">
         <!-- Selector de tipo de producto -->
-        <select
-          class="form-select rounded-pill w-50"
-          [(ngModel)]="detail.product_id"
-          name="product-{{ i }}"
-          id="product{{ i }}"
-          [ngModelOptions]="{ standalone: true }"
-          [disabled]="!isEditable"
-          (change)="detail.touched = true"
-          required
-        >
-          <option [ngValue]="null" disabled>Select a product</option>
-          <option *ngFor="let product of products" [value]="product.id_product">
-            {{ product.name }}
-          </option>
-        </select>
-        <!-- Validación -->
+        <ng-container *ngIf="mode === 'edit'; else staticProduct">
+          <select
+            class="form-select rounded-pill w-50"
+            [(ngModel)]="detail.product_name"
+            name="product-{{ i }}"
+            id="product{{ i }}"
+            [ngModelOptions]="{ standalone: true }"
+            required
+          >
+            <option [ngValue]="null" disabled>Select a product</option>
+            <option *ngFor="let product of products" [value]="product.name">
+              {{ product.name }}
+            </option>
+          </select>
+                  <!-- Validación -->
         <div *ngIf="detail.touched && !detail.product_id" class="text-danger">
           Product is required.
         </div>
+        </ng-container>
+        <ng-template #staticProduct>
+          <span class="form-control rounded-pill w-50">{{ detail.product_name || 'N/A' }}</span>
+        </ng-template>
+
 
         <!-- Campo de cantidad -->
-        <input
-          type="number"
-          class="form-control rounded-pill w-25"
-          placeholder="Quantity"
-          [(ngModel)]="detail.quantity"
-          name="quantity-{{ i }}"
-          id="quantity{{ i }}"
-          [ngModelOptions]="{ standalone: true }"
-          [disabled]="!isEditable"
-          min="1"
-          (blur)="detail.touched = true"
-          required
-        />
-        <!-- Validación -->
-        <div *ngIf="detail.touched && (!detail.quantity || detail.quantity <= 0)" class="text-danger">
-          Quantity must be greater than 0.
-        </div>
+          <div>
+            <ng-container *ngIf="mode === 'edit' || mode === 'create'; else staticQuantity">
+              <input
+                type="number"
+                class="form-control rounded-pill w-25"
+                placeholder="Quantity"
+                [(ngModel)]="detail.quantity"
+                name="quantity-{{ i }}"
+                id="quantity{{ i }}"
+                [ngModelOptions]="{ standalone: true }"
+                min="1"
+                required
+              />
+              <!-- Validación -->
+              <div *ngIf="detail.touched && (!detail.quantity || detail.quantity <= 0)" class="text-danger">
+                Quantity must be greater than 0.
+              </div>
+            </ng-container>
+            <ng-template #staticQuantity>
+              <span class="form-control rounded-pill w-4">{{ detail.quantity || '0' }}</span>
+            </ng-template>
+          </div>
 
         <!-- Botón para eliminar producto -->
-        <button type="button" class="btn btn-danger" *ngIf="isEditable" (click)="removeProduct(i)">
+        <button type="button" class="btn btn-danger" *ngIf="canManageProducts" (click)="removeProduct(i)">
           &minus;
         </button>
       </div>
 
       <!-- Botón para agregar nuevos productos -->
       <div class="my-3">
-        <button type="button" class="btn btn-primary rounded-pill" *ngIf="isEditable" (click)="addProduct()">
+        <button type="button" class="btn btn-primary rounded-pill" *ngIf="canManageProducts" (click)="addProduct()">
           + Add Product
         </button>
       </div>

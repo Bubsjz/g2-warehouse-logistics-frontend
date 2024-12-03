@@ -41,8 +41,13 @@
     products: Product[] = [];
   
     // Detalles de los productos seleccionados para el pedido
-    orderDetails: { product_id: number | null; quantity: number; touched: boolean }[] = [
-      { product_id: null, quantity: 0, touched: false }, // Producto vacío inicial
+    orderDetails: { 
+      product_id: number | null; 
+      product_name?: string;
+      quantity: number; 
+      touched: boolean; 
+    }[] = [
+      { product_id: null, quantity: 0, touched: false },
     ];
   
     // Mensaje de error para mostrar en caso de validación fallida o error del servidor
@@ -50,6 +55,9 @@
   
     // Indica si el formulario ya fue enviado
     submitted: boolean = false;
+
+    // Indica si el rol puede gestionar productos
+    canManageProducts: boolean = true;
 
     // Indica si el envío es editable
     isEditable: boolean = true;
@@ -82,34 +90,33 @@
 
         //Determina el modo del formulario y carga los datos correspondientes
           async detectMode(): Promise<void> {
-            // Detectar el rol desde la URL
             const fullUrl = this.router.url;
+          
             if (fullUrl.includes('/operator/')) {
               this.role = 'operator';
             } else if (fullUrl.includes('/manager/')) {
               this.role = 'manager';
             } else {
               console.error('Role not detected in the URL. Defaulting to operator.');
-              this.role = 'operator'; // Rol por defecto
+              this.role = 'operator';
             }
+          
             console.log(`Detected role: ${this.role}`);
-
-            // Detectar el ID desde los parámetros
+          
             const id = +this.route.snapshot.paramMap.get('id')!;
             if (!id) {
               console.error('ID not found in the URL');
               return;
             }
             console.log(`Detected ID: ${id}`);
-
-            // Determinar el modo
+          
             if (fullUrl.includes('create-order')) {
               this.mode = 'create';
             } else if (fullUrl.includes('modify-order')) {
               this.mode = 'edit';
               await this.loadDeliveryWithProducts(id, this.role);
             } else if (fullUrl.includes('review-order')) {
-              this.mode = 'review';
+              this.mode = 'review'; // Asegúrate de que esto sea válido
               await this.loadDeliveryWithProducts(id, this.role);
             }
           }
@@ -142,81 +149,80 @@
           async loadDeliveryWithProducts(id: number, role: string): Promise<void> {
             try {
               const response = await firstValueFrom(this.deliveryService.getDeliveryById(id, role));
+              console.log('Response from backend:', response);
               const data = Array.isArray(response) ? response[0] : response;
-                
-              // Mapear los datos directamente
+          
+              // Normalizar los datos recibidos del backend
               this.delivery = this.normalizeDeliveryFromBackend(data);
-                
-              // Poblar selectores con datos combinados
-              this.warehouses = data.warehouse || [];
-              this.trucks = data.truck || [];
-              this.products = data.productNames || [];
-                
-              // Configurar los productos del envío
-              this.orderDetails = (data.products || []).map((product: { product_id: number; quantity: number }) => ({
-                product_id: product.product_id,
-                quantity: Number(product.quantity),
+              console.log('Mapped delivery:', this.delivery);
+          
+              // Configurar los productos, asegurando que la cantidad se asigna correctamente
+              this.orderDetails = (data.products || []).map((product: { product_name: string; product_quantity: number }) => ({
+                product_name: product.product_name || '', // Asegurar que siempre haya un nombre
+                quantity: product.product_quantity ?? 0, // Cambiar de `quantity` a `product_quantity`
                 touched: false,
               }));
-                
+          
+              // Verificar condiciones de editabilidad del formulario
               this.checkIfEditable();
-              console.log('Delivery loaded:', this.delivery);
-              } catch (error) {
+          
+              // Depuración en consola
+              console.log('Order details:', this.orderDetails);
+            } catch (error) {
+              // Manejo de errores
               console.error('Failed to load delivery data:', error);
-                this.errorMessage = 'Error loading delivery data.';
-              }
+              this.errorMessage = 'Error loading delivery data.';
             }
+          }
 
 //-------------------------------
 //FUNCIONES DE PROCESAMIENTO DE DATOS
 //-------------------------------
         
         //Genera un objeto con los datos del pedido para enviar al back-end
-          prepareDeliveryPayload(status: string): any {
-            return {
-              ...this.delivery,
-              status,
-              send_date: this.delivery.send_date
-                ? dayjs(this.delivery.send_date).format('YYYY-MM-DD HH:mm:ss')
-                : null,
-              received_date: this.delivery.received_date
-                ? dayjs(this.delivery.received_date).format('YYYY-MM-DD HH:mm:ss')
-                : null,
-              products: this.orderDetails.map((detail) => ({
-                product_id: detail.product_id ? Number(detail.product_id) : null,
-                quantity: Number(detail.quantity), // Forzar conversión a número
-              })),
-              // Enviar directamente los nombres y la placa
-              origin_warehouse_name: this.delivery.origin_warehouse_name,
-              destination_warehouse_name: this.delivery.destination_warehouse_name,
-              plate: this.delivery.plate,
-            };
-          }
+            prepareDeliveryPayload(status: string): any {
+              return {
+                ...this.delivery,
+                status,
+                send_date: this.delivery.send_date
+                  ? dayjs(this.delivery.send_date).format('YYYY-MM-DD HH:mm:ss')
+                  : null,
+                received_date: this.delivery.received_date
+                  ? dayjs(this.delivery.received_date).format('YYYY-MM-DD HH:mm:ss')
+                  : null,
+                products: this.orderDetails.map((detail) => ({
+                  product_name: detail.product_name || '',
+                  product_quantity: detail.quantity, // Cambiar `quantity` a `product_quantity` para el backend
+                })),
+              };
+            }
+        
         
 
         //Comprueba las condiciones de editabilidad
           checkIfEditable(): void {
             const editableStatuses = ['pending', 'corrections needed'];
-            const reviewStatuses = ['under review', 'pending reception'];
+            const reviewStatuses = ['review', 'pending reception'];
           
-            // Control de editabilidad general (modo edit y estados permitidos)
-            this.isEditable = this.mode === 'edit' && editableStatuses.includes(this.delivery.status);
+            // General editability: no editable in review mode, otherwise depends on status
+            this.isEditable = this.mode !== 'review' && editableStatuses.includes(this.delivery.status);
           
-            // Botones habilitados
+            // Enable buttons: only for edit mode with specific statuses or review mode for specific statuses
             this.areButtonsEnabled =
               (this.mode === 'edit' && editableStatuses.includes(this.delivery.status)) ||
               (this.mode === 'review' && reviewStatuses.includes(this.delivery.status));
           
-            // Campo de comentarios (editable solo en ciertos casos en modo review)
-            if (this.mode === 'edit') {
-              this.isCommentEditable = this.delivery.status === 'corrections needed';
-            } else if (this.mode === 'review') {
+            // Comment field editable only in review mode for specific statuses
+            if (this.mode === 'review') {
               this.isCommentEditable = reviewStatuses.includes(this.delivery.status);
             } else {
               this.isCommentEditable = false;
             }
+          
+            // Buttons for adding/removing products only in create or edit modes
+            this.canManageProducts = this.mode !== 'review' && this.isEditable;
           }
-
+          
         //Normaliza los datos de un pedido para mostrarlos en la interfaz
           normalizeDeliveryFromBackend(data: any): Delivery {
             return {
@@ -225,13 +231,13 @@
               received_date: data.received_date ? new Date(data.received_date) : null,
               comments: data.comments || '',
               status: data.status || 'pending',
-              products: data.products.map((product: { product_id: number; quantity: string | number }) => ({
-                product_id: product.product_id,
-                quantity: Number(product.quantity),
+              origin_warehouse_name: data.origin_warehouse_name || null,
+              destination_warehouse_name: data.destination_warehouse_name || null,
+              plate: data.plate || null,
+              products: (data.products || []).map((product: { product_name: string; product_quantity: number }) => ({
+                product_name: product.product_name,
+                quantity: product.product_quantity ?? 0, // Ajustar al nuevo campo `product_quantity`
               })),
-              origin_warehouse_name: data.origin_warehouse_name,
-              destination_warehouse_name: data.destination_warehouse_name,
-              plate: data.plate,
             };
           }
 
@@ -245,23 +251,20 @@
             if (
               !this.delivery.send_date ||
               !dayjs(this.delivery.send_date).isValid() ||
-              !this.delivery.origin_warehouse_name ||
-              !this.delivery.destination_warehouse_name ||
-              !this.delivery.plate
+              !this.delivery.origin_warehouse_id ||
+              !this.delivery.destination_warehouse_id ||
+              !this.delivery.truck_id_truck
             ) {
               this.errorMessage = 'Please fill in all required fields with valid data.';
-              console.log('Form validation failed: Missing required fields.');
               return false;
             }
           
-            // Validar productos
             const invalidProducts = this.orderDetails.some(
-              (detail) => !detail.product_id || detail.quantity <= 0 || isNaN(Number(detail.quantity))
+              (detail) => !detail.product_name || detail.quantity <= 0
             );
           
             if (invalidProducts) {
-              this.errorMessage = 'All products must have a valid type and quantity greater than 0.';
-              console.log('Form validation failed: Invalid products.', this.orderDetails);
+              this.errorMessage = 'All products must have a valid name and quantity greater than 0.';
               return false;
             }
           
@@ -298,7 +301,7 @@
 
         //Guarda un pedido con el status 'review'
           async saveDelivery(): Promise<void> {
-            await this.saveDeliveryByStatus('under review'); // Cambia el status a 'review'
+            await this.saveDeliveryByStatus('review'); // Cambia el status a 'review'
           }
 
         //Guarda un pedido con un status específico
@@ -315,7 +318,7 @@
                 alert(status === 'pending' ? 'Draft saved successfully!' : 'Order created successfully!');
               } else if (this.mode === 'edit') {
                 await firstValueFrom(this.deliveryService.updateDelivery(this.delivery.id_delivery!, deliveryPayload));
-                alert(status === 'under review' ? 'Order updated successfully!' : 'Draft updated successfully!');
+                alert(status === 'review' ? 'Order updated successfully!' : 'Draft updated successfully!');
               }
               this.router.navigate(['/operator/order-list']);
             } catch (error) {
@@ -331,7 +334,7 @@
               return;
             }
           
-            const newStatus = this.delivery.status === 'under review' ? 'corrections needed' : 'not approved';
+            const newStatus = this.delivery.status === 'review' ? 'corrections needed' : 'not approved';
           
             try {
               // Reutiliza `updateDeliveryStatus` para actualizar el estado y comentarios
@@ -346,7 +349,7 @@
       
         //Aprobación de envíos en modo review
           async approveDelivery(): Promise<void> {
-            const newStatus = this.delivery.status === 'under review' ? 'ready for departure' : 'approved';
+            const newStatus = this.delivery.status === 'review' ? 'ready for departure' : 'approved';
             console.log(newStatus);
             await this.updateDeliveryStatus(newStatus);
           }
@@ -452,7 +455,7 @@
 
         //Salida sin enviar el formulario
           cancel(): void {
-            this.router.navigate(['/${this.role}/order-list'], { relativeTo: this.route });
+            this.router.navigate([`/${this.role}/order-list`]);
           }
 
 }

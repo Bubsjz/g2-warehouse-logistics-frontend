@@ -3,8 +3,8 @@ export interface Delivery {
     send_date: Date | null;
     received_date: Date | null;
     comments: string;
-    products: { product_id: number; quantity: number }[];
-    status: 'pending' | 'under review' | 'corrections needed' | 'ready for departure' | 'in transit' | 'pending reception' | 'approved' | 'not approved';
+    products: { product_name: string; quantity: number }[];
+    status: 'pending' | 'review' | 'corrections needed' | 'ready for departure' | 'in transit' | 'pending reception' | 'approved' | 'not approved';
     origin_warehouse_id?: number | null;
     origin_warehouse_name?: string | null;
     destination_warehouse_id?: number | null;
@@ -49,7 +49,7 @@ export interface Delivery {
     origin_warehouse_locality?: string;
     destination_warehouse_name: string;
     destination_warehouse_locality?: string;
-    status: 'pending' | 'under review' | 'corrections needed' | 'ready for departure' | 'in transit' | 'pending reception' | 'approved' | 'not approved';
+    status: 'pending' | 'review' | 'corrections needed' | 'ready for departure' | 'in transit' | 'pending reception' | 'approved' | 'not approved';
     plate: string;
     comments: string;
     products: { product_id: number; quantity: number | string }[];

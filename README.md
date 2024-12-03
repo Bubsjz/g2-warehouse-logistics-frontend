@@ -77,14 +77,14 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
             "comments": "",
             "products": [
                 {
-                "product_id": 4,
-                "quantity": 10
+                    "product_name": "pale de hormigón",
+                    "product_quantity": 12
                 },
                 {
-                "product_id": 5,
-                "quantity": 20
+                    "product_name": "tablones",
+                    "product_quantity": 20
                 }
-            ]
+                ]
             }
 
 
@@ -103,12 +103,12 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
                 "comments": "Revisar productos",
                 "products": [
                 {
-                    "product_id": 4,
-                    "quantity": 12
+                    "product_name": "pale de hormigón",
+                    "product_quantity": 12
                 },
                 {
-                    "product_id": 5,
-                    "quantity": 20
+                    "product_name": "tablones",
+                    "product_quantity": 20
                 }
                 ]
             },
@@ -156,14 +156,14 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
             "comments": "Pedido actualizado",
             "products": [
                 {
-                "product_id": 4,
-                "quantity": 15
+                    "product_name": "pale de hormigón",
+                    "product_quantity": 12
                 },
                 {
-                "product_id": 5,
-                "quantity": 18
+                    "product_name": "tablones",
+                    "product_quantity": 20
                 }
-            ]
+                ]
             }
 
 
@@ -178,16 +178,16 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
                 "origin_warehouse_name": "Central Warehouse",
                 "destination_warehouse_name": "South Warehouse",
                 "plate": "4586-BTP",
-                "status": "under review",
+                "status": "review",
                 "comments": "Revisar productos",
                 "products": [
                 {
-                    "product_id": 4,
-                    "quantity": 12
+                    "product_name": "pale de hormigón",
+                    "product_quantity": 12
                 },
                 {
-                    "product_id": 5,
-                    "quantity": 20
+                    "product_name": "tablones",
+                    "product_quantity": 20
                 }
                 ]
             }
