@@ -2,7 +2,7 @@
   <div class="card shadow-lg p-4">
     <h3 class="text-center my-4">{{formType}} a user</h3>
     <hr />
-    <form [formGroup]="userForm">
+    <form [formGroup]="userForm" (ngSubmit) = "getDataForm()">
       <div class="my-3">
         <label class="form-label" for="name"><strong>Name</strong></label>
         <input

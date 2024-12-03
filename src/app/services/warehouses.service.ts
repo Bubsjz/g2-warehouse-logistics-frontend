@@ -20,16 +20,4 @@ export class WarehousesService {
   getById(id: number): Promise<Iwarehouse2> {
     return lastValueFrom(this.httpClient.get<Iwarehouse2>(`${this.baseUrl}/warehouse/${id}`))
   }
-
-  // private baseUrl: string = "http://localhost:3000/warehouses";
-  // private httpClient = inject(HttpClient)
-
-  // getAll(): Promise<Iwarehouse[]> {
-  //   return lastValueFrom(this.httpClient.get<Iwarehouse[]>(this.baseUrl))
-  //  }
-  
-  // getById(id: number): Promise<Iwarehouse[]> {
-  //   return lastValueFrom(this.httpClient.get<Iwarehouse[]>(`${this.baseUrl}?id=${id}`))
-  // }
-
 }
