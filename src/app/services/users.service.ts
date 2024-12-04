@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Iuser } from '../interfaces/iuser.interface';
+import { Iuser3, Iuser4 } from '../interfaces/iuser.interface';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 
@@ -9,19 +9,28 @@ import { lastValueFrom } from 'rxjs';
 
 export class UsersService {
 
-  private baseUrl: string = "http://localhost:3000/users";
+  private baseUrl: string = "http://localhost:3000/boss";
   private httpClient = inject(HttpClient);
 
-  getAll(): Promise<Iuser[]> {
-    return lastValueFrom(this.httpClient.get<Iuser[]>(this.baseUrl))
+  getAll(): Promise<Iuser3[]> {
+    return lastValueFrom(this.httpClient.get<Iuser3[]>(`${this.baseUrl}/users`))
   }
 
-  getById(id: number): Promise<Iuser[]> {
-    return lastValueFrom(this.httpClient.get<Iuser[]>(`${this.baseUrl}?id=${id}`))
+  getById(id: number): Promise<Iuser4> {
+    return lastValueFrom(this.httpClient.get<Iuser4>(`${this.baseUrl}/users/${id}`))
   }
 
-  getByWarehouseId(warehouse_id: number): Promise<Iuser[]> {
-    return lastValueFrom(this.httpClient.get<Iuser[]>(`${this.baseUrl}?warehouse_id=${warehouse_id}`))
+  insert(body: Iuser3): Promise<Iuser3> {
+    return lastValueFrom(this.httpClient.post<Iuser3>(`${this.baseUrl}/register`, body))
+  }
+
+  update(user: Iuser3): Promise<Iuser3> {
+    const body = {
+      name: user.name, surname: user.surname, email: user.email, 
+      password: user.password, role: user.role, image: user.image, 
+      assigned_id_warehouse: user.assigned_id_warehouse, assigned_id_truck: user.assigned_id_truck
+    }
+    return lastValueFrom(this.httpClient.put<Iuser3>(`${this.baseUrl}/users/${user.id_user}`, body))
   }
 
 }
