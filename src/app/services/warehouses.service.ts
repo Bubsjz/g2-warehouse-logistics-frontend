@@ -9,7 +9,7 @@ type warehouse= {
 name:string,
 locality: string,
 address: string,
-image: string, 
+image: File, 
 }
 
 @Injectable({
@@ -39,7 +39,7 @@ export class WarehousesService {
     }
   }
 
-  createWarehouse(body:any){
+  createWarehouse(body:FormData){
     return lastValueFrom(this.httpClient.post<warehouse>(`${this.Url}/warehouse`, body))
   }
 
