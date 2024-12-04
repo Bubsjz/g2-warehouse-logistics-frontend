@@ -128,15 +128,17 @@ export class UserFormComponent {
           });
         }
         formData.append("assigned_id_warehouse", "1");
-        formData.append("assigned_id_truck", "107");
+        formData.append("assigned_id_truck", "109");
 
         const response: Iuser3 = await this.userServices.update(this.myUserId, formData)
-        console.log(response)
-        if (response.id_user === Number(this.userForm.value.id_user)) {
+        console.log('usuario actualizado', response)
+        if (response.id_user) {
           let alert_res: AlertResponse = {title: 'Great!', text: 'User with ID: ' + response.id_user + ' successfully updated', icon: 'success', cbutton: 'Accept'}
           Swal.fire(alert_res)
           this.router.navigate(['/boss', 'employee-view', response.id_user])
         }
+
+        
       } catch (error) {
         console.log(error)
       }
@@ -159,7 +161,7 @@ export class UserFormComponent {
           });
         }
         formData.append("assigned_id_warehouse", "1");
-        formData.append("assigned_id_truck", "107");
+        formData.append("assigned_id_truck", "109");
     
         const response: Iuser3 = await this.userServices.insert(formData)
         console.log('usuario creado:', response)

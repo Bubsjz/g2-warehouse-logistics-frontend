@@ -8,6 +8,7 @@
                 <th scope="col" class="d-none d-sm-table-cell">Surname</th>
                 <th scope="col">Rol</th>
                 <th scope="col" class="d-none d-sm-table-cell">Email</th>
+                <th scope="col">View</th>
                 <th scope="col">Edit</th>
             </tr>
         </thead>
@@ -19,6 +20,11 @@
                     <td class="d-none d-sm-table-cell">{{ employee.surname }}</td>
                     <td>{{ employee.role }}</td>
                     <td class="d-none d-sm-table-cell"><a [href]="'mailto:' + employee.email">{{ employee.email }}</a></td>
+                    <td>
+                        <a class="btn btn-outline-info" [routerLink]="['/boss', 'employee-view', employee?.id_user]">
+                            <i class="fa-regular fa-eye" style="color: #060606"></i>
+                        </a>
+                    </td>
                     <td>
                         <a class="btn btn-outline-info" [routerLink]="['/boss', 'update-employee', employee?.id_user]">
                             <i class="fa-regular fa-pen-to-square fa-xl" style="color: #060606"></i>
