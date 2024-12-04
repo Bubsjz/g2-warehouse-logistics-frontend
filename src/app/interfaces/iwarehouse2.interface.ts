@@ -5,7 +5,7 @@ export interface Iwarehouse2 {
     name: string;
     locality: string;
     address: string;
-    image: string;
+    image: File ;
     id_user: number;
     user_name: string;
     surname: string;

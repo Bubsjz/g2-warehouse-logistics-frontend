@@ -1,6 +1,6 @@
 <section class="container mt-5">
   <div class="card shadow-lg p-4">
-    <h3 class="text-center my-4">Creation of warehouse</h3>
+    <h3 class="text-center my-4">{{type}} of warehouse</h3>
     <hr />
     <form [formGroup]="reactiveForm" (ngSubmit)="onSubmit()">
       <div class="my-3">
@@ -32,6 +32,8 @@
   
         </div>
       }
+
+      
         <div>
           <button type="button" onclick="document.getElementById('image').click()" class="btn btn-secondary">
             Select image
@@ -41,7 +43,7 @@
           }
         </div>
         <div class="d-flex justify-content-center gap-2 my-3">
-          <input type="submit" value="Create" class="btn btn-success rounded-pill btn-size" [disabled]='!reactiveForm.valid' />
+          <input type="submit" [value]="typebtn" class="btn btn-success rounded-pill btn-size" [disabled]='!reactiveForm.valid' />
           <input type="button" value="Delete" class="btn btn-danger rounded-pill btn-size"
             onclick="deleteWarehouse()" />
         </div>
