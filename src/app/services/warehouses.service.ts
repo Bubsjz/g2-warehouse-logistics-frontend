@@ -5,11 +5,19 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { lastValueFrom } from 'rxjs';
 
+type warehouse= {
+name:string,
+locality: string,
+address: string,
+image: string, 
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class WarehousesService {
   private baseUrl: string = "http://localhost:3000/warehouses";
+  private Url: string = "http://localhost:3000/boss"
   private httpClient = inject(HttpClient);
 
   getAll(): Promise<Iwarehouse[]> {
@@ -30,4 +38,9 @@ export class WarehousesService {
       return this.httpClient.post(this.baseUrl, warehouse);
     }
   }
+
+  createWarehouse(body:any){
+    return lastValueFrom(this.httpClient.post<warehouse>(`${this.Url}/warehouse`, body))
+  }
+
 }
