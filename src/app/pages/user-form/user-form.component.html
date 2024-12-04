@@ -1,8 +1,8 @@
 <section class="container mt-5">
   <div class="card shadow-lg p-4">
-    <h3 class="text-center my-4">{{formType}} a user</h3>
+    <h3 class="text-center my-4">{{ formType }} a user</h3>
     <hr />
-    <form [formGroup]="userForm" (ngSubmit) = "getDataForm()">
+    <form [formGroup]="userForm" (ngSubmit)="getDataForm()">
       <div class="my-3">
         <label class="form-label" for="name"><strong>Name</strong></label>
         <input
@@ -10,10 +10,11 @@
           type="text"
           id="name"
           formControlName="name"
-          placeholder="Enter the employee's name">
+          placeholder="Enter the employee's name"
+        />
         @if(checkControl('name', 'required')) {
-          <p class="error">Name is required</p>
-      }
+        <p class="error">Name is required</p>
+        }
       </div>
 
       <div class="my-3">
@@ -23,9 +24,10 @@
           type="text"
           id="surname"
           formControlName="surname"
-          placeholder="Enter the employee's surname">
+          placeholder="Enter the employee's surname"
+        />
         @if(checkControl('surname', 'required')) {
-          <p class="error">Surname is required</p>
+        <p class="error">Surname is required</p>
         }
       </div>
 
@@ -36,66 +38,101 @@
           type="text"
           id="email"
           formControlName="email"
-          placeholder="Enter the email">
+          placeholder="Enter the email"
+        />
         @if(checkControl('email', 'required')) {
-          <p class="error">Email is required</p>
+        <p class="error">Email is required</p>
+        } @if(checkControl('email', 'pattern')) {
+        <p class="error">Email is incorrect</p>
         }
-        @if(checkControl('email', 'pattern')) {
-          <p class="error">Email is incorrect</p>
-          }
       </div>
 
       <div class="mb-3">
-        <label class="form-label" for="password"><strong>Password</strong></label>
+        <label class="form-label" for="password"
+          ><strong>Password</strong></label
+        >
         <input
           class="form-control rounded-pill"
           type="password"
           id="password"
           formControlName="password"
-          placeholder="Enter the password">
+          placeholder="Enter the password"
+        />
         @if(checkControl('password', 'required')) {
-          <p class="error">Password is required</p>
+        <p class="error">Password is required</p>
         }
-        </div>
+      </div>
 
-        <div class="mb-3">
-          <label class="form-label" for="repeatpassword"><strong>Repeat Password</strong></label>
-          <input
-            class="form-control rounded-pill"
-            type="password"
-            id="repeatpassword"
-            formControlName="repeatpassword"
-            placeholder="Repeat the password">
-          @if(checkControl('password', 'required')) {
-            <p class="error">Password is required</p>
-          }
-          @if(userForm.hasError('checkpassword')) {
-            <p class="error">Both password values must coincide</p>
-          }
-          </div>
+      <div class="mb-3">
+        <label class="form-label" for="repeatpassword"
+          ><strong>Repeat Password</strong></label
+        >
+        <input
+          class="form-control rounded-pill"
+          type="password"
+          id="repeatpassword"
+          formControlName="repeatpassword"
+          placeholder="Repeat the password"
+        />
+        @if(checkControl('password', 'required')) {
+        <p class="error">Password is required</p>
+        } @if(userForm.hasError('checkpassword')) {
+        <p class="error">Both password values must coincide</p>
+        }
+      </div>
+
+      <div class="my-3">
+        <label class="form-label" for="image"><strong>Upload image</strong></label>
+        <div class="image-upload">
+          <input class="form-control rounded-pill" type="file" id="image" formControlName="image" accept="image/*"
+            style="display: none" (change)="onFileSelected($event)" />
+        </div>
+      </div>
+      @if(this.imagePreview){
+        <div class="mb-4 image-preview-container position-relative">
+          <button type="button" class="btn-close position-absolute" style="top:5px; left:5px ; z-index:10;" (click)="clearImage()"></button>
+          <img [src]="imagePreview" alt="image user"  class="img rounded shadow-lg border" style="max-width: 200px;"/>
   
+        </div>
+      }
+      <div>
+        <button type="button" onclick="document.getElementById('image').click()" class="btn btn-secondary">
+          Select image
+        </button>
+        @if(!this.imagePreview){
+          <span id="image-name" class="ms-2">No image selected</span>
+        }
+      </div>
+
       <div class="my-3">
         <label class="form-label" for="role"><strong>Role</strong></label>
-        <select class="form-select rounded-pill" id="role" formControlName="role">
+        <select
+          class="form-select rounded-pill"
+          id="role"
+          formControlName="role"
+        >
           <option value="" selected>Select a role</option>
           <option value="operator">Operator</option>
           <option value="manager">Manager</option>
           <option value="administrator">Administrator</option>
         </select>
         @if(userForm.hasError('checkrole')) {
-          <p class="error">Choose one among available options</p>
+        <p class="error">Choose one among available options</p>
         }
       </div>
 
       <div class="my-3">
-        <label class="form-label" for="warehouse"><strong>Warehouse</strong></label>
+        <label class="form-label" for="warehouse"
+          ><strong>Warehouse</strong></label
+        >
         <select
           class="form-select rounded-pill"
           id="warehouse"
-          formControlName="warehouse">
+          formControlName="warehouse"
+        >
           <option value="" selected>Select a warehouse</option>
           @for(warehouse of warehouses; track warehouse.id_warehouse) {
-            <option [value]="warehouse.name">{{warehouse.name}}</option>
+          <option [value]="warehouse.name">{{ warehouse.name }}</option>
 
           }
         </select>
@@ -104,7 +141,7 @@
       <div class="d-flex justify-content-center gap-2 my-3">
         <input
           type="submit"
-          [value]="(formType === 'Update') ? formType : 'Save'" 
+          [value]="formType === 'Update' ? formType : 'Save'"
           [disabled]="!userForm.valid"
           class="btn btn-success rounded-pill btn-size"
         />

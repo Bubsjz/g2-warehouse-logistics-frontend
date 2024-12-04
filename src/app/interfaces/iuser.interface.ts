@@ -15,7 +15,7 @@ export interface Iuser3 {
     email: string;
     password: string;
     role: string;
-    image: string;     
+    image: File;     
     assigned_id_warehouse: number;
     assigned_id_truck: number;
 }
@@ -28,7 +28,7 @@ export interface Iuser4 {
     email: string;
     password: string;
     role: string;
-    image: string;     
+    image: File;     
     assigned_id_warehouse: number;
     assigned_id_truck: number;
     warehouse_name: string;

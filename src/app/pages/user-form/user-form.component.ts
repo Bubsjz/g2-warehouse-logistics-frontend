@@ -25,12 +25,15 @@ export class UserFormComponent {
 
   warehouses: Iwarehouse[] | undefined = [];
   myWarehouse: Iwarehouse | undefined;
-  myUserId: Iuser3 | undefined;
+  myUserId: number | undefined;
 
   userForm: FormGroup;
   formType: string = 'Insert';
 
   email_pattern = /^[\w-.]+@([\w-]+\.)+[\w-]{2,8}$/
+
+  imagePreview: string | null = null; // Para almacenar la vista previa
+  selectedFile!: File; // Para almacenar el archivo seleccionado
 
   constructor() {
     this.userForm = new FormGroup({
@@ -42,10 +45,37 @@ export class UserFormComponent {
       ]),
       password: new FormControl(null, [Validators.required]),
       repeatpassword: new FormControl(null, [Validators.required]),
+      image: new FormControl(null),
       role: new FormControl(null),
       warehouse: new FormControl(null),
     }, [this.checkPassword])
   }
+
+  onFileSelected(event:Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    console.log('file', file)
+
+    if (file) {
+     this.selectedFile = file
+     
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result as string;
+      };
+      reader.onerror = (error) => {
+        console.error('error with reed the file', error);
+      };
+       reader.readAsDataURL(file);
+    } else {
+      console.warn('No image was provided');
+    }
+    }
+  
+    clearImage(){
+      this.imagePreview = null
+      this.userForm.get('image')?.reset();
+    }
+
 
   async ngOnInit() {
     try {
@@ -70,6 +100,7 @@ export class UserFormComponent {
           ]),
           password: new FormControl(res.password, [Validators.required]),
           repeatpassword: new FormControl(res.password, [Validators.required]),
+          image: new FormControl(null),
           role: new FormControl(res.role),
           warehouse: new FormControl(res.warehouse_name),
         }, [this.checkPassword])
@@ -78,15 +109,28 @@ export class UserFormComponent {
   }
 
   async getDataForm() {
-    console.log(this.userForm.value)
     if (this.myUserId) {
       try{
-        const form_values = this.userForm.value
-        form_values.id_user = this.myUserId;
-        form_values.assigned_id_warehouse = 1
-        form_values.assigned_id_truck = 105
-        form_values.image = 'http:/localhost:3000/uploads/user-2.jpg'
-        const response: Iuser3 = await this.userServices.update(form_values)
+        const formData = new FormData();
+        formData.append("id_user", this.myUserId.toString());
+        formData.append("name", this.userForm.get("name")?.value);
+        formData.append("surname", this.userForm.get("surname")?.value);
+        formData.append("email", this.userForm.get("email")?.value);
+        formData.append("password", this.userForm.get("password")?.value);
+        formData.append("role", this.userForm.get("role")?.value);
+        if (this.selectedFile) {
+          formData.append("image", this.selectedFile)
+        } else {
+          Swal.fire({
+            title: "Upsss!",
+            text: `No image was provided!`,
+            icon: "error"
+          });
+        }
+        formData.append("assigned_id_warehouse", "1");
+        formData.append("assigned_id_truck", "107");
+
+        const response: Iuser3 = await this.userServices.update(this.myUserId, formData)
         console.log(response)
         if (response.id_user === Number(this.userForm.value.id_user)) {
           let alert_res: AlertResponse = {title: 'Great!', text: 'User with ID: ' + response.id_user + ' successfully updated', icon: 'success', cbutton: 'Accept'}
@@ -99,12 +143,26 @@ export class UserFormComponent {
 
     }else{
       try{
-        const form_values = this.userForm.value
-        form_values.assigned_id_warehouse = 1
-        form_values.assigned_id_truck = 104
-        form_values.image = 'http:/localhost:3000/uploads/user-2.jpg'
-        const response: Iuser3 = await this.userServices.insert(form_values)
-        console.log(response)
+        const formData = new FormData();
+        formData.append("name", this.userForm.get("name")?.value);
+        formData.append("surname", this.userForm.get("surname")?.value);
+        formData.append("email", this.userForm.get("email")?.value);
+        formData.append("password", this.userForm.get("password")?.value);
+        formData.append("role", this.userForm.get("role")?.value);
+        if (this.selectedFile) {
+          formData.append("image", this.selectedFile)
+        } else {
+          Swal.fire({
+            title: "Upsss!",
+            text: `No image was provided!`,
+            icon: "error"
+          });
+        }
+        formData.append("assigned_id_warehouse", "1");
+        formData.append("assigned_id_truck", "107");
+    
+        const response: Iuser3 = await this.userServices.insert(formData)
+        console.log('usuario creado:', response)
         if (response.id_user) {
           let alert_res: AlertResponse = {title: 'Great!', text: 'User succesfully registered', icon: 'success', cbutton: 'Accept'}
           Swal.fire(alert_res)
