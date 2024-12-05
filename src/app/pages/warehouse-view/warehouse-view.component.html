@@ -1,7 +1,10 @@
 <section class="container mt-5">
     <app-warehouse-card [warehouse_id]="warehouse_id"></app-warehouse-card>
     <br>
-    <app-warehouse-user-list [warehouse_id]="warehouse_id"></app-warehouse-user-list>
+    <section class="mt-5">
+        <h2 class="card-title mb-4"><strong>Staff</strong></h2>
+        <app-warehouse-user-list [warehouse_id]="warehouse_id"></app-warehouse-user-list>
+    </section>
     <!-- <div class="mt-5 d-flex flex-row justify-content-center ">
         <app-paginator></app-paginator>
     </div> -->
