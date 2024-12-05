@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { UsersService } from '../../services/users.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Iwarehouse } from '../../interfaces/iwarehouse.interface';
 import { WarehousesService } from '../../services/warehouses.service';
@@ -12,7 +12,7 @@ type AlertResponse = { title: string; text: string; icon: SweetAlertIcon, cbutto
 @Component({
   selector: 'app-user-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './user-form.component.html',
   styleUrl: './user-form.component.css'
 })
