@@ -34,4 +34,8 @@ export class UsersService {
     return lastValueFrom(this.httpClient.put<Iuser3>(`${this.baseUrl}/users/${id}`, body))
   }
 
+  deleteByID(id: number): Promise<Iuser3> {
+    return lastValueFrom(this.httpClient.delete<Iuser3>(`${this.baseUrl}/users/${id}`))
+  }
+
 }
