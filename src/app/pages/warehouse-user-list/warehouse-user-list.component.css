@@ -63,4 +63,6 @@ table tr, table td, table th{
     color: white;
   }
   
- 
+  .text-users{
+    color: #800020;
+  }

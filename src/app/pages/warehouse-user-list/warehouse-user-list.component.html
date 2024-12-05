@@ -1,6 +1,7 @@
 <table class="table table-borderless table-hover">
     <thead class="table table-info">
         <tr>
+            <th scope="col">Id</th>
             <th scope="col">Name</th>
             <th scope="col" class="d-none d-md-table-cell">Surname</th>
             <th scope="col">Role</th>
@@ -13,18 +14,19 @@
 
         @for(employee of employees; track employee.id_user){
             <tr>
+                <th scope="row" class="text-users pointer" [routerLink]="['/boss', 'employee-view', employee?.id_user]">{{employee.id_user}}</th>
                 <td>{{ employee.name }}</td>
                 <td class="d-none d-md-table-cell">{{ employee.surname }}</td>
                 <td>{{ employee.role }}</td>
                 <td class="d-none d-md-table-cell"><a [href]="'mailto:' + employee.email">{{ employee.email }}</a></td>
                 <td>
                     <button class="btn btn-outline-primary" [routerLink]="['/boss', 'employee-view', employee?.id_user]">
-                        <i class="fa-regular fa-eye" style="color: #060606"></i>
+                        <i class="fa-regular fa-eye"></i>
                     </button>
                 </td>
                 <td>
                     <button class="btn  btn-outline-primary" [routerLink]="['/boss', 'update-employee', employee?.id_user]">
-                        <i class="fa-regular fa-pen-to-square fa-xl" style="color: #060606"></i>
+                        <i class="fa-regular fa-pen-to-square fa-xl"></i>
                     </button>
                 </td>
             </tr>
