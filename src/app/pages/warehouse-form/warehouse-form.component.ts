@@ -3,14 +3,14 @@ import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { WarehousesService } from '../../services/warehouses.service';
 import Swal from 'sweetalert2';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 
 
 @Component({
   selector: 'app-warehouse-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule,RouterLink],
   templateUrl: './warehouse-form.component.html',
   styleUrls: ['./warehouse-form.component.css'],
 })
@@ -40,7 +40,7 @@ export class WarehouseFormComponent {
   ngOnInit() {
 
     this.activateRoute.params.subscribe(async (params: any) => {
-      this.warehouse_id = Number(params._id)
+      this.warehouse_id = Number(params.id)
       if (params.id) {
         this.type = "Update"
         this.typebtn = "Update"

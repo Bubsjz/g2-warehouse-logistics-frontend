@@ -10,8 +10,13 @@
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.btnSelect:hover{
+    background-color: #0c2fdf; 
+
+
+}
 .btn-size:hover {
-    background-color: #28a745; 
+    background-color: #0c2fdf; 
     transform: scale(1.05);
     box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15);
 }

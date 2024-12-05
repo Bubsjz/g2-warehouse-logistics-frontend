@@ -5,23 +5,23 @@
     <form [formGroup]="reactiveForm" (ngSubmit)="onSubmit()">
       <div class="my-3">
         <label class="form-label" for="name">Warehouse name</label>
-        <input class="form-control rounded-pill" type="text" id="name" formControlName="name"
+        <input class="form-control " type="text" id="name" formControlName="name"
           placeholder="Enter the name of the warehouse" />
       </div>
       <div class="my-3">
         <label class="form-label" for="locality">Locality</label>
-        <input class="form-control rounded-pill" type="text" id="locality" formControlName="locality"
+        <input class="form-control " type="text" id="locality" formControlName="locality"
           placeholder="Enter the locality of the warehouse" />
       </div>
       <div class="my-3">
         <label class="form-label" for="address">Address</label>
-        <input class="form-control rounded-pill" type="text" id="address" formControlName="address"
+        <input class="form-control " type="text" id="address" formControlName="address"
           placeholder="Enter the street of the warehouse" />
       </div>
       <div class="my-3">
         <label class="form-label" for="image">Upload image</label>
         <div class="image-upload">
-          <input class="form-control rounded-pill" type="file" id="image" formControlName="image" accept="image/*"
+          <input class="form-control " type="file" id="image" formControlName="image" accept="image/*"
             style="display: none" (change)="onFileSelected($event)" />
         </div>
       </div>
@@ -33,18 +33,20 @@
         </div>
       }
 
-      
         <div>
-          <button type="button" onclick="document.getElementById('image').click()" class="btn btn-secondary">
-            Select image
+          <button type="button" onclick="document.getElementById('image').click()" class="btn btn-primary p-3 btnSelect  ">Select photo <i class="fa-solid fa-cloud-arrow-up fa-xl"></i> 
           </button>
-          @if(!this.imagePreview){
-            <span id="image-name" class="ms-2">No image selected</span>
-          }
+         
         </div>
         <div class="d-flex justify-content-center gap-2 my-3">
-          <input type="submit" [value]="typebtn" class="btn btn-success rounded-pill btn-size" [disabled]='!reactiveForm.valid' />
-          <input type="button" value="Back" class="btn btn-danger rounded-pill btn-size"
+          @if(type === "create"){
+            <input type="submit" [value]="typebtn" class="btn btn-success  pb-5 btn-size" [disabled]='!reactiveForm.valid' />
+
+          }@else{
+            <input type="submit" [value]="typebtn" class="btn btn-success  pb-5 btn-size"  />
+
+          }
+          <input type="button" value="Back" class="btn btn-primary pb-5 btn-size " [routerLink]="['/boss','warehouse-view',this.warehouse_id]"
              />
         </div>
           
