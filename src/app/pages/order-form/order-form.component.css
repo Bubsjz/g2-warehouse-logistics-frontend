@@ -2,3 +2,7 @@
     width: 150px;
     height: 45px;
 }
+
+.is-invalid {
+    border: 1px solid red;
+  }

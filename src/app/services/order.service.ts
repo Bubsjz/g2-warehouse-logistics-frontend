@@ -20,6 +20,7 @@ export class DeliveryService {
   }
 
   // Obtener envío por ID
+  //Problemas con peticiones de envíos sin productos, puede que por necesidad de aunque sea ofrecer un array vacío, o de cómo se procesa en el back-end, porque también falla en rest
   getDeliveryById(id: number, role: string): Observable<CombinedResponse> {
     const url = role === 'operator'
       ? `${this.baseUrl}/operator/modify-order/${id}`
@@ -33,6 +34,7 @@ export class DeliveryService {
     return this.http.post<Delivery>(`${this.baseUrl}/create-order`, delivery);
   }
 
+  // Actualizar envío
   updateDelivery(id: number, delivery: any): Observable<any> {
     const url = `${this.baseUrl}/operator/update-delivery/${id}`;
     console.log('PUT URL:', url);
@@ -49,10 +51,19 @@ export class DeliveryService {
     return this.http.delete<void>(`${this.baseUrl}/modify-order/${id}`);
   }
 
-  // Cambiar estado de un envío
+  // Cambiar estado de un envío en modo revisión (basado en status que se envía)
   updateDeliveryStatus(id: number, status: string, comments: string | null = null): Observable<Delivery> {
     const payload = { comments, status };
-    const url = `${this.baseUrl}/manager/review-order/${id}`;
+    const url = ['ready for departure', 'corrections needed'].includes(status)
+    ? `${this.baseUrl}/manager/review-order/${id}`
+    : ['approved', 'not approved'].includes(status)
+    ? `${this.baseUrl}/manager/verify-order/${id}`
+    : '';
+
+    if (!url) {
+      console.error('Invalid status provided:', status);
+      return throwError(() => new Error('Invalid status provided.'));
+    }
     
     const headers = {
       headers: { 'Content-Type': 'application/json' }

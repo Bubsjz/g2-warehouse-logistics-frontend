@@ -112,36 +112,6 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
                 }
                 ]
             },
-            "warehouse": [
-                {
-                "id_warehouse": 1,
-                "name": "Central Warehouse",
-                },
-                {
-                "id_warehouse": 2,
-                "name": "South Warehouse",
-                }
-            ],
-            "truck": [
-                {
-                "id_truck": 42,
-                "plate": "4586-BTP",
-                },
-                {
-                "id_truck": 7,
-                "plate": "2345-RTY",
-                }
-            ],
-            "productNames": [
-                {
-                "id_product": 4,
-                "name": "Pale de tablones"
-                },
-                {
-                "id_product": 5,
-                "name": "Pale bloques de hormigón"
-                }
-            ]
             }
 
     DATOS ENVIADOS A BACK

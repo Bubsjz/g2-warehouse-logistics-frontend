@@ -1,7 +1,7 @@
 <section class="container mt-4">
   <div class="card shadow-lg p-4">
     <h3 class="text-center my-4">
-      {{ mode === 'create' ? 'Create Order' : mode === 'edit' ? 'Edit Order' : 'Review Order' }}
+      {{ getTitle() }}
     </h3>
     <hr />
     <form (ngSubmit)="processModeSpecificActions(mode === 'review' ? 'submit' : 'save')" #orderForm="ngForm">
@@ -19,6 +19,7 @@
           id="send-date"
           [ngModel]="delivery.send_date ? formatDateForInput(delivery.send_date) : ''"
           (ngModelChange)="onDateChange('send_date', $event)"
+          [ngClass]="{ 'is-invalid': submitted && !delivery.send_date }"
           name="send_date"
           [disabled]="mode === 'review' || !isEditable"
           required
@@ -37,12 +38,16 @@
           id="received-date"
           [ngModel]="delivery.received_date ? formatDateForInput(delivery.received_date) : ''"
           (ngModelChange)="onDateChange('received_date', $event)"
+          [ngClass]="{ 'is-invalid': submitted && !delivery.received_date }"
           name="received_date"
           [disabled]="mode === 'review' || !isEditable"
           required
         />
         <div *ngIf="submitted && !delivery.received_date" class="text-danger">
           Received date is required.
+        </div>
+        <div *ngIf="delivery.send_date && delivery.received_date && delivery.received_date < delivery.send_date" class="text-danger">
+          Received date cannot be earlier than send date.
         </div>
       </div>
 
@@ -53,6 +58,7 @@
           <select
             class="form-select rounded-pill"
             [(ngModel)]="delivery.origin_warehouse_name"
+            [ngClass]="{ 'is-invalid': submitted && !delivery.origin_warehouse_name }"
             name="origin_warehouse_name"
             id="originWarehouse"
             required
@@ -78,6 +84,7 @@
           <select
             class="form-select rounded-pill"
             [(ngModel)]="delivery.destination_warehouse_name"
+            [ngClass]="{ 'is-invalid': submitted && !delivery.destination_warehouse_name }"
             name="destination_warehouse_name"
             id="destinationWarehouse"
             required
@@ -89,6 +96,9 @@
           </select>
           <div *ngIf="submitted && !delivery.destination_warehouse_name" class="text-danger">
             Destination warehouse is required.
+          </div>
+          <div *ngIf="delivery.origin_warehouse_name && delivery.destination_warehouse_name && delivery.origin_warehouse_name === delivery.destination_warehouse_name" class="text-danger">
+            Origin and destination warehouses must be different.
           </div>
         </ng-container>
         <ng-template #staticDestinationWarehouse>
@@ -103,11 +113,12 @@
           <select
             class="form-select rounded-pill"
             [(ngModel)]="delivery.plate"
+            [ngClass]="{ 'is-invalid': submitted && !delivery.plate }"
             name="truck_plate"
             id="plate"
             required
           >
-            <option [ngValue]="null" disabled>Select the truck</option>
+            <option [ngValue]="null" disabled>Select the truck plate</option>
             <option *ngFor="let truck of trucks" [value]="truck.plate">
               {{ truck.plate }}
             </option>
@@ -122,13 +133,17 @@
       </div>
 
       <!-- Productos -->
-        <p class="fw-bold mt-4">Order Details</p>
+        <p class="fw-bold mt-4">Order Products</p>
+        <div *ngIf="orderDetails.length === 0 && mode === 'review'" class="alert alert-warning">
+          There are no products associated with this order.
+        </div>
         <div *ngFor="let detail of orderDetails; let i = index" class="my-3 d-flex align-items-center gap-3">
         <!-- Selector de tipo de producto -->
         <ng-container *ngIf="mode === 'edit'; else staticProduct">
           <select
             class="form-select rounded-pill w-50"
             [(ngModel)]="detail.product_name"
+            [ngClass]="{ 'is-invalid': submitted && !detail.product_name }"
             name="product-{{ i }}"
             id="product{{ i }}"
             [ngModelOptions]="{ standalone: true }"
@@ -157,6 +172,7 @@
                 class="form-control rounded-pill w-25"
                 placeholder="Quantity"
                 [(ngModel)]="detail.product_quantity"
+                [ngClass]="{ 'is-invalid': submitted && !detail.product_quantity }"
                 name="quantity-{{ i }}"
                 id="quantity{{ i }}"
                 [ngModelOptions]="{ standalone: true }"
@@ -215,6 +231,7 @@
             type="submit"
             class="btn btn-success rounded-pill"
             [disabled]="!validateForm()"
+            (click)="processModeSpecificActions('save', 'review')"
           >
             Create Order
           </button>
@@ -226,8 +243,9 @@
             type="submit"
             class="btn btn-success rounded-pill"
             [disabled]="!validateForm()"
+            (click)="processModeSpecificActions('update', 'review')"
           >
-            Create Order
+          {{ delivery.status === 'pending' ? 'Create Order' : 'Update Order' }}
           </button>
           <button
             type="button"
@@ -246,23 +264,23 @@
             (click)="handleReviewAction('submit')"
             [disabled]="!isCommentEditable || !delivery.comments || delivery.comments.trim() === ''"
           >
-            Send Comments
+          {{ delivery.status === 'review' ? 'Send comments' : 'Not approved' }}
           </button>
           <button
             class="btn btn-success rounded-pill"
             type="button"
             (click)="handleReviewAction('approve')"
           >
-            Approve
+          {{ delivery.status === 'review' ? 'Send delivery' : 'Approved' }}
           </button>
-          <button
+<!--           <button
             class="btn btn-danger rounded-pill"
             type="button"
             (click)="handleReviewAction('reject')"
             *ngIf="delivery.status === 'pending reception'"
           >
             Reject
-          </button>
+          </button> -->
         </ng-container>
       
         <!-- Botón "Back" (siempre visible) -->
