@@ -26,7 +26,6 @@ export class UserFormComponent {
   warehouses: Iwarehouse[] | undefined = [];
   myWarehouseId: number | undefined;
   myUserId: number | undefined;
-
   userForm: FormGroup;
   formType: string = 'Insert';
 
@@ -129,8 +128,12 @@ export class UserFormComponent {
             icon: "error"
           });
         }
-        formData.append("assigned_id_warehouse", "1");
-        formData.append("assigned_id_truck", "109");
+
+        const newWarehouseName: string = this.userForm.get("warehouse")?.value
+        const newWarehouseId: number = this.warehouses!.filter(warehouse => warehouse.name === newWarehouseName)[0].id_warehouse
+        formData.append("assigned_id_warehouse", newWarehouseId.toString());
+
+        formData.append("assigned_id_truck", "111");
 
         const response: Iuser3 = await this.userServices.update(this.myUserId, formData)
         console.log('usuario actualizado', response)
@@ -153,6 +156,7 @@ export class UserFormComponent {
         formData.append("email", this.userForm.get("email")?.value);
         formData.append("password", this.userForm.get("password")?.value);
         formData.append("role", this.userForm.get("role")?.value);
+        
         if (this.selectedFile) {
           formData.append("image", this.selectedFile)
         } else {
@@ -162,8 +166,12 @@ export class UserFormComponent {
             icon: "error"
           });
         }
-        formData.append("assigned_id_warehouse", "1");
-        formData.append("assigned_id_truck", "109");
+
+        const newWarehouseName: string = this.userForm.get("warehouse")?.value
+        const newWarehouseId: number = this.warehouses!.filter(warehouse => warehouse.name === newWarehouseName)[0].id_warehouse
+        formData.append("assigned_id_warehouse", newWarehouseId.toString());
+
+        formData.append("assigned_id_truck", "111");
     
         const response: Iuser3 = await this.userServices.insert(formData)
         console.log('usuario creado:', response)
