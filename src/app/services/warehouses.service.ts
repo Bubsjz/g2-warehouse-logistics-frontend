@@ -37,4 +37,7 @@ export class WarehousesService {
     return firstValueFrom(this.httpClient.put<Warehouse>(`${this.baseUrl}/warehouse/${warehouse_id}`,body))
   }
 
+  delete(warehouse_id:number){
+    return lastValueFrom(this.httpClient.delete<Warehouse>(`${this.baseUrl}/warehouse/${warehouse_id}`))
+  }
 }

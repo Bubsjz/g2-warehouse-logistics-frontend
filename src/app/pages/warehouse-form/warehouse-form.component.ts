@@ -25,7 +25,7 @@ export class WarehouseFormComponent {
   selectedFile!: File | null // Para almacenar el archivo seleccionado
   type: string = "Creation"
   typebtn: string = "Create"
-  prueba!: File
+  warehouse_id!:number
 
 
   constructor() {
@@ -40,6 +40,7 @@ export class WarehouseFormComponent {
   ngOnInit() {
 
     this.activateRoute.params.subscribe(async (params: any) => {
+      this.warehouse_id = Number(params._id)
       if (params.id) {
         this.type = "Update"
         this.typebtn = "Update"
@@ -112,13 +113,14 @@ export class WarehouseFormComponent {
           text: `${response.name} has been created! `,
           icon: "success"
         });
-        
-        //await this.router.navigateByUrl('/dummy-route', { skipLocationChange: true });
+      
         await this.router.navigate(['/boss', 'warehouse-info'])
         window.location.reload()
       }
     }
   }
+
+ 
 }
 
 

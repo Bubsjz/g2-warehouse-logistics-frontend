@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { WarehouseCardComponent } from '../warehouse-card/warehouse-card.component';
 import { WarehouseUserListComponent } from '../warehouse-user-list/warehouse-user-list.component';
-import { PaginatorComponent } from '../../components/paginator/paginator.component';
 import { ActivatedRoute } from '@angular/router';
 
 
