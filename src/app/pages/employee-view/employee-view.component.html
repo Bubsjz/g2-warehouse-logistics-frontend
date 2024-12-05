@@ -18,7 +18,7 @@
                 <!-- <button class="btn btn-outline-danger m-1 p-3 px-5" (click)="deleteUser()">Delete</button> -->
                 <a class="btn btn-success m-1 p-3 px-5" [routerLink]="['/boss', 'update-employee', myUser?.id_user]">Update</a>
                 <a class="btn btn-secondary m-1 p-3 px-5" [routerLink]="['/boss', 'warehouse-view', myUser?.assigned_id_warehouse]">Back</a>
-                <button class="btn btn-danger m-1 p-3 px-5">Delete</button>
+                <button class="btn btn-danger m-1 p-3 px-5" (click)="delete(userID)">Delete</button>
             </div>
         </div>
         <!-- <div *ngIf="!userInfo || !warehouseInfo">
