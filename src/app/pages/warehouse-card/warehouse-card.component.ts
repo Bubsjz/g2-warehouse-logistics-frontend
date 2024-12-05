@@ -51,8 +51,8 @@ export class WarehouseCardComponent {
     Swal.fire({
       title: `Are you sure?`,
       showDenyButton: true,
-      confirmButtonText: 'Eliminar',
-      denyButtonText: `No eliminar`,
+      confirmButtonText: 'Delete',
+      denyButtonText: `No delete`,
       confirmButtonColor: '#4caf50',
     }).then(async (result) => {
       if (result.isConfirmed) {
