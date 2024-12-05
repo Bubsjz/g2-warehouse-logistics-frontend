@@ -7,7 +7,8 @@
             <th scope="col">Role</th>
             <th scope="col" class="d-none d-md-table-cell">Email</th>
             <th scope="col">View</th>
-            <th scope="col">Edit</th>
+            <th scope="col" class="d-none d-md-table-cell">Edit</th>
+            <th scope="col" class="d-none d-md-table-cell">Delete</th>
         </tr>
     </thead>
     <tbody>
@@ -24,10 +25,15 @@
                         <i class="fa-regular fa-eye"></i>
                     </button>
                 </td>
-                <td>
+                <td class="d-none d-md-table-cell">
                     <button class="btn  btn-outline-primary" [routerLink]="['/boss', 'update-employee', employee?.id_user]">
                         <i class="fa-regular fa-pen-to-square fa-xl"></i>
                     </button>
+                </td>
+                <td class="d-none d-md-table-cell">
+                    <button class="btn btn-outline-primary">
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
                 </td>
             </tr>
             }
