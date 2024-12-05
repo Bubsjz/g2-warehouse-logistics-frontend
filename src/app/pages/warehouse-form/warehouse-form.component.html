@@ -1,6 +1,6 @@
 <section class="container mt-5">
   <div class="card shadow-lg p-4">
-    <h3 class="text-center my-4">{{type}} of warehouse</h3>
+    <h3 class="text-center my-4"> Warehouse {{type}}</h3>
     <hr />
     <form [formGroup]="reactiveForm" (ngSubmit)="onSubmit()">
       <div class="my-3">
@@ -17,6 +17,16 @@
         <label class="form-label" for="address">Address</label>
         <input class="form-control " type="text" id="address" formControlName="address"
           placeholder="Enter the street of the warehouse" />
+      </div>
+      <div class="my-3">
+        <label class="form-label" for="latitude">Latitude</label>
+        <input class="form-control " type="text" id="latitude" formControlName="latitude"
+          placeholder="Enter the latitude of the warehouse" />
+      </div>
+      <div class="my-3">
+        <label class="form-label" for="longitude">Longitude</label>
+        <input class="form-control " type="text" id="longitude" formControlName="longitude"
+          placeholder="Enter the longitude of the warehouse" />
       </div>
       <div class="my-3">
         <div class="image-upload">
@@ -38,10 +48,10 @@
          
         </div>
         <div class="d-flex justify-content-center gap-2 my-3">
-          @if(type === "create"){
+          @if(typebtn === "create"){
             <input type="submit" [value]="typebtn" class="btn btn-success  pb-5 btn-size" [disabled]='!reactiveForm.valid' />
 
-          }@else{
+          }@else  {
             <input type="submit" [value]="typebtn" class="btn btn-success  pb-5 btn-size"  />
 
           }

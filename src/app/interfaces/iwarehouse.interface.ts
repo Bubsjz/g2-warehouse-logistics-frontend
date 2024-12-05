@@ -4,6 +4,8 @@ export interface Iwarehouse {
     locality: string;
     address: string;
     image: string;
+    latitude:string;
+    longitude:string;
 }
 // export interface Iwarehouse {
 //     id: number;

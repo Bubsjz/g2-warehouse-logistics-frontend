@@ -5,11 +5,12 @@ import { Router, RouterLink } from '@angular/router';
 import { Iwarehouse2 } from '../../interfaces/iwarehouse2.interface';
 import { Iuser2 } from '../../interfaces/iuser2.interface';
 import Swal from 'sweetalert2';
+import { GoogleMap, MapMarker } from '@angular/google-maps';
 
 @Component({
   selector: 'app-warehouse-card',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink,GoogleMap,MapMarker],
   templateUrl: './warehouse-card.component.html',
   styleUrl: './warehouse-card.component.css'
 })

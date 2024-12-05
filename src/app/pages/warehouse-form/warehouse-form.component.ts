@@ -23,7 +23,7 @@ export class WarehouseFormComponent {
   reactiveForm: FormGroup;
   imagePreview: string | null = null; // Para almacenar la vista previa
   selectedFile!: File | null // Para almacenar el archivo seleccionado
-  type: string = "Creation"
+  type: string = "creation"
   typebtn: string = "Create"
   warehouse_id!:number
 
@@ -33,16 +33,22 @@ export class WarehouseFormComponent {
       name: new FormControl('', [Validators.required]),
       locality: new FormControl('', [Validators.required]),
       address: new FormControl('', [Validators.required]),
-      image: new FormControl('', [Validators.required])
+      image: new FormControl('', [Validators.required]),
+      latitude: new FormControl('',[Validators.required]),
+      longitude: new FormControl('',[Validators.required])
+
 
     }, [])
   }
   ngOnInit() {
 
+    
+
     this.activateRoute.params.subscribe(async (params: any) => {
       this.warehouse_id = Number(params.id)
       if (params.id) {
-        this.type = "Update"
+        console.log(params.id)
+        this.type = "update"
         this.typebtn = "Update"
         const warehouse = await this.serviceWarehouse.getById(params.id)
         this.reactiveForm = new FormGroup({
@@ -50,6 +56,8 @@ export class WarehouseFormComponent {
           name: new FormControl(warehouse.name, [Validators.required]),
           locality: new FormControl(warehouse.locality, [Validators.required]),
           address: new FormControl(warehouse.address, [Validators.required]),
+          latitude: new FormControl(warehouse.latitude, [Validators.required]),
+          longitude: new FormControl(warehouse.longitude, [Validators.required]),
           image: new FormControl(null, [Validators.required])
 
         }, [])
