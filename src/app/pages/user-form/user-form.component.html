@@ -145,8 +145,9 @@
           [disabled]="!userForm.valid"
           class="btn btn-success rounded-pill btn-size"
         />
-        <a class="btn btn-secondary rounded-pill btn-size" 
-        [routerLink]="formType === 'Insert' ? ['/boss', 'warehouse-info'] : ['/boss', 'warehouse-view', myWarehouseId]">Back</a>
+        <button class="btn btn-secondary rounded-pill btn-size" 
+        [routerLink]="formType === 'Insert' ? ['/boss', 'warehouse-info'] : ['/boss', 'warehouse-view', myWarehouseId]">Back
+      </button>
       </div>
     </form>
   </div>
