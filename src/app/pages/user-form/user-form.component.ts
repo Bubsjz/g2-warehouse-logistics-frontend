@@ -24,7 +24,7 @@ export class UserFormComponent {
   router = inject(Router);
 
   warehouses: Iwarehouse[] | undefined = [];
-  myWarehouse: Iwarehouse | undefined;
+  myWarehouseId: number | undefined;
   myUserId: number | undefined;
 
   userForm: FormGroup;
@@ -88,8 +88,10 @@ export class UserFormComponent {
     this.activatedRoute.params.subscribe(async (params: any) => {
       if(params.id) {
         this.formType = 'Update'
-        const res = await this.userServices.getById(params.id);
         this.myUserId = params.id
+
+        const res = await this.userServices.getById(params.id);
+        this.myWarehouseId = res.assigned_id_warehouse;
 
         this.userForm = new FormGroup({
           name: new FormControl(res.name, [Validators.required]),

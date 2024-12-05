@@ -18,7 +18,7 @@
                 <!-- <button class="btn btn-outline-danger m-1 p-3 px-5" (click)="deleteUser()">Delete</button> -->
                 <button class="btn btn-outline-danger m-1 p-3 px-5">Delete</button>
                 <a class="btn btn-outline-success m-1 p-3 px-5" href="/dashboard/boss/w-userform">Update</a>
-                <a class="btn btn-outline-secondary m-1 p-3 px-5" [routerLink]="['/boss', 'warehouse-info']">Back to list</a>
+                <a class="btn btn-outline-secondary m-1 p-3 px-5" [routerLink]="['/boss', 'warehouse-view', myUser?.assigned_id_warehouse]">Back to list</a>
                 
             </div>
         </div>
