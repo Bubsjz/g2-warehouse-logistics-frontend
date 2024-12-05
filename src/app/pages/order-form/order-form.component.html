@@ -4,7 +4,7 @@
       {{ mode === 'create' ? 'Create Order' : mode === 'edit' ? 'Edit Order' : 'Review Order' }}
     </h3>
     <hr />
-    <form (ngSubmit)="mode === 'review' ? submitReview() : saveDelivery()" #orderForm="ngForm">
+    <form (ngSubmit)="processModeSpecificActions(mode === 'review' ? 'submit' : 'save')" #orderForm="ngForm">
       <!-- Mostrar mensaje de error -->
       <div *ngIf="submitted && errorMessage" class="alert alert-danger">
         {{ errorMessage }}
@@ -49,7 +49,7 @@
       <!-- Almacén de origen -->
       <div class="my-3">
         <label class="form-label" for="originWarehouse">Origin Warehouse</label>
-        <ng-container *ngIf="mode === 'edit'; else staticOriginWarehouse">
+        <ng-container *ngIf="mode !== 'review'; else staticOriginWarehouse">
           <select
             class="form-select rounded-pill"
             [(ngModel)]="delivery.origin_warehouse_name"
@@ -74,7 +74,7 @@
       <!-- Almacén de destino -->
       <div class="my-3">
         <label class="form-label" for="destinationWarehouse">Destination Warehouse</label>
-        <ng-container *ngIf="mode === 'edit'; else staticDestinationWarehouse">
+        <ng-container *ngIf="mode !== 'review'; else staticDestinationWarehouse">
           <select
             class="form-select rounded-pill"
             [(ngModel)]="delivery.destination_warehouse_name"
@@ -99,7 +99,7 @@
       <!-- Matrícula del camión -->
       <div class="my-3">
         <label class="form-label" for="plate">Truck License Plate</label>
-        <ng-container *ngIf="mode === 'edit'; else staticPlate">
+        <ng-container *ngIf="mode !== 'review'; else staticPlate">
           <select
             class="form-select rounded-pill"
             [(ngModel)]="delivery.plate"
@@ -140,7 +140,7 @@
             </option>
           </select>
                   <!-- Validación -->
-        <div *ngIf="detail.touched && !detail.product_id" class="text-danger">
+        <div *ngIf="detail.touched && !detail.product_name" class="text-danger">
           Product is required.
         </div>
         </ng-container>
@@ -156,7 +156,7 @@
                 type="number"
                 class="form-control rounded-pill w-25"
                 placeholder="Quantity"
-                [(ngModel)]="detail.quantity"
+                [(ngModel)]="detail.product_quantity"
                 name="quantity-{{ i }}"
                 id="quantity{{ i }}"
                 [ngModelOptions]="{ standalone: true }"
@@ -164,12 +164,12 @@
                 required
               />
               <!-- Validación -->
-              <div *ngIf="detail.touched && (!detail.quantity || detail.quantity <= 0)" class="text-danger">
+              <div *ngIf="detail.touched && (!detail.product_quantity || detail.product_quantity <= 0)" class="text-danger">
                 Quantity must be greater than 0.
               </div>
             </ng-container>
             <ng-template #staticQuantity>
-              <span class="form-control rounded-pill w-4">{{ detail.quantity || '0' }}</span>
+              <span class="form-control rounded-pill w-4">{{ detail.product_quantity || '0' }}</span>
             </ng-template>
           </div>
 
@@ -207,7 +207,7 @@
           <button
             type="button"
             class="btn btn-warning rounded-pill"
-            (click)="saveAsDraft()"
+            (click)="processModeSpecificActions('save', 'pending')"
           >
             Save as draft
           </button>
@@ -243,7 +243,7 @@
           <button
             class="btn btn-danger rounded-pill"
             type="button"
-            (click)="submitReview()"
+            (click)="handleReviewAction('submit')"
             [disabled]="!isCommentEditable || !delivery.comments || delivery.comments.trim() === ''"
           >
             Send Comments
@@ -251,9 +251,17 @@
           <button
             class="btn btn-success rounded-pill"
             type="button"
-            (click)="approveDelivery()"
+            (click)="handleReviewAction('approve')"
           >
             Approve
+          </button>
+          <button
+            class="btn btn-danger rounded-pill"
+            type="button"
+            (click)="handleReviewAction('reject')"
+            *ngIf="delivery.status === 'pending reception'"
+          >
+            Reject
           </button>
         </ng-container>
       
