@@ -6,6 +6,7 @@ import { Iwarehouse } from '../../interfaces/iwarehouse.interface';
 import { WarehousesService } from '../../services/warehouses.service';
 import { Iuser3 } from '../../interfaces/iuser.interface';
 import Swal, { SweetAlertIcon } from 'sweetalert2';
+import { Itruck } from '../../interfaces/itruck.interface';
 
 type AlertResponse = { title: string; text: string; icon: SweetAlertIcon, cbutton: string};
 
@@ -24,8 +25,12 @@ export class UserFormComponent {
   router = inject(Router);
 
   warehouses: Iwarehouse[] | undefined = [];
+  trucks: Itruck[] | undefined = [];
   myWarehouseId: number | undefined;
   myUserId: number | undefined;
+  previousImage: any | undefined;
+  previousFile: File = new File([], "empty.txt", { type: "text/plain" });
+
   userForm: FormGroup;
   formType: string = 'Insert';
 
@@ -47,6 +52,7 @@ export class UserFormComponent {
       image: new FormControl(null),
       role: new FormControl(null),
       warehouse: new FormControl(null),
+      truck: new FormControl(null)
     }, [this.checkPassword])
   }
 
@@ -75,11 +81,24 @@ export class UserFormComponent {
       this.userForm.get('image')?.reset();
     }
 
+  convertImageToFile(image: any): void {
+    fetch(image)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const fileName = 'image.jpg'; // Name your file
+        this.previousFile = new File([blob], fileName, { type: blob.type });
+      })
+      .catch((error) => {
+        console.error('Error converting image URL to File:', error);
+      });
+  }  
 
   async ngOnInit() {
     try {
       const res = await this.warehouseServices.getAll();
       this.warehouses = res
+      const res2 = await this.userServices.getAvailableTrucks();
+      this.trucks = res2;
     } catch (error) {
       console.log(error)
     }
@@ -91,6 +110,7 @@ export class UserFormComponent {
 
         const res = await this.userServices.getById(params.id);
         this.myWarehouseId = res.assigned_id_warehouse;
+        this.previousImage = res.image;
 
         this.userForm = new FormGroup({
           name: new FormControl(res.name, [Validators.required]),
@@ -104,6 +124,7 @@ export class UserFormComponent {
           image: new FormControl(null),
           role: new FormControl(res.role),
           warehouse: new FormControl(res.warehouse_name),
+          truck: new FormControl(res.assigned_id_truck)  // TODO: res.plate (acceder a la matricula del assigned_id_truck)
         }, [this.checkPassword])
       }
     })
@@ -122,18 +143,26 @@ export class UserFormComponent {
         if (this.selectedFile) {
           formData.append("image", this.selectedFile)
         } else {
-          Swal.fire({
-            title: "Upsss!",
-            text: `No image was provided!`,
-            icon: "error"
-          });
+          if (this.previousImage) {
+            this.convertImageToFile(this.previousImage)
+            formData.append("image", this.previousFile)
+          }else {
+            Swal.fire({
+              title: "Upsss!",
+              text: `No image was provided!`,
+              icon: "error"
+            });
+          }
         }
 
         const newWarehouseName: string = this.userForm.get("warehouse")?.value
         const newWarehouseId: number = this.warehouses!.filter(warehouse => warehouse.name === newWarehouseName)[0].id_warehouse
         formData.append("assigned_id_warehouse", newWarehouseId.toString());
 
-        formData.append("assigned_id_truck", "111");
+        // formData.append("assigned_id_truck", "115");
+        const chosentruck = this.userForm.get("truck")?.value
+        console.log(chosentruck)
+        formData.append("assigned_id_truck", chosentruck.toString());
 
         const response: Iuser3 = await this.userServices.update(this.myUserId, formData)
         console.log('usuario actualizado', response)
@@ -171,7 +200,8 @@ export class UserFormComponent {
         const newWarehouseId: number = this.warehouses!.filter(warehouse => warehouse.name === newWarehouseName)[0].id_warehouse
         formData.append("assigned_id_warehouse", newWarehouseId.toString());
 
-        formData.append("assigned_id_truck", "111");
+        // formData.append("assigned_id_truck", "115");
+        formData.append("assigned_id_truck", this.userForm.get("truck")?.value);
     
         const response: Iuser3 = await this.userServices.insert(formData)
         console.log('usuario creado:', response)
