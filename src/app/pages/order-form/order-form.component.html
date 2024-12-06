@@ -19,12 +19,13 @@
           id="send-date"
           [ngModel]="delivery.send_date ? formatDateForInput(delivery.send_date) : ''"
           (ngModelChange)="onDateChange('send_date', $event)"
-          [ngClass]="{ 'is-invalid': submitted && !delivery.send_date }"
+          #sendDate="ngModel"
+          [ngClass]="{ 'is-invalid': (submitted || sendDate.touched) && !delivery.send_date }"
           name="send_date"
           [disabled]="mode === 'review' || !isEditable"
           required
         />
-        <div *ngIf="submitted && !delivery.send_date" class="text-danger">
+        <div *ngIf="(submitted || sendDate.touched) && !delivery.send_date" class="text-danger">
           Send date is required.
         </div>
       </div>
@@ -38,12 +39,13 @@
           id="received-date"
           [ngModel]="delivery.received_date ? formatDateForInput(delivery.received_date) : ''"
           (ngModelChange)="onDateChange('received_date', $event)"
-          [ngClass]="{ 'is-invalid': submitted && !delivery.received_date }"
+          #receivedDate="ngModel"
+          [ngClass]="{ 'is-invalid': (submitted || receivedDate.touched) && !delivery.received_date }"
           name="received_date"
           [disabled]="mode === 'review' || !isEditable"
           required
         />
-        <div *ngIf="submitted && !delivery.received_date" class="text-danger">
+        <div *ngIf="(submitted || receivedDate.touched) && !delivery.received_date" class="text-danger">
           Received date is required.
         </div>
         <div *ngIf="delivery.send_date && delivery.received_date && delivery.received_date < delivery.send_date" class="text-danger">
@@ -58,9 +60,11 @@
           <select
             class="form-select rounded-pill"
             [(ngModel)]="delivery.origin_warehouse_name"
-            [ngClass]="{ 'is-invalid': submitted && !delivery.origin_warehouse_name }"
+            #originWarehouse="ngModel"
+            [ngClass]="{ 'is-invalid': (submitted || originWarehouse.touched) && !delivery.origin_warehouse_name }"
             name="origin_warehouse_name"
             id="originWarehouse"
+            [disabled]="!isEditable"
             required
           >
             <option [ngValue]="null" disabled>Select the origin warehouse</option>
@@ -68,12 +72,12 @@
               {{ warehouse.name }}
             </option>
           </select>
-          <div *ngIf="submitted && !delivery.origin_warehouse_name" class="text-danger">
+          <div *ngIf="(submitted || originWarehouse.touched) && !delivery.origin_warehouse_name" class="text-danger">
             Origin warehouse is required.
           </div>
         </ng-container>
         <ng-template #staticOriginWarehouse>
-          <span class="form-control rounded-pill">{{ delivery.origin_warehouse_name || 'N/A' }}</span>
+          <span class="form-control rounded-pill">{{ delivery.origin_warehouse_name || 'No data associated' }}</span>
         </ng-template>
       </div>
 
@@ -84,9 +88,11 @@
           <select
             class="form-select rounded-pill"
             [(ngModel)]="delivery.destination_warehouse_name"
-            [ngClass]="{ 'is-invalid': submitted && !delivery.destination_warehouse_name }"
+            #destinationWarehouse="ngModel"
+            [ngClass]="{ 'is-invalid': (submitted || destinationWarehouse.touched) && !delivery.destination_warehouse_name }"
             name="destination_warehouse_name"
             id="destinationWarehouse"
+            [disabled]="!isEditable"
             required
           >
             <option [ngValue]="null" disabled>Select the destination warehouse</option>
@@ -94,7 +100,7 @@
               {{ warehouse.name }}
             </option>
           </select>
-          <div *ngIf="submitted && !delivery.destination_warehouse_name" class="text-danger">
+          <div *ngIf="(submitted || destinationWarehouse.touched) && !delivery.destination_warehouse_name" class="text-danger">
             Destination warehouse is required.
           </div>
           <div *ngIf="delivery.origin_warehouse_name && delivery.destination_warehouse_name && delivery.origin_warehouse_name === delivery.destination_warehouse_name" class="text-danger">
@@ -102,7 +108,7 @@
           </div>
         </ng-container>
         <ng-template #staticDestinationWarehouse>
-          <span class="form-control rounded-pill">{{ delivery.destination_warehouse_name || 'N/A' }}</span>
+          <span class="form-control rounded-pill">{{ delivery.destination_warehouse_name || 'No data associated' }}</span>
         </ng-template>
       </div>
 
@@ -113,9 +119,11 @@
           <select
             class="form-select rounded-pill"
             [(ngModel)]="delivery.plate"
-            [ngClass]="{ 'is-invalid': submitted && !delivery.plate }"
+            #plate="ngModel"
+            [ngClass]="{ 'is-invalid': (submitted || plate.touched) && !delivery.plate }"
             name="truck_plate"
             id="plate"
+            [disabled]="!isEditable"
             required
           >
             <option [ngValue]="null" disabled>Select the truck plate</option>
@@ -123,12 +131,12 @@
               {{ truck.plate }}
             </option>
           </select>
-          <div *ngIf="submitted && !delivery.plate" class="text-danger">
+          <div *ngIf="(submitted || plate.touched) && !delivery.plate" class="text-danger">
             Truck is required.
           </div>
         </ng-container>
         <ng-template #staticPlate>
-          <span class="form-control rounded-pill">{{ delivery.plate || 'N/A' }}</span>
+          <span class="form-control rounded-pill">{{ delivery.plate || 'No data associated' }}</span>
         </ng-template>
       </div>
 
@@ -143,10 +151,12 @@
           <select
             class="form-select rounded-pill w-50"
             [(ngModel)]="detail.product_name"
-            [ngClass]="{ 'is-invalid': submitted && !detail.product_name }"
+            #productName="ngModel"
+            [ngClass]="{ 'is-invalid': (submitted || productName.touched) && !detail.product_name }"
             name="product-{{ i }}"
             id="product{{ i }}"
             [ngModelOptions]="{ standalone: true }"
+            [disabled]="!isEditable"
             required
           >
             <option [ngValue]="null" disabled>Select a product</option>
@@ -155,12 +165,12 @@
             </option>
           </select>
                   <!-- Validación -->
-        <div *ngIf="detail.touched && !detail.product_name" class="text-danger">
+        <div *ngIf="productName.touched && !detail.product_name" class="text-danger">
           Product is required.
         </div>
         </ng-container>
         <ng-template #staticProduct>
-          <span class="form-control rounded-pill w-50">{{ detail.product_name || 'N/A' }}</span>
+          <span class="form-control rounded-pill w-50">{{ detail.product_name || 'No data associated' }}</span>
         </ng-template>
 
 
@@ -177,6 +187,7 @@
                 id="quantity{{ i }}"
                 [ngModelOptions]="{ standalone: true }"
                 min="1"
+                [disabled]="!isEditable"
                 required
               />
               <!-- Validación -->
