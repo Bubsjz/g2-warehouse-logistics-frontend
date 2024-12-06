@@ -5,7 +5,9 @@ import { WarehousesService } from '../../services/warehouses.service';
 import Swal from 'sweetalert2';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-
+type error ={
+  message: string;
+}
 
 @Component({
   selector: 'app-warehouse-form',
@@ -30,9 +32,9 @@ export class WarehouseFormComponent {
 
   constructor() {
     this.reactiveForm = new FormGroup({
-      name: new FormControl('', [Validators.required]),
+      name: new FormControl('', [Validators.required,Validators.minLength(6)]),
       locality: new FormControl('', [Validators.required]),
-      address: new FormControl('', [Validators.required]),
+      address: new FormControl('', [Validators.required,Validators.minLength(10)]),
       image: new FormControl('', [Validators.required]),
       latitude: new FormControl('',[Validators.required]),
       longitude: new FormControl('',[Validators.required])
@@ -41,9 +43,6 @@ export class WarehouseFormComponent {
     }, [])
   }
   ngOnInit() {
-
-    
-
     this.activateRoute.params.subscribe(async (params: any) => {
       this.warehouse_id = Number(params.id)
       if (params.id) {
@@ -108,34 +107,45 @@ export class WarehouseFormComponent {
         formData.append("image", this.selectedFile);
       }
 
-      let response;
-      if (this.type === "creation") {
-        response = await this.serviceWarehouse.createWarehouse(formData)
-        console.log(response)
-        Swal.fire({
-          title: "Good job!",
-          text: `${response.name} has been created! `,
-          icon: "success"
-        })
-        await this.router.navigate(['/boss', 'warehouse-info'])
-      } else {
-        response = await this.serviceWarehouse.update(this.reactiveForm.value._id, formData)
-        console.log(response)
-        Swal.fire({
-          title: "Good job!",
-          text: `${response.name} has been created! `,
-          icon: "success"
-        });
-      
-        await this.router.navigate(['/boss', 'warehouse-info'])
-        window.location.reload()
+     try {
+       let response;
+       if (this.type === "creation") {
+         response = await this.serviceWarehouse.createWarehouse(formData)
+         console.log(response)
+         Swal.fire({
+           title: "Good job!",
+           text: `${response.name} has been created! `,
+           icon: "success"
+         })
+         await this.router.navigate(['/boss', 'warehouse-info'])
+       } else {
+         response = await this.serviceWarehouse.update(this.reactiveForm.value._id, formData)
+         console.log(response)
+         Swal.fire({
+           title: "Good job!",
+           text: `${response.name} has been created! `,
+           icon: "success"
+         });
+        }
+         await this.router.navigate(['/boss', 'warehouse-info'])
+         window.location.reload()
+     } catch (error:any) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: `${error.error.message}`,
+      });
+     
+     
       }
     }
   }
 
- 
+  checkControl(formControlName:string, Validators:string){
+    return this.reactiveForm.get(formControlName)?.hasError(Validators) && this.reactiveForm.get(formControlName)?.touched
+  }
+  
+
 }
-
-
 
 

@@ -7,31 +7,56 @@
         <label class="form-label" for="name">Warehouse name</label>
         <input class="form-control " type="text" id="name" formControlName="name"
           placeholder="Enter the name of the warehouse" />
+          @if(checkControl("name","required")){
+            <p class="text-danger">This field is required.</p>
+          }
+          @if(checkControl("name","minlength")){
+            <p class="text-danger">This field must have more than 6 characters.</p>
+          }
       </div>
       <div class="my-3">
         <label class="form-label" for="locality">Locality</label>
         <input class="form-control " type="text" id="locality" formControlName="locality"
           placeholder="Enter the locality of the warehouse" />
+          @if(checkControl("locality","required")){
+            <p class="text-danger">This field is required.</p>
+          }
+          
       </div>
       <div class="my-3">
         <label class="form-label" for="address">Address</label>
         <input class="form-control " type="text" id="address" formControlName="address"
           placeholder="Enter the street of the warehouse" />
+          @if(checkControl("address","required")){
+            <p class="text-danger">This field is required.</p>
+          }
+          @if(checkControl("address","minlength")){
+            <p class="text-danger">This field must have more than 10 characters.</p>
+          }
       </div>
       <div class="my-3">
         <label class="form-label" for="latitude">Latitude</label>
         <input class="form-control " type="text" id="latitude" formControlName="latitude"
           placeholder="Enter the latitude of the warehouse" />
+          @if(checkControl("latitude","required")){
+            <p class="text-danger">This field is required.</p>
+          }
       </div>
       <div class="my-3">
         <label class="form-label" for="longitude">Longitude</label>
         <input class="form-control " type="text" id="longitude" formControlName="longitude"
           placeholder="Enter the longitude of the warehouse" />
+          @if(checkControl("longitude","required")){
+            <p class="text-danger">This field is required.</p>
+          }
       </div>
       <div class="my-3">
         <div class="image-upload">
           <input class="form-control " type="file" id="image" formControlName="image" accept="image/*"
             style="display: none" (change)="onFileSelected($event)" />
+            @if(checkControl("image","required")){
+              <p class="text-danger">This image is required.</p>
+            }
         </div>
       </div>
       @if(this.imagePreview){
@@ -48,7 +73,7 @@
          
         </div>
         <div class="d-flex justify-content-center gap-2 my-3">
-          @if(typebtn === "create"){
+          @if(typebtn === "Create"){
             <input type="submit" [value]="typebtn" class="btn btn-success  pb-5 btn-size" [disabled]='!reactiveForm.valid' />
 
           }@else  {
