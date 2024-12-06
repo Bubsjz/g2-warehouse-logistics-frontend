@@ -6,3 +6,16 @@ header {
         background-position: center;
         color: white;
       }
+
+.font{
+  
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+
+
+.title:hover{
+  color:#358deb ;
+}
