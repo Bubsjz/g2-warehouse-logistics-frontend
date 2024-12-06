@@ -51,6 +51,7 @@ export class WarehouseFormComponent {
         this.type = "update"
         this.typebtn = "Update"
         const warehouse = await this.serviceWarehouse.getById(params.id)
+        console.log(warehouse)
         this.reactiveForm = new FormGroup({
           _id: new FormControl(warehouse.id_warehouse, []),
           name: new FormControl(warehouse.name, [Validators.required]),
@@ -101,13 +102,16 @@ export class WarehouseFormComponent {
       formData.append("name", this.reactiveForm.get("name")?.value);
       formData.append("locality", this.reactiveForm.get("locality")?.value);
       formData.append("address", this.reactiveForm.get("address")?.value);
+      formData.append("latitude", this.reactiveForm.get("latitude")?.value);
+      formData.append("longitude", this.reactiveForm.get("longitude")?.value);
       if (this.selectedFile) {
         formData.append("image", this.selectedFile);
       }
 
       let response;
-      if (this.type === "Creation") {
+      if (this.type === "creation") {
         response = await this.serviceWarehouse.createWarehouse(formData)
+        console.log(response)
         Swal.fire({
           title: "Good job!",
           text: `${response.name} has been created! `,
@@ -116,6 +120,7 @@ export class WarehouseFormComponent {
         await this.router.navigate(['/boss', 'warehouse-info'])
       } else {
         response = await this.serviceWarehouse.update(this.reactiveForm.value._id, formData)
+        console.log(response)
         Swal.fire({
           title: "Good job!",
           text: `${response.name} has been created! `,

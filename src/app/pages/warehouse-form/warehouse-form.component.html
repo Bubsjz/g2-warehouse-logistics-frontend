@@ -55,8 +55,14 @@
             <input type="submit" [value]="typebtn" class="btn btn-success  pb-5 btn-size"  />
 
           }
-          <input type="button" value="Back" class="btn btn-primary pb-5 btn-size " [routerLink]="['/boss','warehouse-view',this.warehouse_id]"
-             />
+          @if(typebtn === "Update"){
+
+            <input type="button" value="Back" class="btn btn-primary pb-5 btn-size " [routerLink]="['/boss','warehouse-view',this.warehouse_id]"
+            />
+          }@else{
+            <input type="button" value="Back" class="btn btn-primary pb-5 btn-size " [routerLink]="['/boss','warehouse-info']"
+            />
+          }
         </div>
           
         </form >
