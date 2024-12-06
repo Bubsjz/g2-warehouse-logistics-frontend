@@ -1,3 +1,64 @@
-img {
-    max-width: 150px
-}
+/* Fondo moderno con degradado más amplio */
+.footer-modern {
+    position: relative;
+    background: linear-gradient(135deg, #1e3a8a, #253a67);
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    padding: 1px 90px; /* Reducido para minimizar la altura */
+    margin: 0 auto;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  /* Barra expansiva */
+  .footer-modern::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw; /* Ocupa todo el ancho de la ventana */
+    height: 50%;
+    background: inherit; /* Mantiene el mismo degradado */
+    z-index: -1; /* Detrás del contenido */
+  }
+  
+  /* Logo */
+  .footer-logo {
+    max-width: 100px;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+  }
+  
+  /* Descripción */
+  .footer-description {
+    font-size: 0.9rem;
+    margin-bottom: 5px; /* Reducido para ahorrar espacio */
+    color: #d1d5db;
+    line-height: 1.4;
+  }
+  
+  /* Enlaces */
+  .footer-links a {
+    color: #93c5fd;
+    font-size: 0.9rem;
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 5px; /* Reducido */
+    transition: color 0.3s, transform 0.3s;
+  }
+  
+  .footer-links a:hover {
+    color: #ffffff;
+    transform: translateY(-2px);
+  }
+  
+  /* Separador y copyright */
+  .border-top {
+    border-top: 1px solid rgba(255, 255, 255, 0.317);
+  }
+  
+  .footer-copyright {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    margin-top: 5px; /* Reducido */
+  }
+      
