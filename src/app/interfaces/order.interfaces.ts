@@ -3,7 +3,7 @@ export interface Delivery {
     send_date: Date | null;
     received_date: Date | null;
     comments: string;
-    products: { product_name: string; quantity: number }[];
+    products: { product_id: number | null; product_name?: string; product_quantity: number }[];
     status: 'pending' | 'review' | 'corrections needed' | 'ready for departure' | 'in transit' | 'pending reception' | 'approved' | 'not approved';
     origin_warehouse_id?: number | null;
     origin_warehouse_name?: string | null;

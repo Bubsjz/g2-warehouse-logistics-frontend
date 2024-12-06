@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Delivery, Warehouse, Truck, Product, DeliveryProduct, CombinedResponse } from '../interfaces/order.interfaces';
+import { catchError, Observable, tap, throwError } from 'rxjs';
+import { Delivery, Warehouse, Truck, Product, CombinedResponse } from '../interfaces/order.interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +12,15 @@ export class DeliveryService {
   constructor(private http: HttpClient) {}
 
 
+
+  // OBTENER DATOS SELECTORES FORMULARIO
+  getCombinedData(): Observable<{ warehouse: Warehouse[]; truck: Truck[]; productNames: Product[] }> {
+    const url = `${this.baseUrl}/operator/create-order`;
+    return this.http.get<{ warehouse: Warehouse[]; truck: Truck[]; productNames: Product[] }>(url);
+  }
+
   // Obtener envío por ID
+  //Problemas con peticiones de envíos sin productos, puede que por necesidad de aunque sea ofrecer un array vacío, o de cómo se procesa en el back-end, porque también falla en rest
   getDeliveryById(id: number, role: string): Observable<CombinedResponse> {
     const url = role === 'operator'
       ? `${this.baseUrl}/operator/modify-order/${id}`
@@ -21,24 +29,21 @@ export class DeliveryService {
     return this.http.get<CombinedResponse>(url);
   }
 
-  // Relación entre envíos y productos
-  getDeliveryProducts(id: number, role: string): Observable<DeliveryProduct[]> {
-    const url = role === 'operator'
-      ? `${this.baseUrl}/operator/modify-order/${id}`
-      : `${this.baseUrl}/manager/review-order/${id}`;
-
-    return this.http.get<DeliveryProduct[]>(url);
-  }
-
   // Crear envío
   createDelivery(delivery: Delivery): Observable<Delivery> {
-    return this.http.post<Delivery>(`${this.baseUrl}/create-order`, delivery);
+    return this.http.post<Delivery>(`${this.baseUrl}/operator/create-order`, delivery);
   }
 
-  updateDelivery(id: number, delivery: Delivery): Observable<any> {
+  // Actualizar envío
+  updateDelivery(id: number, delivery: any): Observable<any> {
     const url = `${this.baseUrl}/operator/modify-order/${id}`;
     console.log('PUT URL:', url);
-    return this.http.put(url, delivery);
+    console.log('PUT payload:', delivery);
+    return this.http.put(url, delivery).pipe(
+      tap(response => {
+        console.log('PUT response:', response);
+      })
+    );
   }
 
   // Eliminar envío
@@ -46,22 +51,42 @@ export class DeliveryService {
     return this.http.delete<void>(`${this.baseUrl}/modify-order/${id}`);
   }
 
-  // Cambiar estado de un envío
-  updateDeliveryStatus(id: number, comments: string): Observable<Delivery> {
-    return this.http.put<Delivery>(`${this.baseUrl}/manager/review-order/${id}`, { comments });
-  }
+  // Cambiar estado de un envío en modo revisión (basado en status que se envía)
+  updateDeliveryStatus(id: number, status: string, comments: string | null = null): Observable<Delivery> {
+    const payload = { comments, status };
+    const url = ['ready for departure', 'corrections needed'].includes(status)
+    ? `${this.baseUrl}/manager/review-order/${id}`
+    : ['approved', 'not approved'].includes(status)
+    ? `${this.baseUrl}/manager/verify-order/${id}`
+    : '';
 
-  // Actualizar comentarios de un envío
-  updateDeliveryComments(id: number, comments: string): Observable<Delivery> {
-    return this.http.put<Delivery>(`${this.baseUrl}/manager/review-order/${id}`, { comments });
-  }
-
-// OBTENER DATOS FUNCIONAMIENTO FORMULARIO
-    getCombinedData(): Observable<{ warehouse: Warehouse[]; truck: Truck[]; productNames: Product[] }> {
-      const url = `${this.baseUrl}/operator/creation-data`;
-      return this.http.get<{ warehouse: Warehouse[]; truck: Truck[]; productNames: Product[] }>(url);
+    if (!url) {
+      console.error('Invalid status provided:', status);
+      return throwError(() => new Error('Invalid status provided.'));
     }
+    
+    const headers = {
+      headers: { 'Content-Type': 'application/json' }
+    };
 
+    console.log('PUT URL:', url);
+    console.log('PUT payload:', payload);
+    
+    return this.http.put<Delivery>(url, payload, headers).pipe(
+      tap(response => {
+          console.log('PUT response:', response);
+      }),
+      catchError(error => {
+          console.error('Error details:', {
+              url,
+              payload,
+              headers,
+              error
+          });
+          return throwError(() => new Error('Failed to update delivery status.'));
+      })
+    );
+  }
 
 }
 
