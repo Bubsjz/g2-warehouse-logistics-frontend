@@ -11,9 +11,14 @@
         <h2 class="card-title"><strong>{{ warehouse?.name }}</strong></h2>
         <div class="d-flex align-items-center">
           <h4 class="card-subtitle mt-3 mb-4 text-info">{{ warehouse?.locality }}</h4>
-          <button class="btn ms-2 mb-2" title="View in map">
+          <button class="btn ms-2 mb-2" title="View in map" (click)="locationMap()" >
             <i class="fa-solid fa-location-crosshairs" style="color: #060606"></i>
           </button>
+          @if(this.showMap === true){
+            <google-map  width="300px" height="200px" [zoom]="12" [center]="getPosition()">
+            <map-marker #market="mapMarker"   [position]="getPosition()"></map-marker>
+          </google-map>
+          }
         </div>
         <hr class="mt-2 mb-4">
         <p class="card-text mb-2">{{ warehouse?.name }} is located in {{ warehouse?.locality }}. The staff is comprised of 

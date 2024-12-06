@@ -25,7 +25,9 @@ export class WarehouseCardComponent {
   // warehouse: Iwarehouse | undefined;
   // operators: Iuser[] | undefined;
   // managers: Iuser[] | undefined;
-
+  showMap:boolean = false;
+  latitude!: string ;
+  longitude!: string;
   warehouse: Iwarehouse2 | undefined;
   operators: Iuser2[] | undefined;
   managers: Iuser2[] | undefined;
@@ -38,6 +40,8 @@ export class WarehouseCardComponent {
 
     const res = await this.warehouseServices.getById(this.warehouse_id)
     this.warehouse = res
+    this.latitude = res.latitude
+    this.longitude = res.longitude
 
     // const res2 = await this.userServices.getByWarehouseId(this.warehouse_id)
 
@@ -80,4 +84,14 @@ export class WarehouseCardComponent {
       }
     })
   }
+
+  locationMap(){
+    this.showMap = !this.showMap
+   }
+ 
+   getPosition(){
+    
+     return new google.maps.LatLng(Number(this.latitude),Number(this.longitude))
+ 
+   }
 }
