@@ -1,25 +1,27 @@
 <section class="container margin d-flex justify-content-between responsive-section">
         <div class="pt-5">
-            <img src="../../../assets/employee-test.jpg" alt="imagen" class="rounded-circle img-small">
+            <img src={{myUser?.image}} alt="imagen" class="rounded-circle img-small">
         </div>
 
         <div class="divider mx-3"></div>
 
-        <div class="pt-5" *ngIf="userInfo && warehouseInfo">
-            <p class="p-2 nunito-sans fs-1">{{userInfo.name}} {{userInfo.surname}}</p>
+        <!-- <div class="pt-5" *ngIf="userInfo && warehouseInfo"> -->
+        <div class="pt-5">
+            <p class="p-2 nunito-sans fs-1">{{myUser?.name}} {{myUser?.surname}}</p>
             <hr>
-            <p class="p-2 pt-4 fs-4"><strong>Position:</strong> {{userInfo.rol}}</p>
-            <p class="p-2 fs-4"><strong>Employee ID:</strong> {{userInfo.id_user}}</p>
-            <p class="p-2 fs-4"><strong>Email:</strong> {{userInfo.email}}</p>
-            <p class="p-2 fs-4"><strong>Wharehouse:</strong> {{warehouseInfo.name}}</p>
-            <p class="p-2 fs-4"><strong>Wharehouse locality:</strong> {{warehouseInfo.locality}}</p>
+            <p class="p-2 pt-4 fs-4"><strong>Position:</strong> {{myUser?.role}}</p>
+            <p class="p-2 fs-4"><strong>Employee ID:</strong> {{myUser?.id_user}}</p>
+            <p class="p-2 fs-4"><strong>Email:</strong> {{myUser?.email}}</p>
+            <p class="p-2 fs-4"><strong>Wharehouse:</strong> {{myUser?.warehouse_name}}</p>
+            <p class="p-2 fs-4"><strong>Wharehouse locality:</strong> {{myUser?.locality}}</p>
             <div class="pt-4">
-                <button class="btn btn-outline-danger m-1 p-3 px-5" (click)="deleteUser()">Delete</button>
-                <a class="btn btn-outline-success m-1 p-3 px-5" href="/dashboard/boss/w-userform">Update</a>
-                <a class="btn btn-outline-secondary m-1 p-3 px-5" href="/dashboard/boss/employee-view">Back to list</a>
+                <!-- <button class="btn btn-outline-danger m-1 p-3 px-5" (click)="deleteUser()">Delete</button> -->
+                <a class="btn btn-success m-1 p-3 px-5" [routerLink]="['/boss', 'update-employee', myUser?.id_user]">Update</a>
+                <a class="btn btn-secondary m-1 p-3 px-5" [routerLink]="['/boss', 'warehouse-view', myUser?.assigned_id_warehouse]">Back</a>
+                <button class="btn btn-danger m-1 p-3 px-5" (click)="delete(userID)">Delete</button>
             </div>
         </div>
-        <div *ngIf="!userInfo || !warehouseInfo">
+        <!-- <div *ngIf="!userInfo || !warehouseInfo">
             <p>Cargando información...</p>
-          </div>
+        </div> -->
 </section>

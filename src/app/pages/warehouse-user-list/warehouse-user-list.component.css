@@ -1,0 +1,44 @@
+/*color de todos los valores */
+td{
+    font-weight:600;
+}
+/*Quito el margen de los p para poder poner el punto al lado del status */
+.td-p{
+    margin: 0;
+}
+
+/*encabezado de la tabla con fuente mas gruesa para resaltar sobre la tabla */
+thead tr th{
+  font-size: large;
+  font-weight: 800;
+  text-align: center;
+  width: 100px
+   
+}
+table.table.table-hover > thead > tr > th {
+    background-color: #800020; /* Fondo burdeos */
+    color: white ; /* Texto blanco */
+    text-align: center ;
+    
+  }
+  
+.pointer{
+cursor: pointer;
+font-weight: 900;
+}
+
+
+/* para poner separacion entre pedidos */
+table tr, table td, table th{
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center;
+  }
+  
+  td button {
+    font-weight: 700 ;
+  }
+
+  .text-users{
+    color: #800020;
+  }
