@@ -107,8 +107,11 @@
                 await this.loadInitialData();
               } else if (fullUrl.includes('modify-order')) {
                 this.mode = 'edit';
+                console.log(`Mode detected: ${this.mode}`);
+                await this.loadInitialData();
               } else if (fullUrl.includes('review-order')) {
                 this.mode = 'review';
+                console.log(`Mode detected: ${this.mode}`);
               } else {
                 console.error('Invalid mode detected. Defaulting to "create".');
                 this.mode = 'create';
@@ -140,13 +143,22 @@
               //Uso de firstValueFrom para manejar el observable del servicio y transformar en promesa
               const combinedData = await firstValueFrom(this.deliveryService.getCombinedData());
               console.log('Combined data loaded:', combinedData);
+              if (Array.isArray(combinedData) && combinedData.length > 0) {
+                const data = combinedData[0];
+
 
               //Asignación de datos al HTML
-              this.warehouses = combinedData.warehouse || [];
-              this.trucks = combinedData.truck || [];
-              this.products = combinedData.productNames || [];
+              this.warehouses = data.warehouse || [];
+              this.trucks = data.truck || [];
+              this.products = data.productNames || [];
           
+              console.log('Warehouses:', this.warehouses);
+              console.log('Trucks:', this.trucks);
+              console.log('Products:', this.products);
               console.log('Combined data asigned to HTML:', this.warehouses, this.trucks, this.products);
+            } else {
+              console.error('Estructura inesperada en los datos recibidos del back:', combinedData);
+            }
 
             } catch (error: unknown) {
               console.error('Error loading combined initial data:', error);
@@ -325,6 +337,7 @@
 
         //Enviar el formulario (crear o actualizar un pedido)
           async onSubmit(form: NgForm): Promise<void> {
+            console.log('onSubmit called');
             // Marcar el formulario como enviado para activar las validaciones visuales
             this.submitted = true;
           
@@ -347,6 +360,7 @@
 
         //Procesa las acciones específicas del modo en los botones paraenvío al back de los datos (approve y reject a la espera por si se implementa)
             async processModeSpecificActions(action: 'save' | 'submit' | 'update' | 'approve' | 'reject', status?: string): Promise<void> {
+              console.log(`processModeSpecificActions called with action: ${action}`);
               if (action === 'save') {
                   if (this.mode === 'create') {
                       // Crear pedido nuevo (POST)
@@ -382,6 +396,7 @@
 
           //Modo creación
               async handleCreateAction(status: string): Promise<void> {
+                console.log('handleCreateAction called');
                 const deliveryPayload = this.prepareDeliveryPayload(status);
                 console.log('Creating delivery with payload:', deliveryPayload);
             
@@ -539,7 +554,7 @@
             const reviewStatuses = ['review', 'pending reception'];
 
             // En caso de haber fallo en obtener datos del back-end o estado del pedido no está definido, deshabilita todos los campos y botones excepto "Back"
-            if (this.errorMessage || (this.mode !== 'create' && !this.delivery.status)) {
+            if (this.errorMessage && this.errorMessage.includes('Error loading') && (this.mode !== 'create' && !this.delivery.status)) {
               console.warn('Error detected or missing status. Disabling all fields and buttons except "Back".');
               this.isEditable = false;
               this.areButtonsEnabled = false;
@@ -563,7 +578,7 @@
               this.isCommentEditable = false;
             }
           
-            // Buttons for adding/removing products only in create or edit modes
+            // Botones de producto solo disponibles en modo create o edit
             this.canManageProducts = this.mode !== 'review' && this.isEditable;
           }
 

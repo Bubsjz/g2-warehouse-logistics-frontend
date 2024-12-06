@@ -139,7 +139,7 @@
         </div>
         <div *ngFor="let detail of orderDetails; let i = index" class="my-3 d-flex align-items-center gap-3">
         <!-- Selector de tipo de producto -->
-        <ng-container *ngIf="mode === 'edit'; else staticProduct">
+        <ng-container *ngIf="mode === 'edit' || mode === 'create'; else staticProduct">
           <select
             class="form-select rounded-pill w-50"
             [(ngModel)]="detail.product_name"
@@ -169,7 +169,7 @@
             <ng-container *ngIf="mode === 'edit' || mode === 'create'; else staticQuantity">
               <input
                 type="number"
-                class="form-control rounded-pill w-25"
+                class="form-control rounded-pill w-3"
                 placeholder="Quantity"
                 [(ngModel)]="detail.product_quantity"
                 [ngClass]="{ 'is-invalid': submitted && !detail.product_quantity }"
@@ -228,7 +228,7 @@
             Save as draft
           </button>
           <button
-            type="submit"
+            type="button"
             class="btn btn-success rounded-pill"
             [disabled]="!validateForm()"
             (click)="processModeSpecificActions('save', 'review')"
@@ -240,7 +240,7 @@
         <!-- Botones en modo edit -->
         <ng-container *ngIf="mode === 'edit' && areButtonsEnabled">
           <button
-            type="submit"
+            type="button"
             class="btn btn-success rounded-pill"
             [disabled]="!validateForm()"
             (click)="processModeSpecificActions('update', 'review')"

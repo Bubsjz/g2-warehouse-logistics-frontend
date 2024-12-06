@@ -33,38 +33,52 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
   ## MODO CREATE 
   
     DATOS NECESARIOS EN FRONT
-            {
-            "warehouse": [
+            [
                 {
-                "id_warehouse": 1,
-                "name": "Central Warehouse",
-                },
-                {
-                "id_warehouse": 2,
-                "name": "South Warehouse",
+                    "warehouse": [
+                    {
+                        "id_warehouse": 23,
+                        "name": "Alicante Warehouse"
+                    },
+                    {
+                        "id_warehouse": 16,
+                        "name": "Barcelona Warehouse"
+                    },
+                    {
+                        "id_warehouse": 20,
+                        "name": "Bilbao Warehouse"
+                    }
+                ],
+                    "truck": [
+                    {
+                        "id_truck": 11,
+                        "plate": "0857-OPA"
+                    },
+                    {
+                        "id_truck": 6,
+                        "plate": "0874-UIO"
+                    },
+                    {
+                        "id_truck": 45,
+                        "plate": "1234-ABC"
+                    }
+                ],
+                    "productNames": [
+                    {
+                        "id_product": 5,
+                        "product_name": "Pale bloques de hormigón"
+                    },
+                    {
+                        "id_product": 3,
+                        "product_name": "Pale de ladrillos"
+                    },
+                    {
+                        "id_product": 4,
+                        "product_name": "Pale de tablones"
+                    }
+                    ]
                 }
-            ],
-            "truck": [
-                {
-                "id_truck": 42,
-                "plate": "4586-BTP",
-                },
-                {
-                "id_truck": 7,
-                "plate": "2345-RTY",
-                }
-            ],
-            "productNames": [
-                {
-                "id_product": 4,
-                "name": "Pale de tablones"
-                },
-                {
-                "id_product": 5,
-                "name": "Pale bloques de hormigón"
-                }
-            ]
-            }
+                ]
 
     DATOS ENVIADOS A BACK
         {

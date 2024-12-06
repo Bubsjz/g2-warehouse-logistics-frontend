@@ -15,7 +15,7 @@ export class DeliveryService {
 
   // OBTENER DATOS SELECTORES FORMULARIO
   getCombinedData(): Observable<{ warehouse: Warehouse[]; truck: Truck[]; productNames: Product[] }> {
-    const url = `${this.baseUrl}/operator/creation-data`;
+    const url = `${this.baseUrl}/operator/create-order`;
     return this.http.get<{ warehouse: Warehouse[]; truck: Truck[]; productNames: Product[] }>(url);
   }
 
@@ -31,12 +31,12 @@ export class DeliveryService {
 
   // Crear envío
   createDelivery(delivery: Delivery): Observable<Delivery> {
-    return this.http.post<Delivery>(`${this.baseUrl}/create-order`, delivery);
+    return this.http.post<Delivery>(`${this.baseUrl}/operator/create-order`, delivery);
   }
 
   // Actualizar envío
   updateDelivery(id: number, delivery: any): Observable<any> {
-    const url = `${this.baseUrl}/operator/update-delivery/${id}`;
+    const url = `${this.baseUrl}/operator/modify-order/${id}`;
     console.log('PUT URL:', url);
     console.log('PUT payload:', delivery);
     return this.http.put(url, delivery).pipe(
