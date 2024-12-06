@@ -2,8 +2,9 @@
 import { inject, Injectable } from '@angular/core';
 import { Iwarehouse } from '../interfaces/iwarehouse.interface';
 import { HttpClient } from '@angular/common/http';
-import { lastValueFrom } from 'rxjs';
+import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { Iwarehouse2 } from '../interfaces/iwarehouse2.interface';
+import { Warehouse } from '../interfaces/order.interfaces';
 
 type warehouse= {
 name:string,
@@ -32,4 +33,11 @@ export class WarehousesService {
     return lastValueFrom(this.httpClient.post<warehouse>(`${this.baseUrl}/warehouse`, body))
   }
 
+  update(warehouse_id:number,body:FormData){
+    return firstValueFrom(this.httpClient.put<Warehouse>(`${this.baseUrl}/warehouse/${warehouse_id}`,body))
+  }
+
+  delete(warehouse_id:number){
+    return lastValueFrom(this.httpClient.delete<Warehouse>(`${this.baseUrl}/warehouse/${warehouse_id}`))
+  }
 }
