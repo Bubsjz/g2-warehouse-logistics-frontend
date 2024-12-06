@@ -1,4 +1,4 @@
-<table class="table table-borderless table-hover">
+<table class="table table-borderless table-hover mb-5">
     <thead class="table table-info">
         <tr>
             <th scope="col">Id</th>
@@ -19,10 +19,10 @@
                 <td>{{ employee.name }}</td>
                 <td class="d-none d-md-table-cell">{{ employee.surname }}</td>
                 <td>{{ employee.role }}</td>
-                <td class="d-none d-md-table-cell"><a [href]="'mailto:' + employee.email">{{ employee.email }}</a></td>
+                <td class="d-none d-md-table-cell "><a [href]="'mailto:' + employee.email">{{ employee.email }}</a></td>
                 <td>
-                    <button class="btn btn-outline-primary" [routerLink]="['/boss', 'employee-view', employee?.id_user]">
-                        <i class="fa-regular fa-eye"></i>
+                    <button class="btn btn-outline-success" [routerLink]="['/boss', 'employee-view', employee?.id_user]">
+                        <i class="fa-regular fa-eye fa-lg "></i>
                     </button>
                 </td>
                 <td class="d-none d-md-table-cell">
@@ -31,8 +31,8 @@
                     </button>
                 </td>
                 <td class="d-none d-md-table-cell">
-                    <button class="btn btn-outline-primary" (click)="delete(employee!.id_user)">
-                        <i class="fa-solid fa-trash"></i>
+                    <button class="btn btn-outline-danger" (click)="delete(employee!.id_user)">
+                        <i class="fa-solid fa-trash fa-lg "></i>
                       </button>
                 </td>
             </tr>

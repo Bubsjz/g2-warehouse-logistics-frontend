@@ -16,7 +16,7 @@ thead tr th{
    
 }
 table.table.table-hover > thead > tr > th {
-    background-color: #800020; /* Fondo burdeos */
+    background-color:  #1a994b; /* Fondo Verde */
     color: white ; /* Texto blanco */
     text-align: center ;
     
@@ -40,5 +40,7 @@ table tr, table td, table th{
   }
 
   .text-users{
-    color: #800020;
+    color:  #1a994b;
   }
+
+  
