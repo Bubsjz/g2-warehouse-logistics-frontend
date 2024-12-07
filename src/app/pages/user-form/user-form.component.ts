@@ -28,8 +28,7 @@ export class UserFormComponent {
   trucks: Itruck[] | undefined = [];
   myWarehouseId: number | undefined;
   myUserId: number | undefined;
-  previousImage: any | undefined;
-  previousFile: File = new File([], "empty.txt", { type: "text/plain" });
+  previousFile: File = new File([], "image.jpg", { type: 'image/jpeg' });
 
   userForm: FormGroup;
   formType: string = 'Insert';
@@ -74,19 +73,18 @@ export class UserFormComponent {
     } else {
       console.warn('No image was provided');
     }
-    }
+  }
   
-    clearImage(){
-      this.imagePreview = null
-      this.userForm.get('image')?.reset();
-    }
+  clearImage(){
+    this.imagePreview = null
+    this.userForm.get('image')?.reset();
+  }
 
   convertImageToFile(image: any): void {
     fetch(image)
       .then((response) => response.blob())
       .then((blob) => {
-        const fileName = 'image.jpg'; // Name your file
-        this.previousFile = new File([blob], fileName, { type: blob.type });
+        this.previousFile = new File([blob], 'image.jpg', { type: 'image/jpeg' });
       })
       .catch((error) => {
         console.error('Error converting image URL to File:', error);
@@ -110,7 +108,7 @@ export class UserFormComponent {
 
         const res = await this.userServices.getById(params.id);
         this.myWarehouseId = res.assigned_id_warehouse;
-        this.previousImage = res.image;
+        this.convertImageToFile(res.image)
 
         this.userForm = new FormGroup({
           name: new FormControl(res.name, [Validators.required]),
@@ -143,16 +141,7 @@ export class UserFormComponent {
         if (this.selectedFile) {
           formData.append("image", this.selectedFile)
         } else {
-          if (this.previousImage) {
-            this.convertImageToFile(this.previousImage)
-            formData.append("image", this.previousFile)
-          }else {
-            Swal.fire({
-              title: "Upsss!",
-              text: `No image was provided!`,
-              icon: "error"
-            });
-          }
+          formData.append("image", this.previousFile)
         }
 
         const newWarehouseName: string = this.userForm.get("warehouse")?.value
