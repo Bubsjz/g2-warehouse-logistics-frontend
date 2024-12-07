@@ -29,6 +29,7 @@ export class UserFormComponent {
   myWarehouseId: number | undefined;
   myUserId: number | undefined;
   previousFile: File = new File([], "image.jpg", { type: 'image/jpeg' });
+  previousTruck: Itruck | undefined;
 
   userForm: FormGroup;
   formType: string = 'Insert';
@@ -109,6 +110,8 @@ export class UserFormComponent {
         const res = await this.userServices.getById(params.id);
         this.myWarehouseId = res.assigned_id_warehouse;
         this.convertImageToFile(res.image)
+        this.previousTruck = await this.userServices.getTruckById(res.assigned_id_truck)
+        this.trucks?.push(this.previousTruck)
 
         this.userForm = new FormGroup({
           name: new FormControl(res.name, [Validators.required]),
@@ -122,7 +125,7 @@ export class UserFormComponent {
           image: new FormControl(null),
           role: new FormControl(res.role),
           warehouse: new FormControl(res.warehouse_name),
-          truck: new FormControl(res.assigned_id_truck)  // TODO: res.plate (acceder a la matricula del assigned_id_truck)
+          truck: new FormControl(this.previousTruck.plate)  // TODO: res.plate (acceder a la matricula del assigned_id_truck)
         }, [this.checkPassword])
       }
     })

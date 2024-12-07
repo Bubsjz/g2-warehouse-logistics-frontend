@@ -39,6 +39,10 @@ export class UsersService {
     return lastValueFrom(this.httpClient.delete<Iuser3>(`${this.baseUrl}/users/${id}`))
   }
 
+  getTruckById(id: number): Promise<Itruck> {
+    return lastValueFrom(this.httpClient.get<Itruck>(`${this.baseUrl}/truck/${id}`))
+  }
+
   getAvailableTrucks(): Promise<Itruck[]> {
     return lastValueFrom(this.httpClient.get<Itruck[]>(`${this.baseUrl}/available-trucks`))
   }
