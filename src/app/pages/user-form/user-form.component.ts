@@ -108,8 +108,12 @@ export class UserFormComponent {
         const res = await this.userServices.getById(params.id);
         this.myWarehouseId = res.assigned_id_warehouse;
         this.convertImageToFile(res.image);
-        this.previousTruck = await this.userServices.getTruckById(res.assigned_id_truck);
-        this.trucks?.push({id_truck: this.previousTruck.id_truck, plate: this.previousTruck.plate});
+        if (res.assigned_id_truck) {
+          this.previousTruck = await this.userServices.getTruckById(res.assigned_id_truck);
+        }
+        if (this.previousTruck) {
+          this.trucks?.push({id_truck: this.previousTruck.id_truck, plate: this.previousTruck.plate});
+        }
 
         this.userForm = new FormGroup({
           name: new FormControl(res.name, [Validators.required]),
@@ -123,7 +127,7 @@ export class UserFormComponent {
           image: new FormControl(null),
           role: new FormControl(res.role),
           warehouse: new FormControl(res.warehouse_name),
-          truck: new FormControl(this.previousTruck.plate)
+          truck: new FormControl(this.previousTruck ? this.previousTruck.plate : null)
         }, [this.checkPassword])
       }
     })
@@ -150,8 +154,10 @@ export class UserFormComponent {
         formData.append("assigned_id_warehouse", newWarehouseId.toString());
 
         const chosenPlate: string = this.userForm.get("truck")?.value
-        const chosenTruckId: string = this.trucks!.find((obj) => obj.plate == chosenPlate)!.id_truck;
-        formData.append("assigned_id_truck", chosenTruckId);
+        const chosenTruckId: string | undefined = this.trucks!.find((obj) => obj.plate == chosenPlate)?.id_truck;
+        if (chosenTruckId) {
+          formData.append("assigned_id_truck", chosenTruckId);
+        }
 
         const response: Iuser3 = await this.userServices.update(this.myUserId, formData)
         console.log('usuario actualizado', response)
