@@ -94,10 +94,8 @@ export class UserFormComponent {
 
   async ngOnInit() {
     try {
-      const res = await this.warehouseServices.getAll();
-      this.warehouses = res
-      const res2 = await this.userServices.getAvailableTrucks();
-      this.trucks = res2;
+      this.warehouses = await this.warehouseServices.getAll();
+      this.trucks = await this.userServices.getAvailableTrucks();
     } catch (error) {
       console.log(error)
     }
@@ -109,9 +107,9 @@ export class UserFormComponent {
 
         const res = await this.userServices.getById(params.id);
         this.myWarehouseId = res.assigned_id_warehouse;
-        this.convertImageToFile(res.image)
-        this.previousTruck = await this.userServices.getTruckById(res.assigned_id_truck)
-        this.trucks?.push(this.previousTruck)
+        this.convertImageToFile(res.image);
+        this.previousTruck = await this.userServices.getTruckById(res.assigned_id_truck);
+        this.trucks?.push({id_truck: this.previousTruck.id_truck, plate: this.previousTruck.plate});
 
         this.userForm = new FormGroup({
           name: new FormControl(res.name, [Validators.required]),
@@ -125,7 +123,7 @@ export class UserFormComponent {
           image: new FormControl(null),
           role: new FormControl(res.role),
           warehouse: new FormControl(res.warehouse_name),
-          truck: new FormControl(this.previousTruck.plate)  // TODO: res.plate (acceder a la matricula del assigned_id_truck)
+          truck: new FormControl(this.previousTruck.plate)
         }, [this.checkPassword])
       }
     })
@@ -151,10 +149,9 @@ export class UserFormComponent {
         const newWarehouseId: number = this.warehouses!.filter(warehouse => warehouse.name === newWarehouseName)[0].id_warehouse
         formData.append("assigned_id_warehouse", newWarehouseId.toString());
 
-        // formData.append("assigned_id_truck", "115");
-        const chosentruck = this.userForm.get("truck")?.value
-        console.log(chosentruck)
-        formData.append("assigned_id_truck", chosentruck.toString());
+        const chosenPlate: string = this.userForm.get("truck")?.value
+        const chosenTruckId: string = this.trucks!.find((obj) => obj.plate == chosenPlate)!.id_truck;
+        formData.append("assigned_id_truck", chosenTruckId);
 
         const response: Iuser3 = await this.userServices.update(this.myUserId, formData)
         console.log('usuario actualizado', response)
@@ -192,8 +189,9 @@ export class UserFormComponent {
         const newWarehouseId: number = this.warehouses!.filter(warehouse => warehouse.name === newWarehouseName)[0].id_warehouse
         formData.append("assigned_id_warehouse", newWarehouseId.toString());
 
-        // formData.append("assigned_id_truck", "115");
-        formData.append("assigned_id_truck", this.userForm.get("truck")?.value);
+        const chosenPlate: string = this.userForm.get("truck")?.value
+        const chosenTruckId: string = this.trucks!.find((obj) => obj.plate == chosenPlate)!.id_truck;
+        formData.append("assigned_id_truck", chosenTruckId);
     
         const response: Iuser3 = await this.userServices.insert(formData)
         console.log('usuario creado:', response)

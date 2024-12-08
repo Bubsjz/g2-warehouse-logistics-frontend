@@ -1,4 +1,4 @@
 export interface Itruck {
-    id_truck?: string;
+    id_truck: string;
     plate: string;
 }
