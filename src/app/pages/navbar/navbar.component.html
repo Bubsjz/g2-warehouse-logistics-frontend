@@ -9,17 +9,14 @@
 
   <div class="store-container">
     @for(warehouse of warehouses; track warehouse.id_warehouse) {
-      <div class="store">
+      <a [routerLink]="['/boss', 'warehouse-view', warehouse.id_warehouse]" class="store">
         <div class="store-header">{{warehouse.name}}</div>
-        <div class="store-body">
-          <img src={{warehouse.image}} alt={{warehouse.name}} class="store-image">
-          <div class="store-actions">
-            <div class="icons">
-              <a [routerLink]="['/boss', 'warehouse-view', warehouse.id_warehouse]"><i class="fas fa-info-circle icon"></i></a>
-            </div>
+          <div class="store-body">
+            <div class="store-image-container">
+            <img src={{warehouse.image}} alt={{warehouse.name}} class="store-image">
           </div>
-        </div>
-      </div>
+          </div>
+      </a>
     }
   </div>
 </div>
