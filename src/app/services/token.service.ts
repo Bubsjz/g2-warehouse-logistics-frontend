@@ -2,12 +2,12 @@ import { Injectable } from "@angular/core";
 import { jwtDecode } from "jwt-decode";
 import { DecodedToken } from "../interfaces/token.interface";
 
-
-
 @Injectable({
     providedIn: 'root',
   })
   export class AuthService {
+
+    private tokenKey = 'authToken';
     
     getTokenData(): DecodedToken | null {
       const token = localStorage.getItem('authToken');
@@ -21,10 +21,21 @@ import { DecodedToken } from "../interfaces/token.interface";
             return null;
           }
         }
-  
-    isTokenExpired(): boolean {
+        
+    // Verifica si el token está expirado
+    /* isTokenExpired(): boolean {
       const tokenData = this.getTokenData();
       return tokenData ? tokenData.exp < Math.floor(Date.now() / 1000) : true;
+    } */
+
+    getUserName(): string | null {
+      const tokenData = this.getTokenData();
+      return tokenData?.user_name || null;
+    }
+
+    getUserSurname(): string | null {
+      const tokenData = this.getTokenData();
+      return tokenData?.user_surname || null;
     }
   
     getUserRole(): string | null {
@@ -35,5 +46,9 @@ import { DecodedToken } from "../interfaces/token.interface";
     getTruckPlate(): string | null {
       const tokenData = this.getTokenData();
       return tokenData?.user_truck_plate || null;
+    }
+
+    logOut(): void {
+      localStorage.removeItem(this.tokenKey);
     }
   }

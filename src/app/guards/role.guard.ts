@@ -29,8 +29,8 @@ export class roleGuard implements CanActivate {
         return false;
     }
   
-    if ((userRole === 'manager' && url.startsWith('/operator/')) ||
-      (userRole === 'operator' && url.startsWith('/manager/')) ||
+    if ((userRole === 'manager' && !url.startsWith('/manager/')) ||
+      (userRole === 'operator' && !url.startsWith('/operator/')) ||
       (userRole === 'boss' && !url.startsWith('/boss/'))
     ) {
     console.warn(`Unauthorized URL access detected for role: ${userRole}. Redirecting...`);
