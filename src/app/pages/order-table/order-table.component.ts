@@ -7,6 +7,7 @@ import { DatePipe } from "@angular/common";
 import { OperatorService } from "../../services/operator.service";
 import {jwtDecode} from 'jwt-decode';
 import { ManagerService } from "../../services/manager.service";
+import Swal from "sweetalert2";
 
 type decodeToken = {
   user_id: number;
@@ -64,13 +65,9 @@ export class OrderTableComponent {
         
 
       }else{
-        //operator   
-        //const response2 = await this.operatorService.getUserById(this.idUser.user_id)
         this.userLogin = this.idUser.user_role
         const response1 =  await this.operatorService.getAllDeliveryByUser()
         this.arrDeliveries = response1
-        console.log(this.arrDeliveries)
-        
       }
 
       
@@ -85,7 +82,11 @@ export class OrderTableComponent {
 
   filterFather(event:Delivery[]) {
     if(event.length <= 0 ){
-      alert('no products')
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "No products!",
+      });
     }else{
       this.arrDeliveries = event
     }
