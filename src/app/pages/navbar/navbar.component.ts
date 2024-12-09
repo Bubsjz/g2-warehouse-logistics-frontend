@@ -24,4 +24,10 @@ export class NavbarComponent {
       console.log(error)
     }
   }
+
+  async search(event: string): Promise<void> {
+    this.warehouses = await this.warehouseServices.getAll()
+    this.warehouses =  this.warehouses.filter(warehouse => warehouse.name.toLowerCase().includes(event.toLowerCase()))
+  }
+  
 }
