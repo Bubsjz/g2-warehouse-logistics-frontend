@@ -7,13 +7,14 @@ import { WarehousesService } from '../../services/warehouses.service';
 import { Iuser3 } from '../../interfaces/iuser.interface';
 import Swal, { SweetAlertIcon } from 'sweetalert2';
 import { Itruck } from '../../interfaces/itruck.interface';
+import { CommonModule } from '@angular/common';
 
 type AlertResponse = { title: string; text: string; icon: SweetAlertIcon, cbutton: string};
 
 @Component({
   selector: 'app-user-form',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, CommonModule],
   templateUrl: './user-form.component.html',
   styleUrl: './user-form.component.css'
 })
@@ -38,6 +39,8 @@ export class UserFormComponent {
 
   imagePreview: string | null = null; // Para almacenar la vista previa
   selectedFile!: File; // Para almacenar el archivo seleccionado
+
+  isOperator: boolean | undefined;
 
   constructor() {
     this.userForm = new FormGroup({
@@ -96,6 +99,7 @@ export class UserFormComponent {
     try {
       this.warehouses = await this.warehouseServices.getAll();
       this.trucks = await this.userServices.getAvailableTrucks();
+      this.isOperator = true;
     } catch (error) {
       console.log(error)
     }
@@ -106,8 +110,11 @@ export class UserFormComponent {
         this.myUserId = params.id
 
         const res = await this.userServices.getById(params.id);
+
         this.myWarehouseId = res.assigned_id_warehouse;
         this.convertImageToFile(res.image);
+        this.isOperator = (res.role === 'operator' ? true: false);
+
         if (res.assigned_id_truck) {
           this.previousTruck = await this.userServices.getTruckById(res.assigned_id_truck);
         }
@@ -130,9 +137,21 @@ export class UserFormComponent {
           truck: new FormControl(this.previousTruck ? this.previousTruck.plate : null)
         }, [this.checkPassword])
       }
+    
+      this.userForm.get('role')?.valueChanges.subscribe((value) => {
+        if (value === 'operator') {
+          this.isOperator = true;
+          this.userForm.get('truck')?.setValue('Select a truck plate');
+        } else {
+          this.isOperator = false;
+          this.userForm.get('truck')?.reset();
+        }
+      });
+    
     })
   }
 
+  
   async getDataForm() {
     if (this.myUserId) {
       try{
@@ -154,8 +173,8 @@ export class UserFormComponent {
         formData.append("assigned_id_warehouse", newWarehouseId.toString());
 
         const chosenPlate: string = this.userForm.get("truck")?.value
-        const chosenTruckId: string | undefined = this.trucks!.find((obj) => obj.plate == chosenPlate)?.id_truck;
-        if (chosenTruckId) {
+        if (chosenPlate) {
+          const chosenTruckId: string = this.trucks!.find((obj) => obj.plate == chosenPlate)!.id_truck;
           formData.append("assigned_id_truck", chosenTruckId);
         }
 
@@ -196,8 +215,10 @@ export class UserFormComponent {
         formData.append("assigned_id_warehouse", newWarehouseId.toString());
 
         const chosenPlate: string = this.userForm.get("truck")?.value
-        const chosenTruckId: string = this.trucks!.find((obj) => obj.plate == chosenPlate)!.id_truck;
-        formData.append("assigned_id_truck", chosenTruckId);
+        if (chosenPlate) {
+          const chosenTruckId: string = this.trucks!.find((obj) => obj.plate == chosenPlate)!.id_truck;
+          formData.append("assigned_id_truck", chosenTruckId);
+        }
     
         const response: Iuser3 = await this.userServices.insert(formData)
         console.log('usuario creado:', response)

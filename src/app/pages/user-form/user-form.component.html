@@ -138,16 +138,16 @@
         </select>
       </div>
 
-      <div class="my-3">
+      <div class="my-3" *ngIf="isOperator">
         <label class="form-label" for="truck"
-          ><strong>Truck</strong></label
+          ><strong>Truck Plate</strong></label
         >
         <select
           class="form-select rounded-pill"
           id="truck"
           formControlName="truck"
         >
-          <option value="" selected>Select a truck</option>
+          <option value='Select a truck plate'>Select a truck plate</option>
           @for(truck of trucks; track truck.id_truck) {
           <option [value]="truck.plate">{{ truck.plate }}</option>
 
