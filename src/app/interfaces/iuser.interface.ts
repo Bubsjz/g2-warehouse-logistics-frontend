@@ -30,7 +30,7 @@ export interface Iuser4 {
     role: string;
     image: File;     
     assigned_id_warehouse: number;
-    assigned_id_truck: number;
+    assigned_id_truck?: number;
     warehouse_name: string;
     locality: string;
     address: string;

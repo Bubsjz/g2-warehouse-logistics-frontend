@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Iuser3, Iuser4 } from '../interfaces/iuser.interface';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
+import { Itruck } from '../interfaces/itruck.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -38,4 +39,11 @@ export class UsersService {
     return lastValueFrom(this.httpClient.delete<Iuser3>(`${this.baseUrl}/users/${id}`))
   }
 
+  getTruckById(id: number): Promise<Itruck> {
+    return lastValueFrom(this.httpClient.get<Itruck>(`${this.baseUrl}/truck/${id}`))
+  }
+
+  getAvailableTrucks(): Promise<Itruck[]> {
+    return lastValueFrom(this.httpClient.get<Itruck[]>(`${this.baseUrl}/available-trucks`))
+  }
 }

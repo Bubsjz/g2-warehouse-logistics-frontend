@@ -40,4 +40,5 @@ export class WarehousesService {
   delete(warehouse_id:number){
     return lastValueFrom(this.httpClient.delete<Warehouse>(`${this.baseUrl}/warehouse/${warehouse_id}`))
   }
+
 }

@@ -6,13 +6,15 @@ import { Iwarehouse } from '../../interfaces/iwarehouse.interface';
 import { WarehousesService } from '../../services/warehouses.service';
 import { Iuser3 } from '../../interfaces/iuser.interface';
 import Swal, { SweetAlertIcon } from 'sweetalert2';
+import { Itruck } from '../../interfaces/itruck.interface';
+import { CommonModule } from '@angular/common';
 
 type AlertResponse = { title: string; text: string; icon: SweetAlertIcon, cbutton: string};
 
 @Component({
   selector: 'app-user-form',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, CommonModule],
   templateUrl: './user-form.component.html',
   styleUrl: './user-form.component.css'
 })
@@ -24,8 +26,12 @@ export class UserFormComponent {
   router = inject(Router);
 
   warehouses: Iwarehouse[] | undefined = [];
+  trucks: Itruck[] | undefined = [];
   myWarehouseId: number | undefined;
   myUserId: number | undefined;
+  previousFile: File = new File([], "image.jpg", { type: 'image/jpeg' });
+  previousTruck: Itruck | undefined;
+
   userForm: FormGroup;
   formType: string = 'Insert';
 
@@ -33,6 +39,8 @@ export class UserFormComponent {
 
   imagePreview: string | null = null; // Para almacenar la vista previa
   selectedFile!: File; // Para almacenar el archivo seleccionado
+
+  isOperator: boolean | undefined;
 
   constructor() {
     this.userForm = new FormGroup({
@@ -47,6 +55,7 @@ export class UserFormComponent {
       image: new FormControl(null),
       role: new FormControl(null),
       warehouse: new FormControl(null),
+      truck: new FormControl(null)
     }, [this.checkPassword])
   }
 
@@ -68,18 +77,29 @@ export class UserFormComponent {
     } else {
       console.warn('No image was provided');
     }
-    }
+  }
   
-    clearImage(){
-      this.imagePreview = null
-      this.userForm.get('image')?.reset();
-    }
+  clearImage(){
+    this.imagePreview = null
+    this.userForm.get('image')?.reset();
+  }
 
+  convertImageToFile(image: any): void {
+    fetch(image)
+      .then((response) => response.blob())
+      .then((blob) => {
+        this.previousFile = new File([blob], 'image.jpg', { type: 'image/jpeg' });
+      })
+      .catch((error) => {
+        console.error('Error converting image URL to File:', error);
+      });
+  }  
 
   async ngOnInit() {
     try {
-      const res = await this.warehouseServices.getAll();
-      this.warehouses = res
+      this.warehouses = await this.warehouseServices.getAll();
+      this.trucks = await this.userServices.getAvailableTrucks();
+      this.isOperator = true;
     } catch (error) {
       console.log(error)
     }
@@ -90,7 +110,17 @@ export class UserFormComponent {
         this.myUserId = params.id
 
         const res = await this.userServices.getById(params.id);
+
         this.myWarehouseId = res.assigned_id_warehouse;
+        this.convertImageToFile(res.image);
+        this.isOperator = (res.role === 'operator' ? true: false);
+
+        if (res.assigned_id_truck) {
+          this.previousTruck = await this.userServices.getTruckById(res.assigned_id_truck);
+        }
+        if (this.previousTruck) {
+          this.trucks?.push({id_truck: this.previousTruck.id_truck, plate: this.previousTruck.plate});
+        }
 
         this.userForm = new FormGroup({
           name: new FormControl(res.name, [Validators.required]),
@@ -104,11 +134,24 @@ export class UserFormComponent {
           image: new FormControl(null),
           role: new FormControl(res.role),
           warehouse: new FormControl(res.warehouse_name),
+          truck: new FormControl(this.previousTruck ? this.previousTruck.plate : null)
         }, [this.checkPassword])
       }
+    
+      this.userForm.get('role')?.valueChanges.subscribe((value) => {
+        if (value === 'operator') {
+          this.isOperator = true;
+          this.userForm.get('truck')?.setValue('Select a truck plate');
+        } else {
+          this.isOperator = false;
+          this.userForm.get('truck')?.reset();
+        }
+      });
+    
     })
   }
 
+  
   async getDataForm() {
     if (this.myUserId) {
       try{
@@ -122,18 +165,18 @@ export class UserFormComponent {
         if (this.selectedFile) {
           formData.append("image", this.selectedFile)
         } else {
-          Swal.fire({
-            title: "Upsss!",
-            text: `No image was provided!`,
-            icon: "error"
-          });
+          formData.append("image", this.previousFile)
         }
 
         const newWarehouseName: string = this.userForm.get("warehouse")?.value
         const newWarehouseId: number = this.warehouses!.filter(warehouse => warehouse.name === newWarehouseName)[0].id_warehouse
         formData.append("assigned_id_warehouse", newWarehouseId.toString());
 
-        formData.append("assigned_id_truck", "111");
+        const chosenPlate: string = this.userForm.get("truck")?.value
+        if (chosenPlate) {
+          const chosenTruckId: string = this.trucks!.find((obj) => obj.plate == chosenPlate)!.id_truck;
+          formData.append("assigned_id_truck", chosenTruckId);
+        }
 
         const response: Iuser3 = await this.userServices.update(this.myUserId, formData)
         console.log('usuario actualizado', response)
@@ -171,7 +214,11 @@ export class UserFormComponent {
         const newWarehouseId: number = this.warehouses!.filter(warehouse => warehouse.name === newWarehouseName)[0].id_warehouse
         formData.append("assigned_id_warehouse", newWarehouseId.toString());
 
-        formData.append("assigned_id_truck", "111");
+        const chosenPlate: string = this.userForm.get("truck")?.value
+        if (chosenPlate) {
+          const chosenTruckId: string = this.trucks!.find((obj) => obj.plate == chosenPlate)!.id_truck;
+          formData.append("assigned_id_truck", chosenTruckId);
+        }
     
         const response: Iuser3 = await this.userServices.insert(formData)
         console.log('usuario creado:', response)

@@ -6,11 +6,12 @@ import { Iwarehouse2 } from '../../interfaces/iwarehouse2.interface';
 import { Iuser2 } from '../../interfaces/iuser2.interface';
 import Swal from 'sweetalert2';
 import { GoogleMap, MapMarker } from '@angular/google-maps';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-warehouse-card',
   standalone: true,
-  imports: [RouterLink,GoogleMap,MapMarker],
+  imports: [RouterLink,GoogleMap,MapMarker,CommonModule],
   templateUrl: './warehouse-card.component.html',
   styleUrl: './warehouse-card.component.css'
 })
@@ -22,17 +23,16 @@ export class WarehouseCardComponent {
 
   @Input() warehouse_id!: number;
 
-  // warehouse: Iwarehouse | undefined;
-  // operators: Iuser[] | undefined;
-  // managers: Iuser[] | undefined;
   showMap:boolean = false;
   latitude!: string ;
   longitude!: string;
   warehouse: Iwarehouse2 | undefined;
   operators: Iuser2[] | undefined;
   managers: Iuser2[] | undefined;
+  administrators: Iuser2[] | undefined;
   n_operators: number = 0;
   n_managers: number = 0;
+  n_administrators: number = 0;
   n_employees: number = 0;
 
 
@@ -47,8 +47,10 @@ export class WarehouseCardComponent {
 
     this.managers = res.users!.filter(employee => employee.role === 'manager')
     this.operators = res.users!.filter(employee => employee.role === 'operator')
+    this.administrators = res.users!.filter(employee => (employee.role === 'administrator') || (employee.role === 'boss'))
     this.n_operators = this.operators!.length
     this.n_managers = this.managers!.length
+    this.n_administrators = this.administrators!.length
     this.n_employees = this.n_managers + this.n_operators
   }
 

@@ -28,7 +28,7 @@ export class WarehouseFormComponent {
   type: string = "creation"
   typebtn: string = "Create"
   warehouse_id!:number
-
+  previousFile: File = new File([], "image.jpg", { type: 'image/jpeg' });
 
   constructor() {
     this.reactiveForm = new FormGroup({
@@ -51,6 +51,7 @@ export class WarehouseFormComponent {
         this.typebtn = "Update"
         const warehouse = await this.serviceWarehouse.getById(params.id)
         console.log(warehouse)
+        this.convertImageToFile(warehouse.image)
         this.reactiveForm = new FormGroup({
           _id: new FormControl(warehouse.id_warehouse, []),
           name: new FormControl(warehouse.name, [Validators.required]),
@@ -58,7 +59,7 @@ export class WarehouseFormComponent {
           address: new FormControl(warehouse.address, [Validators.required]),
           latitude: new FormControl(warehouse.latitude, [Validators.required]),
           longitude: new FormControl(warehouse.longitude, [Validators.required]),
-          image: new FormControl(null, [Validators.required])
+          image: new FormControl(null)
 
         }, [])
 
@@ -95,6 +96,17 @@ export class WarehouseFormComponent {
     this.reactiveForm.get('image')?.reset();
   }
 
+  convertImageToFile(image: any): void {
+    fetch(image)
+      .then((response) => response.blob())
+      .then((blob) => {
+        this.previousFile = new File([blob], 'image.jpg', { type: 'image/jpeg' });
+      })
+      .catch((error) => {
+        console.error('Error converting image URL to File:', error);
+      });
+  }  
+
   async onSubmit() {
     if (this.reactiveForm.valid) {
       const formData = new FormData();
@@ -104,7 +116,9 @@ export class WarehouseFormComponent {
       formData.append("latitude", this.reactiveForm.get("latitude")?.value);
       formData.append("longitude", this.reactiveForm.get("longitude")?.value);
       if (this.selectedFile) {
-        formData.append("image", this.selectedFile);
+        formData.append("image", this.selectedFile)
+      } else {
+        formData.append("image", this.previousFile)
       }
 
      try {

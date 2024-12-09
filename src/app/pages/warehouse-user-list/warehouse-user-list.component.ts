@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, SimpleChanges } from '@angular/core';
 import { WarehousesService } from '../../services/warehouses.service';
 import { Iwarehouse } from '../../interfaces/iwarehouse.interface';
 import { Iuser } from '../../interfaces/iuser.interface';
@@ -22,32 +22,28 @@ export class WarehouseUserListComponent {
   @Input() warehouse_id!: number;
   warehouseServices = inject(WarehousesService);
   warehouse: Iwarehouse2 | undefined;
-  // warehouse: Iwarehouse | undefined;
   employees: Iuser2[] | undefined;
-  // employees: Iuser[] | undefined;
 
   userServices = inject(UsersService)
 
   async ngOnInit() {
 
-    const res = await this.warehouseServices.getById(this.warehouse_id)
-    this.warehouse = res
-
-    // const res2 = await this.userServices.getByWarehouseId(this.warehouse_id)
-    this.employees = res.users;
-    console.log(this.employees)
+    this.warehouse = await this.warehouseServices.getById(this.warehouse_id)
+    this.employees = this.warehouse.users;
 
   }
 
   async delete(id: number) {
     const currentUser = this.employees!.filter(employee => employee.id_user === id)
-    let borrado = confirm('Seguro que deseas borrar el usuario ' + currentUser[0].name + '?');
-    if (borrado) {
+    let confirmation = confirm('Are you sure you want to remove user with name ' + currentUser[0].name + '?');
+    if (confirmation) {
       let alert_res: AlertResponse;
       try {
         const res = await this.userServices.deleteByID(id);
         if ('id_user' in res && res.id_user === id) {
           alert_res = {title: 'Great!', text: 'User with ID: ' + id + ' succesfully removed', icon: 'success', cbutton: 'Accept'}
+          this.warehouse = await this.warehouseServices.getById(this.warehouse_id)
+          this.employees = this.warehouse.users;
         } else {
           let text: string;
           text = ('error' in res) ?  'Error' : 'User with ID: ' + id + ' not found'

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-search-engine',
@@ -8,11 +8,11 @@ import { Component } from '@angular/core';
   styleUrl: './search-engine.component.css'
 })
 export class SearchEngineComponent {
-  // @Output() busquedaEmitida: EventEmitter<string> = new EventEmitter()
+  @Output() EmittedSearch: EventEmitter<string> = new EventEmitter()
 
-  // search(event: Event) {
-  //   let input = event.target as HTMLInputElement;
-  //   let word = input.value
-  //   this.busquedaEmitida.emit(word)
+  search(event: Event) {
+    let input = event.target as HTMLInputElement;
+    this.EmittedSearch.emit(input.value)
+  }
 
 }
