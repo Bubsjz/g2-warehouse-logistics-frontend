@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
-import { Delivery, Warehouse, Truck, Product, CombinedResponse } from '../interfaces/order.interfaces';
+import { Delivery, Warehouse, Truck, Product, CombinedResponse } from '../interfaces/order.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +31,8 @@ export class DeliveryService {
 
   // Crear envío
   createDelivery(delivery: Delivery): Observable<Delivery> {
+    console.log('POST URL:', `${this.baseUrl}/operator/create-order`);
+    console.log('POST payload:', delivery);
     return this.http.post<Delivery>(`${this.baseUrl}/operator/create-order`, delivery);
   }
 

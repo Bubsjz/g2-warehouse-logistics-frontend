@@ -12,7 +12,8 @@
 
   // Importaciones del proyecto
   import { DeliveryService } from '../../services/order.service';
-  import { Delivery, Warehouse, Truck, Product } from '../../interfaces/order.interfaces';
+  import { Delivery, Warehouse, Truck, Product } from '../../interfaces/order.interface';
+  import { AuthService } from '../../services/token.service';
 
   
   @Component({
@@ -69,22 +70,44 @@
     isCommentEditable: boolean = false;
 
     // Variable para almacenar el rol
-    role: string = 'operator';
+    role: string = '';
   
     // Constructor para inyectar dependencias
     constructor(
       private route: ActivatedRoute,
       private router: Router,
-      private deliveryService: DeliveryService
+      private deliveryService: DeliveryService,
+      private authService: AuthService
     ) {}
 
     
+
 //-------------------------------
 //ARRANQUE
 //-------------------------------
 
           ngOnInit(): void {
+            
+            /* const userRole = this.authService.getUserRole();
+            const userPlate = this.authService.getTruckPlate();
+
+            if (!userRole) {
+              console.error('User role not found in token. Redirecting to login.');
+              this.router.navigate(['/login']);
+              return;
+            }
+
+            this.role = userRole;
+
+            // Si el rol es 'operator', asignar la matrícula al formulario
+            if (this.role === 'operator' && userPlate) {
+              this.delivery.plate = userPlate;
+            } */
+            
+            
             this.detectMode()
+
+            /* this.setUserRole(); */
           }
 
 
@@ -92,13 +115,41 @@
 //DETECCIÓN DE MODO Y CARGA DE DATOS
 //-------------------------------
 
+        //Tomar el rol de usuario del token
+          /* private setUserRole(): void {
+            const userRole = this.authService.getUserRole();
+            if (userRole) {
+              this.role = userRole;
+              console.log('Role obtained from token:', this.role);
+            } else {
+              console.error('Your role is not authorized to access this page.');
+              // Redirigir a login si no hay rol disponible
+              this.router.navigate(['/login']);
+            }
+          } */
+
+
+
+
+
+
         //Determina el modo del formulario y carga los datos correspondiente
             async detectMode(): Promise<void> {
-              const fullUrl = this.router.url;
+              // Obtener el rol del token
+              const userRole = this.authService.getUserRole();
+              if (!userRole) {
+                console.error('User role not found in token. Redirecting to login.');
+                /* this.router.navigate(['/login']); */
+                return;
+              }
+              this.role = userRole; // Asignar el rol al componente
+              console.log(`Role detected from token: ${this.role}`);
             
               // Detectar el rol
-              this.role = fullUrl.includes('/manager/') ? 'manager' : 'operator';
-              console.log(`Role detected: ${this.role}`);
+              const fullUrl = this.router.url;
+              /* this.role = fullUrl.includes('/manager/') ? 'manager' : 'operator'; */
+              /* this.setUserRole(); */
+              /* console.log(`Role detected: ${this.role}`); */
             
               // Detectar el modo
               if (fullUrl.includes('create-order')) {
@@ -260,6 +311,7 @@
                 product_name: detail.product_name || '',
                 product_quantity: detail.product_quantity,
               })),
+              /* plate: this.delivery.plate || null, */
             };
           }
         
@@ -395,13 +447,15 @@
           }
 
           //Modo creación
-              async handleCreateAction(status: string): Promise<void> {
+            async handleCreateAction(status: string): Promise<void> {
                 console.log('handleCreateAction called');
                 const deliveryPayload = this.prepareDeliveryPayload(status);
                 console.log('Creating delivery with payload:', deliveryPayload);
             
                 try {
-                    await firstValueFrom(this.deliveryService.createDelivery(deliveryPayload));
+                    const response = await firstValueFrom(this.deliveryService.createDelivery(deliveryPayload));
+                    console.log('Server response:', response);
+
                     const message = status === 'pending' ? 'Draft saved successfully!' : 'Order created successfully!';
                     Swal.fire('Success', message, 'success');
                     this.router.navigate([`/${this.role}/order-list`]);
@@ -410,25 +464,28 @@
                     Swal.fire('Error', this.errorMessage, 'error');
                     console.error('Error during delivery creation:', error);
                 }
-              }
+            }
 
 
         //Modo edición
-            async handleEditAction(status: string): Promise<void> {
+          async handleEditAction(status: string): Promise<void> {
               const deliveryPayload = this.prepareDeliveryPayload(status);
               console.log('Updating delivery with payload:', deliveryPayload);
           
               try {
-                  await firstValueFrom(this.deliveryService.updateDelivery(this.delivery.id_delivery!, deliveryPayload));
-                  const message = this.delivery.status === 'pending' ? 'Order created successfully!' : 'Order updated successfully!';
-                  Swal.fire('Success', message, 'success');
-                  this.router.navigate([`/${this.role}/order-list`]);
+                const response = await firstValueFrom(this.deliveryService.updateDelivery(this.delivery.id_delivery!, deliveryPayload));
+                console.log('Back-end response for update:', response);
+                  
+                const message = this.delivery.status === 'pending' ? 'Order created successfully!' : 'Order updated successfully!';
+                Swal.fire('Success', message, 'success');
+                this.router.navigate([`/${this.role}/order-list`]);
               } catch (error) {
-                  this.errorMessage = 'Failed to update order.';
-                  Swal.fire('Error', this.errorMessage, 'error');
-                  console.error('Error during delivery update:', error);
+                this.errorMessage = 'Failed to update order.';
+                Swal.fire('Error', this.errorMessage, 'error');
+                console.error('Error during delivery update:', error);
               }
           }
+
 
           //Manejo de respuesta en modo revisión previo envío
             async handleReviewAction(action: 'approve' | 'submit' | 'reject'): Promise<void> {
@@ -630,4 +687,5 @@
             }
             return 'Order Management';
           }
+
 }

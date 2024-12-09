@@ -138,6 +138,26 @@
         <ng-template #staticPlate>
           <span class="form-control rounded-pill">{{ delivery.plate || 'No data associated' }}</span>
         </ng-template>
+        <!-- <div *ngIf="role === 'operator'">
+          <label class="form-label" for="plate">Truck Plate</label>
+          <input
+            class="form-control rounded-pill"
+            type="text"
+            id="plate"
+            [value]="delivery.plate || ''"
+            readonly
+          />
+        </div>
+        <div *ngIf="role === 'manager'">
+          <label class="form-label" for="plate">Truck Plate</label>
+          <input
+            class="form-control rounded-pill"
+            type="text"
+            id="plate"
+            [(ngModel)]="delivery.plate"
+            [disabled]="mode === 'review'"
+          />
+        </div> -->
       </div>
 
       <!-- Productos -->

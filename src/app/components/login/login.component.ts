@@ -13,29 +13,6 @@ import Swal from 'sweetalert2';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  
-  // Forma con back-end
-
-/*   loginService = inject(LoginService);
-  
-  formLogin: FormGroup = new FormGroup({
-    email: new FormControl(),
-    password: new FormControl()
-  });
-
-  async onSubmit() {
-    if (this.formLogin.valid) {
-      try {
-        await this.loginService.login(this.formLogin.value);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  } */
-  
-  
-  
-  // Forma con json-server
   email: string = '';
   password: string = '';
   token: string = '';
@@ -51,20 +28,6 @@ export class LoginComponent {
 
   constructor(private loginService: LoginService, private router: Router, private route:ActivatedRoute) {}
 
-/*   onSubmit() {
-    this.loginService.login(this.email, this.password).subscribe(result => {
-      if (result) {
-        const route = this.rolRedirectMap[result.rol]; 
-        if (route) {
-          this.router.navigate([route]);
-        } else {
-          this.router.navigate(['/login']);
-        }
-      } else {
-        alert('Wrong email or password');
-      }
-    });
-  } */
 
     ngOnInit(){
       localStorage.removeItem('authToken')
