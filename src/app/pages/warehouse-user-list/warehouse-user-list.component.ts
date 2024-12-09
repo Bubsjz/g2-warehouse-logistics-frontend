@@ -42,6 +42,8 @@ export class WarehouseUserListComponent {
         const res = await this.userServices.deleteByID(id);
         if ('id_user' in res && res.id_user === id) {
           alert_res = {title: 'Great!', text: 'User with ID: ' + id + ' succesfully removed', icon: 'success', cbutton: 'Accept'}
+          this.warehouse = await this.warehouseServices.getById(this.warehouse_id)
+          this.employees = this.warehouse.users;
         } else {
           let text: string;
           text = ('error' in res) ?  'Error' : 'User with ID: ' + id + ' not found'
