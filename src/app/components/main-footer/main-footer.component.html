@@ -1,40 +1,70 @@
-<footer class="container-fluid mt-5 pt-4">
-  <div class="row align-items-center ">
+<footer class="container-fluid mt-5 pt-4 bg-light text-dark">
+  <div class="row align-items-center">
+    
     <div class="col-12 col-md-2 text-center text-md-start mb-3 mb-md-0 p-1">
-      <img src="rountravel.png" alt="Rountravel Logo" class="img-fluid mx-auto d-block"/>
+      <img src="rountravel.png" alt="Rountravel Logo" class="img-fluid mx-auto d-block" />
     </div>
+
+    
     <div class="col-12 col-md-10">
       <div class="row">
+        
         <div class="col-12 col-md-7">
           <p>
-            Rountravel Logistics logistics software for product shipments between warehouses.<br />Any incident to communicate through the channels provided in the
-            in the contact area to be forwarded to the warehouse manager.
+            <strong>Rountravel Logistics:</strong> Logistics software for product shipments between warehouses. <br />
+            Any incident should be communicated through the provided contact channels to be forwarded to the warehouse manager.
           </p>
         </div>
+
+        
         <div class="col-6 col-md-2">
-          <p class="h6 fw-bold">LINKS</p>
-          <p class="mb-2">
-            @if(this.UserRole === "operator"){
-              <a [routerLink]="['/operator','order-list']" class="link-offset-2"><i class="fa-solid fa-house fa-lg"></i></a>
-            }@else if(this.UserRole === "manager"){
-              <a [routerLink]="['/manager','order-list']" class="link-offset-2"><i class="fa-solid fa-house fa-lg"></i></a>
-            }@else{
-              <a [routerLink]="['/boss','warehouse-info']" class="link-offset-2"><i class="fa-solid fa-house fa-lg"></i></a>
-            }
-            
-          </p>
-          <p class="mb-2"><a href="/login" class="link-offset-2" (click)="logOutFooter()"> <i class="fa-solid fa-right-from-bracket fa-lg" style="color: #ff0033;"></i></a></p>
+          <p class="h6 fw-bold text-primary">LINKS</p>
+          <ul class="list-unstyled">
+            <li>
+              <a *ngIf="UserRole === 'operator'" [routerLink]="['/operator', 'order-list']" class="text-decoration-none text-dark">
+                <i class="fa-solid fa-house fa-lg"></i> Home
+              </a>
+            </li>
+            <li>
+              <a *ngIf="UserRole === 'manager'" [routerLink]="['/manager', 'order-list']" class="text-decoration-none text-dark">
+                <i class="fa-solid fa-house fa-lg"></i> Dashboard
+              </a>
+            </li>
+            <li>
+              <a *ngIf="UserRole === 'boss'" [routerLink]="['/boss', 'warehouse-info']" class="text-decoration-none text-dark">
+                <i class="fa-solid fa-house fa-lg"></i> Warehouse Info
+              </a>
+            </li>
+            <li>
+              <a href="/login" class="text-decoration-none text-danger" (click)="logOutFooter()">
+                <i class="fa-solid fa-right-from-bracket fa-lg"></i> Logout
+              </a>
+            </li>
+          </ul>
         </div>
+
+        <!-- Contact Section -->
         <div class="col-6 col-md-3">
-          <p class="h6 fw-bold">CONTACT</p>
-          <p class="mb-2"><a href="tel:93806409609" class="link-offset-2">93 806 409 609 </a> <i class="fa-solid fa-phone fa-lg"></i></p>
-          <p class="text-truncate mb-2"><a href="mailto:incidencias@roundtravel.com" class="link-offset-2">{{adminEmail}} </a> <i class="fa-solid fa-shield-halved fa-lg"></i></p>
+          <p class="h6 fw-bold text-primary">CONTACT</p>
+          <ul class="list-unstyled">
+            <li class="mb-2">
+              <a href="tel:93806409609" class="text-decoration-none text-dark">
+                <i class="fa-solid fa-phone fa-lg"></i> 93 806 409 609
+              </a>
+            </li>
+            <li class="text-truncate">
+              <a href="mailto:{{ adminEmail }}" class="text-decoration-none text-dark">
+                <i class="fa-solid fa-shield-halved fa-lg"></i> {{ adminEmail }}
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
+
+      <!-- Footer Bottom -->
       <div class="border-top pt-3 mt-3 text-center">
-        <p class="small">
-          2024 copyright Rountravel Logistics Managment Software, Spain. All
-          Rights Reserved
+        <p class="small mb-0">
+          &copy; 2024 Rountravel Logistics Management Software, Spain. All Rights Reserved.
         </p>
       </div>
     </div>
