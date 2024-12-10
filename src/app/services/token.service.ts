@@ -48,6 +48,11 @@ import { DecodedToken } from "../interfaces/token.interface";
       return tokenData?.user_plate || null;
     }
 
+    getUserImage(): File | null {
+      const tokenData = this.getTokenData();
+        return tokenData?.user_image || null;
+    }
+
     logOut(): void {
       localStorage.removeItem(this.tokenKey);
     }
