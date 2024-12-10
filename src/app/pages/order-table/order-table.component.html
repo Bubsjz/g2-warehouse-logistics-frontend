@@ -62,7 +62,7 @@
                                 <td >
                                     
                                         <div class="task-status justify-content-center">
-                                            @if(order.status === "correction needed" || order.status === "not approved") {
+                                            @if(order.status === "corrections needed" || order.status === "not approved") {
                                                 <span class="status-circle corrections d-none d-lg-table-cell"></span>
                                                 <p class="td-p text-danger">{{ capitalizeStatus(order.status) }} <i
                                                         class="fa-solid fa-circle-exclamation"></i></p>
