@@ -59,9 +59,9 @@
                                 <td class="d-none d-lg-table-cell">{{order.origin_warehouse_name}} ({{order.origin_warehouse_locality}})</td>
                                 <td class="d-none d-md-table-cell">{{order.destination_warehouse_name}} ({{order.destination_warehouse_locality}})</td>
                                 <td >{{order.plate}}</td>
-                                <td class="justify-content-start">
+                                <td >
                                     
-                                        <div class="task-status">
+                                        <div class="task-status justify-content-center">
                                             @if(order.status === "correction needed" || order.status === "not approved") {
                                                 <span class="status-circle corrections d-none d-lg-table-cell"></span>
                                                 <p class="td-p text-danger">{{ capitalizeStatus(order.status) }} <i
