@@ -1,16 +1,12 @@
-  // Importaciones básicas de Angular
-  import { Component, OnInit } from '@angular/core'; // Decorador para definir el componente y su ciclo de vida
-  import { ActivatedRoute, Router } from '@angular/router'; // Herramientas para manejo de rutas y navegación
-  import { FormsModule } from '@angular/forms'; // Funcionalidades para trabajar con formularios
-  import { CommonModule } from '@angular/common'; // Funcionalidades comunes de Angular
-  import { NgForm } from '@angular/forms'; // Tipo para formularios reactivos
+  import { Component, OnInit } from '@angular/core';
+  import { ActivatedRoute, Router } from '@angular/router';
+  import { FormsModule } from '@angular/forms';
+  import { CommonModule } from '@angular/common';
+  import { NgForm } from '@angular/forms';
   import { firstValueFrom } from 'rxjs';
   import { HttpErrorResponse } from '@angular/common/http';
   import dayjs from 'dayjs';
   import Swal from 'sweetalert2';
-
-
-  // Importaciones del proyecto
   import { DeliveryService } from '../../services/order.service';
   import { Delivery, Warehouse, Truck, Product } from '../../interfaces/order.interface';
   import { AuthService } from '../../services/token.service';
@@ -47,12 +43,11 @@
   
     // Detalles de los productos seleccionados para el pedido
     orderDetails: { 
-      product_id: number | null; 
-      product_name?: string;
+      product_name: string;
       product_quantity: number; 
       touched: boolean; 
     }[] = [
-      { product_id: null, product_quantity: 0, touched: false },
+      { product_name: '', product_quantity: 0, touched: false },
     ];
   
     // Mensaje de error para mostrar en caso de validación fallida o error del servidor
@@ -605,18 +600,15 @@
 
         //Agrega un nuevo producto al pedido
           addProduct(): void {
-            // Inserta un nuevo producto con valores iniciales en la lista de detalles
             this.orderDetails.push({ 
-              product_id: null,
+              product_name: '',
               product_quantity: 0,
               touched: false,
             });
-            console.log('Product added. Current details:', this.orderDetails);
           }
         
-        //Elimina un producto del pedido
+        //Elimina un producto del pedido, verificando que no se elimine el último producto
           removeProduct(index: number): void {
-            // Verificar si hay más de un producto en la lista
             if (this.orderDetails.length > 1) {
               this.orderDetails.splice(index, 1);
               console.log('Product removed. Current details:', this.orderDetails);

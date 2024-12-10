@@ -137,6 +137,7 @@
           There are no products associated with this order.
         </div>
         <div *ngFor="let detail of orderDetails; let i = index" class="my-3 d-flex align-items-center gap-3">
+
         <!-- Selector de tipo de producto -->
         <ng-container *ngIf="mode === 'edit' || mode === 'create'; else staticProduct">
           <select
@@ -155,7 +156,6 @@
               {{ product.name }}
             </option>
           </select>
-                  <!-- Validación -->
         <div *ngIf="productName.touched && !detail.product_name" class="text-danger">
           Product is required.
         </div>
@@ -181,7 +181,6 @@
                 [disabled]="!isEditable"
                 required
               />
-              <!-- Validación -->
               <div *ngIf="detail.touched && (!detail.product_quantity || detail.product_quantity <= 0)" class="text-danger">
                 Quantity must be greater than 0.
               </div>
@@ -195,14 +194,14 @@
         <button type="button" class="btn btn-danger" *ngIf="canManageProducts" (click)="removeProduct(i)">
           &minus;
         </button>
-      </div>
+        </div>
 
-      <!-- Botón para agregar nuevos productos -->
-      <div class="my-3">
-        <button type="button" class="btn btn-primary rounded-pill" *ngIf="canManageProducts" (click)="addProduct()">
-          + Add Product
-        </button>
-      </div>
+        <!-- Botón para agregar nuevos productos -->
+        <div class="my-3">
+          <button type="button" class="btn btn-primary rounded-pill" *ngIf="canManageProducts" (click)="addProduct()">
+            + Add Product
+          </button>
+        </div>
 
       <!-- Sección de comentarios solo visible en modo edit y review -->
       <div class="my-3" *ngIf="mode !== 'create' && (delivery.status !== 'pending' || mode === 'review')">
