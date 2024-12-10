@@ -54,9 +54,11 @@ export class OrderTableComponent {
         this.userLogin = this.idUser.user_role
         
         const response1 = await this.managerService.getEntryOrders()
+        
         this.originWarehouseName = response1[0].destination_warehouse_name
         this.originWarehouseLocality =  response1[0].destination_warehouse_locality
         this.arrDeliveriesEntry = response1
+        console.log(this.arrDeliveriesEntry)
 
         const response2 = await this.managerService.getOutputOrders()
         this.arrDeliveriesOutput = response2
@@ -103,5 +105,15 @@ export class OrderTableComponent {
     this.isSelected = output;
    this.arrDeliveries = this.arrDeliveriesOutput
 }
+
+
+ capitalizeStatus(status:string) {
+  return status
+      .toLowerCase() // Asegura que todo esté en minúsculas primero
+      .split(' ') // Divide por palabras
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Convierte la primera letra de cada palabra en mayúscula
+      .join(' '); // Une las palabras nuevamente
+}
+
 
 }
