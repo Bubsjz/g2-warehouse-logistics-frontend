@@ -28,11 +28,12 @@
             The complete list is found below</p>
 
           <p class="card-text">
-            <strong>Administrators:</strong>
+            <strong>Administrator:</strong>
           </p>
           <ul class="list-unstyled">
             <li *ngFor="let administrator of administrators">
-              <a [href]="'mailto:' + administrator.email">{{administrator.name}} {{administrator.surname}}</a>
+              <a>{{administrator.name}} {{administrator.surname}} </a>
+              <p class="mt-2"><a  [href]="'mailto:' + administrator.email">{{administrator.email}} </a></p>
             </li>
           </ul>
 

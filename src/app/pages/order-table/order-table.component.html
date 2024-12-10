@@ -57,30 +57,28 @@
                                     <td class="d-none d-md-table-cell">{{order.send_date| date: 'mediumDate'}}</td>
                                 }
                                 <td class="d-none d-lg-table-cell">{{order.origin_warehouse_name}} ({{order.origin_warehouse_locality}})</td>
-                                <td class="d-none d-md-table-cell">{{order.destination_warehouse_name}}({{order.destination_warehouse_locality}})</td>
+                                <td class="d-none d-md-table-cell">{{order.destination_warehouse_name}} ({{order.destination_warehouse_locality}})</td>
                                 <td >{{order.plate}}</td>
-                                <td>
-                                    <button class="btn btn-light">
-                                        <div class="task-status">
-                                            @if(order.status === "correction needed" ){
-                                            <span class="status-circle corrections d-none d-lg-table-cell"></span>
-                                            <p class="td-p text-danger">{{order.status}} <i
-                                                    class="fa-solid fa-circle-exclamation"></i></p>
-                                            }@else if (order.status === "delivered") {
-                                                <p class="td-p text-success">{{order.status}} <i class="fa-solid fa-check fa-lg"></i></p>
-                                                   
-                                            }@else if(order.status === "in transit"|| order.status === "accepted"){
-                                                <p class="td-p text-success">{{order.status}} <i
-                                                    class="fa-solid fa-truck-fast fa-lg"></i></p>
-                                            }@else if(order.status === "ready for departure" ){
-                                            <span class="status-circle ready d-none d-lg-table-cell"></span>
-                                            <p class="td-p text-success">{{order.status}}</p>
-                                            }@else if(order.status === "pending" || order.status === "review" || order.status === "pending reception"){
-                                            <p class="td-p orderStatusYellow">{{order.status}}</p>
-                                        
+                                <td >
+                                    
+                                        <div class="task-status justify-content-center">
+                                            @if(order.status === "correction needed" || order.status === "not approved") {
+                                                <span class="status-circle corrections d-none d-lg-table-cell"></span>
+                                                <p class="td-p text-danger">{{ capitalizeStatus(order.status) }} <i
+                                                        class="fa-solid fa-circle-exclamation"></i></p>
+                                            } @else if (order.status === "delivered" || order.status === "approved") {
+                                                <p class="td-p text-success">{{ capitalizeStatus(order.status) }} <i class="fa-solid fa-check fa-lg"></i></p>
+                                            } @else if(order.status === "in transit") {
+                                                <p class="td-p text-success">{{ capitalizeStatus(order.status) }} <i
+                                                        class="fa-solid fa-truck-fast fa-lg"></i></p>
+                                            } @else if(order.status === "ready for departure") {
+                                                <span class="status-circle ready d-none d-lg-table-cell"></span>
+                                                <p class="td-p text-success">{{ capitalizeStatus(order.status) }}</p>
+                                            } @else if(order.status === "pending" || order.status === "review" || order.status === "pending reception") {
+                                                <p class="td-p orderStatusYellow">{{ capitalizeStatus(order.status) }}</p>
                                             }
                                         </div>
-                                    </button>
+                                   
                                 </td>
                                 <td>
                                     @if(userLogin === "operator"){

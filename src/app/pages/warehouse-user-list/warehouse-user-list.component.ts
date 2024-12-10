@@ -57,4 +57,12 @@ export class WarehouseUserListComponent {
     }
   }
 
+  capitalizeRol(Rol:string) {
+    return Rol
+        .toLowerCase() // Asegura que todo esté en minúsculas primero
+        .split(' ') // Divide por palabras
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Convierte la primera letra de cada palabra en mayúscula
+        .join(' '); // Une las palabras nuevamente
+  }
+
 }
