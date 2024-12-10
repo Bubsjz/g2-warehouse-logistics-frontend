@@ -22,7 +22,7 @@
           #sendDate="ngModel"
           [ngClass]="{ 'is-invalid': (submitted || sendDate.touched) && !delivery.send_date }"
           name="send_date"
-          [disabled]="mode === 'review' || !isEditable"
+          [disabled]="!isEditable"
           required
         />
         <div *ngIf="(submitted || sendDate.touched) && !delivery.send_date" class="text-danger">
@@ -42,7 +42,7 @@
           #receivedDate="ngModel"
           [ngClass]="{ 'is-invalid': (submitted || receivedDate.touched) && !delivery.received_date }"
           name="received_date"
-          [disabled]="mode === 'review' || !isEditable"
+          [disabled]="!isEditable"
           required
         />
         <div *ngIf="(submitted || receivedDate.touched) && !delivery.received_date" class="text-danger">
@@ -113,52 +113,23 @@
       </div>
 
       <!-- Matrícula del camión -->
-      <div class="my-3">
-        <label class="form-label" for="plate">Truck License Plate</label>
-        <ng-container *ngIf="mode !== 'review'; else staticPlate">
-          <select
-            class="form-select rounded-pill"
-            [(ngModel)]="delivery.plate"
-            #plate="ngModel"
-            [ngClass]="{ 'is-invalid': (submitted || plate.touched) && !delivery.plate }"
-            name="truck_plate"
-            id="plate"
-            [disabled]="!isEditable"
-            required
-          >
-            <option [ngValue]="null" disabled>Select the truck plate</option>
-            <option *ngFor="let truck of trucks" [value]="truck.plate">
-              {{ truck.plate }}
-            </option>
-          </select>
-          <div *ngIf="(submitted || plate.touched) && !delivery.plate" class="text-danger">
-            Truck is required.
-          </div>
-        </ng-container>
-        <ng-template #staticPlate>
-          <span class="form-control rounded-pill">{{ delivery.plate || 'No data associated' }}</span>
-        </ng-template>
-        <!-- <div *ngIf="role === 'operator'">
+        <div class="my-3">
           <label class="form-label" for="plate">Truck Plate</label>
-          <input
-            class="form-control rounded-pill"
-            type="text"
-            id="plate"
-            [value]="delivery.plate || ''"
-            readonly
-          />
+          <ng-container *ngIf="mode !== 'review'; else staticPlate">
+            <input
+              class="form-control rounded-pill"
+              type="text"
+              id="plate"
+              #plate="ngModel"
+              [(ngModel)]="delivery.plate"
+              [value]="delivery.plate || 'No data associated'"
+              readonly
+            />
+          </ng-container>
+          <ng-template #staticPlate>
+            <span class="form-control rounded-pill">{{ delivery.plate || 'No data associated' }}</span>
+          </ng-template>
         </div>
-        <div *ngIf="role === 'manager'">
-          <label class="form-label" for="plate">Truck Plate</label>
-          <input
-            class="form-control rounded-pill"
-            type="text"
-            id="plate"
-            [(ngModel)]="delivery.plate"
-            [disabled]="mode === 'review'"
-          />
-        </div> -->
-      </div>
 
       <!-- Productos -->
         <p class="fw-bold mt-4">Order Products</p>
@@ -244,7 +215,11 @@
           [disabled]="!isCommentEditable"
           placeholder="No comments"
           rows="3"
+          #comments="ngModel"
         ></textarea>
+        <div *ngIf="comments.touched && !delivery.comments" class="text-danger">
+          Comments are required if you want to cancel the order.
+        </div>
       </div>
 
       <!-- Botones -->
@@ -290,12 +265,18 @@
         <!-- Botones en modo review -->
         <ng-container *ngIf="mode === 'review' && areButtonsEnabled">
           <button
-            class="btn btn-danger rounded-pill"
-            type="button"
-            (click)="handleReviewAction('submit')"
-            [disabled]="!isCommentEditable || !delivery.comments || delivery.comments.trim() === ''"
+          class="btn btn-danger rounded-pill"
+          type="button"
+          (click)="handleReviewAction(delivery.status === 'review' ? 'submit' : 'reject')"
+          [disabled]="!isCommentEditable || !delivery.comments || delivery.comments.trim() === ''"
           >
-          {{ delivery.status === 'review' ? 'Send comments' : 'Not approved' }}
+          {{
+            delivery.status === 'review'
+              ? 'Send Comments'
+              : delivery.status === 'pending reception'
+              ? 'Reject'
+              : 'Not Approved'
+          }}
           </button>
           <button
             class="btn btn-success rounded-pill"
@@ -304,14 +285,6 @@
           >
           {{ delivery.status === 'review' ? 'Send delivery' : 'Approved' }}
           </button>
-<!--           <button
-            class="btn btn-danger rounded-pill"
-            type="button"
-            (click)="handleReviewAction('reject')"
-            *ngIf="delivery.status === 'pending reception'"
-          >
-            Reject
-          </button> -->
         </ng-container>
       
         <!-- Botón "Back" (siempre visible) -->

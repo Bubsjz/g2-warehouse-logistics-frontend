@@ -87,27 +87,7 @@
 //-------------------------------
 
           ngOnInit(): void {
-            
-            /* const userRole = this.authService.getUserRole();
-            const userPlate = this.authService.getTruckPlate();
-
-            if (!userRole) {
-              console.error('User role not found in token. Redirecting to login.');
-              this.router.navigate(['/login']);
-              return;
-            }
-
-            this.role = userRole;
-
-            // Si el rol es 'operator', asignar la matrícula al formulario
-            if (this.role === 'operator' && userPlate) {
-              this.delivery.plate = userPlate;
-            } */
-            
-            
             this.detectMode()
-
-            /* this.setUserRole(); */
           }
 
 
@@ -115,43 +95,27 @@
 //DETECCIÓN DE MODO Y CARGA DE DATOS
 //-------------------------------
 
-        //Tomar el rol de usuario del token
-          /* private setUserRole(): void {
-            const userRole = this.authService.getUserRole();
-            if (userRole) {
-              this.role = userRole;
-              console.log('Role obtained from token:', this.role);
-            } else {
-              console.error('Your role is not authorized to access this page.');
-              // Redirigir a login si no hay rol disponible
-              this.router.navigate(['/login']);
-            }
-          } */
+        //Determina el rol y modo del formulario y carga los datos correspondientes
+            private async detectMode(): Promise<void> {
 
-
-
-
-
-
-        //Determina el modo del formulario y carga los datos correspondiente
-            async detectMode(): Promise<void> {
               // Obtener el rol del token
               const userRole = this.authService.getUserRole();
               if (!userRole) {
                 console.error('User role not found in token. Redirecting to login.');
-                /* this.router.navigate(['/login']); */
+                this.router.navigate(['/login']);
                 return;
               }
-              this.role = userRole; // Asignar el rol al componente
+              this.role = userRole;
               console.log(`Role detected from token: ${this.role}`);
-            
-              // Detectar el rol
+
+              // Si el rol es 'operator', asignar la matrícula del token al formulario
+              const userPlate = this.authService.getUserPlate();
+              if (this.role === 'operator' && userPlate) {
+                this.delivery.plate = userPlate;
+              }
+              
+              // Detectar el modo y carga de datos de selectores
               const fullUrl = this.router.url;
-              /* this.role = fullUrl.includes('/manager/') ? 'manager' : 'operator'; */
-              /* this.setUserRole(); */
-              /* console.log(`Role detected: ${this.role}`); */
-            
-              // Detectar el modo
               if (fullUrl.includes('create-order')) {
                 this.mode = 'create';
                 console.log(`Mode detected: ${this.mode}`);
@@ -311,7 +275,7 @@
                 product_name: detail.product_name || '',
                 product_quantity: detail.product_quantity,
               })),
-              /* plate: this.delivery.plate || null, */
+              plate: this.delivery.plate || null,
             };
           }
         
@@ -360,7 +324,7 @@
               !dayjs(this.delivery.received_date).isValid() ||
               !this.delivery.origin_warehouse_name ||
               !this.delivery.destination_warehouse_name ||
-              !this.delivery.plate
+              (this.role === 'operator' && !this.delivery.plate)
             ) {
               this.errorMessage = 'Please fill in all required fields with valid data.';
               return false;
@@ -410,7 +374,7 @@
             }
           }
 
-        //Procesa las acciones específicas del modo en los botones paraenvío al back de los datos (approve y reject a la espera por si se implementa)
+        //Procesa las acciones específicas del modo en los botones para envío al back de los datos
             async processModeSpecificActions(action: 'save' | 'submit' | 'update' | 'approve' | 'reject', status?: string): Promise<void> {
               console.log(`processModeSpecificActions called with action: ${action}`);
               if (action === 'save') {
@@ -539,7 +503,7 @@
             
           // Actualización del estado
             try {
-              const comments = action === 'submit' ? this.delivery.comments : null;
+              const comments = this.delivery.comments;
               await this.updateDeliveryStatus(handler.status, comments);
               Swal.fire('Success', `Order status updated to "${handler.status}".`, 'success');
               this.router.navigate([`/${this.role}/order-list`]);

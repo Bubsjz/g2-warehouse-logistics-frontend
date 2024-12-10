@@ -20,7 +20,6 @@ export class DeliveryService {
   }
 
   // Obtener envío por ID
-  //Problemas con peticiones de envíos sin productos, puede que por necesidad de aunque sea ofrecer un array vacío, o de cómo se procesa en el back-end, porque también falla en rest
   getDeliveryById(id: number, role: string): Observable<CombinedResponse> {
     const url = role === 'operator'
       ? `${this.baseUrl}/operator/modify-order/${id}`

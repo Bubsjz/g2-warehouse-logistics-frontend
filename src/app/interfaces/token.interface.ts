@@ -4,7 +4,7 @@ export interface DecodedToken {
     user_role: 'operator' | 'manager' | 'boss';
     user_name: string;
     user_surname: string;
-    user_truck_plate?: string;
+    user_plate?: string | null;
     exp: number;    // Fecha de expiración del token (en segundos)
     [key: string]: any; // Otros posibles campos del token
   }

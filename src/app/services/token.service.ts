@@ -10,7 +10,7 @@ import { DecodedToken } from "../interfaces/token.interface";
     private tokenKey = 'authToken';
     
     getTokenData(): DecodedToken | null {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem(this.tokenKey);
       if (!token) return null;
         try {
             const decoded: DecodedToken = jwtDecode(token);
@@ -43,9 +43,9 @@ import { DecodedToken } from "../interfaces/token.interface";
       return tokenData?.user_role || null;
     }
   
-    getTruckPlate(): string | null {
+    getUserPlate(): string | null {
       const tokenData = this.getTokenData();
-      return tokenData?.user_truck_plate || null;
+      return tokenData?.user_plate || null;
     }
 
     logOut(): void {
