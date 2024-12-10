@@ -11,9 +11,9 @@
             <hr>
             <p class="p-2 pt-4 fs-4"><strong>Position:</strong> {{myUser?.role}}</p>
             <p class="p-2 fs-4"><strong>Employee ID:</strong> {{myUser?.id_user}}</p>
-            <p class="p-2 fs-4"><strong>Email:</strong> {{myUser?.email}}</p>
-            <p class="p-2 fs-4"><strong>Wharehouse:</strong> {{myUser?.warehouse_name}}</p>
-            <p class="p-2 fs-4"><strong>Wharehouse locality:</strong> {{myUser?.locality}}</p>
+            <p class="p-2 fs-4"><strong>Mail:</strong> {{myUser?.email}}</p>
+            <p class="p-2 fs-4"><strong>Warehouse:</strong> {{myUser?.warehouse_name}}</p>
+            <p class="p-2 fs-4"><strong>Warehouse locality:</strong> {{myUser?.locality}}</p>
             <div class="pt-4">
                 <!-- <button class="btn btn-outline-danger m-1 p-3 px-5" (click)="deleteUser()">Delete</button> -->
                 <a class="btn btn-success m-1 p-3 px-5" [routerLink]="['/boss', 'update-employee', myUser?.id_user]">Update</a>

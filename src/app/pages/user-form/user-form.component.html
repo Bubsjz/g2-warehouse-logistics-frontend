@@ -6,7 +6,7 @@
       <div class="my-3">
         <label class="form-label" for="name"><strong>Name</strong></label>
         <input
-          class="form-control rounded-pill"
+          class="form-control "
           type="text"
           id="name"
           formControlName="name"
@@ -20,7 +20,7 @@
       <div class="my-3">
         <label class="form-label" for="surname"><strong>Surname</strong></label>
         <input
-          class="form-control rounded-pill"
+          class="form-control "
           type="text"
           id="surname"
           formControlName="surname"
@@ -34,7 +34,7 @@
       <div class="my-3">
         <label class="form-label" for="email"><strong>Email</strong></label>
         <input
-          class="form-control rounded-pill"
+          class="form-control "
           type="text"
           id="email"
           formControlName="email"
@@ -52,7 +52,7 @@
           ><strong>Password</strong></label
         >
         <input
-          class="form-control rounded-pill"
+          class="form-control "
           type="password"
           id="password"
           formControlName="password"
@@ -68,7 +68,7 @@
           ><strong>Repeat Password</strong></label
         >
         <input
-          class="form-control rounded-pill"
+          class="form-control "
           type="password"
           id="repeatpassword"
           formControlName="repeatpassword"
@@ -84,7 +84,7 @@
       <div class="my-3">
         <label class="form-label" for="image"><strong>Upload image</strong></label>
         <div class="image-upload">
-          <input class="form-control rounded-pill" type="file" id="image" formControlName="image" accept="image/*"
+          <input class="form-control " type="file" id="image" formControlName="image" accept="image/*"
             style="display: none" (change)="onFileSelected($event)" />
         </div>
       </div>
@@ -96,8 +96,8 @@
         </div>
       }
       <div>
-        <button type="button" onclick="document.getElementById('image').click()" class="btn btn-secondary">
-          Select image
+        <button type="button" onclick="document.getElementById('image').click()" class="btn btn-primary p-3 btnSelect" >
+          Select photo  <i class="fa-solid fa-cloud-arrow-up fa-xl"></i> 
         </button>
         @if(!this.imagePreview){
           <span id="image-name" class="ms-2">No image selected</span>
@@ -107,7 +107,7 @@
       <div class="my-3">
         <label class="form-label" for="role"><strong>Role</strong></label>
         <select
-          class="form-select rounded-pill"
+          class="form-select "
           id="role"
           formControlName="role"
         >
@@ -126,7 +126,7 @@
           ><strong>Warehouse</strong></label
         >
         <select
-          class="form-select rounded-pill"
+          class="form-select "
           id="warehouse"
           formControlName="warehouse"
         >
@@ -143,7 +143,7 @@
           ><strong>Truck Plate</strong></label
         >
         <select
-          class="form-select rounded-pill"
+          class="form-select "
           id="truck"
           formControlName="truck"
         >
@@ -155,16 +155,15 @@
         </select>
       </div>
 
-      <div class="d-flex justify-content-center gap-2 my-3">
-        <input
-          type="submit"
+      <div class="d-flex justify-content-center gap-3 my-3">
+        <input type="submit"
           [value]="formType === 'Update' ? formType : 'Save'"
           [disabled]="!userForm.valid"
-          class="btn btn-success rounded-pill btn-size"
+          class="btn btn-success p-3 btn-success"
         />
-        <button class="btn btn-secondary rounded-pill btn-size" 
-        [routerLink]="formType === 'Insert' ? ['/boss', 'warehouse-info'] : ['/boss', 'warehouse-view', myWarehouseId]">Back
-      </button>
+        <input class="btn btn-primary p-3 btn-size " value = "Back" type="submit"
+        [routerLink]="formType === 'Insert' ? ['/boss', 'warehouse-info'] : ['/boss', 'warehouse-view', myWarehouseId]"/>
+    
       </div>
     </form>
   </div>
