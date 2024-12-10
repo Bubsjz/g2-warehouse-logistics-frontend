@@ -1,18 +1,15 @@
-  // Importaciones básicas de Angular
-  import { Component, OnInit } from '@angular/core'; // Decorador para definir el componente y su ciclo de vida
-  import { ActivatedRoute, Router } from '@angular/router'; // Herramientas para manejo de rutas y navegación
-  import { FormsModule } from '@angular/forms'; // Funcionalidades para trabajar con formularios
-  import { CommonModule } from '@angular/common'; // Funcionalidades comunes de Angular
-  import { NgForm } from '@angular/forms'; // Tipo para formularios reactivos
+  import { Component, OnInit } from '@angular/core';
+  import { ActivatedRoute, Router } from '@angular/router';
+  import { FormsModule } from '@angular/forms';
+  import { CommonModule } from '@angular/common';
+  import { NgForm } from '@angular/forms';
   import { firstValueFrom } from 'rxjs';
   import { HttpErrorResponse } from '@angular/common/http';
   import dayjs from 'dayjs';
   import Swal from 'sweetalert2';
-
-
-  // Importaciones del proyecto
   import { DeliveryService } from '../../services/order.service';
-  import { Delivery, Warehouse, Truck, Product } from '../../interfaces/order.interfaces';
+  import { Delivery, Warehouse, Truck, Product } from '../../interfaces/order.interface';
+  import { AuthService } from '../../services/token.service';
 
   
   @Component({
@@ -46,12 +43,11 @@
   
     // Detalles de los productos seleccionados para el pedido
     orderDetails: { 
-      product_id: number | null; 
-      product_name?: string;
+      product_name: string;
       product_quantity: number; 
       touched: boolean; 
     }[] = [
-      { product_id: null, product_quantity: 0, touched: false },
+      { product_name: '', product_quantity: 0, touched: false },
     ];
   
     // Mensaje de error para mostrar en caso de validación fallida o error del servidor
@@ -69,16 +65,18 @@
     isCommentEditable: boolean = false;
 
     // Variable para almacenar el rol
-    role: string = 'operator';
+    role: string = '';
   
     // Constructor para inyectar dependencias
     constructor(
       private route: ActivatedRoute,
       private router: Router,
-      private deliveryService: DeliveryService
+      private deliveryService: DeliveryService,
+      private authService: AuthService
     ) {}
 
     
+
 //-------------------------------
 //ARRANQUE
 //-------------------------------
@@ -92,15 +90,27 @@
 //DETECCIÓN DE MODO Y CARGA DE DATOS
 //-------------------------------
 
-        //Determina el modo del formulario y carga los datos correspondiente
-            async detectMode(): Promise<void> {
+        //Determina el rol y modo del formulario y carga los datos correspondientes
+            private async detectMode(): Promise<void> {
+
+              // Obtener el rol del token
+              const userRole = this.authService.getUserRole();
+              if (!userRole) {
+                console.error('User role not found in token. Redirecting to login.');
+                this.router.navigate(['/login']);
+                return;
+              }
+              this.role = userRole;
+              console.log(`Role detected from token: ${this.role}`);
+
+              // Si el rol es 'operator', asignar la matrícula del token al formulario
+              const userPlate = this.authService.getUserPlate();
+              if (this.role === 'operator' && userPlate) {
+                this.delivery.plate = userPlate;
+              }
+              
+              // Detectar el modo y carga de datos de selectores
               const fullUrl = this.router.url;
-            
-              // Detectar el rol
-              this.role = fullUrl.includes('/manager/') ? 'manager' : 'operator';
-              console.log(`Role detected: ${this.role}`);
-            
-              // Detectar el modo
               if (fullUrl.includes('create-order')) {
                 this.mode = 'create';
                 console.log(`Mode detected: ${this.mode}`);
@@ -260,6 +270,7 @@
                 product_name: detail.product_name || '',
                 product_quantity: detail.product_quantity,
               })),
+              plate: this.delivery.plate || null,
             };
           }
         
@@ -308,7 +319,7 @@
               !dayjs(this.delivery.received_date).isValid() ||
               !this.delivery.origin_warehouse_name ||
               !this.delivery.destination_warehouse_name ||
-              !this.delivery.plate
+              (this.role === 'operator' && !this.delivery.plate)
             ) {
               this.errorMessage = 'Please fill in all required fields with valid data.';
               return false;
@@ -358,7 +369,7 @@
             }
           }
 
-        //Procesa las acciones específicas del modo en los botones paraenvío al back de los datos (approve y reject a la espera por si se implementa)
+        //Procesa las acciones específicas del modo en los botones para envío al back de los datos
             async processModeSpecificActions(action: 'save' | 'submit' | 'update' | 'approve' | 'reject', status?: string): Promise<void> {
               console.log(`processModeSpecificActions called with action: ${action}`);
               if (action === 'save') {
@@ -395,13 +406,15 @@
           }
 
           //Modo creación
-              async handleCreateAction(status: string): Promise<void> {
+            async handleCreateAction(status: string): Promise<void> {
                 console.log('handleCreateAction called');
                 const deliveryPayload = this.prepareDeliveryPayload(status);
                 console.log('Creating delivery with payload:', deliveryPayload);
             
                 try {
-                    await firstValueFrom(this.deliveryService.createDelivery(deliveryPayload));
+                    const response = await firstValueFrom(this.deliveryService.createDelivery(deliveryPayload));
+                    console.log('Server response:', response);
+
                     const message = status === 'pending' ? 'Draft saved successfully!' : 'Order created successfully!';
                     Swal.fire('Success', message, 'success');
                     this.router.navigate([`/${this.role}/order-list`]);
@@ -410,25 +423,28 @@
                     Swal.fire('Error', this.errorMessage, 'error');
                     console.error('Error during delivery creation:', error);
                 }
-              }
+            }
 
 
         //Modo edición
-            async handleEditAction(status: string): Promise<void> {
+          async handleEditAction(status: string): Promise<void> {
               const deliveryPayload = this.prepareDeliveryPayload(status);
               console.log('Updating delivery with payload:', deliveryPayload);
           
               try {
-                  await firstValueFrom(this.deliveryService.updateDelivery(this.delivery.id_delivery!, deliveryPayload));
-                  const message = this.delivery.status === 'pending' ? 'Order created successfully!' : 'Order updated successfully!';
-                  Swal.fire('Success', message, 'success');
-                  this.router.navigate([`/${this.role}/order-list`]);
+                const response = await firstValueFrom(this.deliveryService.updateDelivery(this.delivery.id_delivery!, deliveryPayload));
+                console.log('Back-end response for update:', response);
+                  
+                const message = this.delivery.status === 'pending' ? 'Order created successfully!' : 'Order updated successfully!';
+                Swal.fire('Success', message, 'success');
+                this.router.navigate([`/${this.role}/order-list`]);
               } catch (error) {
-                  this.errorMessage = 'Failed to update order.';
-                  Swal.fire('Error', this.errorMessage, 'error');
-                  console.error('Error during delivery update:', error);
+                this.errorMessage = 'Failed to update order.';
+                Swal.fire('Error', this.errorMessage, 'error');
+                console.error('Error during delivery update:', error);
               }
           }
+
 
           //Manejo de respuesta en modo revisión previo envío
             async handleReviewAction(action: 'approve' | 'submit' | 'reject'): Promise<void> {
@@ -482,7 +498,7 @@
             
           // Actualización del estado
             try {
-              const comments = action === 'submit' ? this.delivery.comments : null;
+              const comments = this.delivery.comments;
               await this.updateDeliveryStatus(handler.status, comments);
               Swal.fire('Success', `Order status updated to "${handler.status}".`, 'success');
               this.router.navigate([`/${this.role}/order-list`]);
@@ -584,18 +600,15 @@
 
         //Agrega un nuevo producto al pedido
           addProduct(): void {
-            // Inserta un nuevo producto con valores iniciales en la lista de detalles
             this.orderDetails.push({ 
-              product_id: null,
+              product_name: '',
               product_quantity: 0,
               touched: false,
             });
-            console.log('Product added. Current details:', this.orderDetails);
           }
         
-        //Elimina un producto del pedido
+        //Elimina un producto del pedido, verificando que no se elimine el último producto
           removeProduct(index: number): void {
-            // Verificar si hay más de un producto en la lista
             if (this.orderDetails.length > 1) {
               this.orderDetails.splice(index, 1);
               console.log('Product removed. Current details:', this.orderDetails);
@@ -630,4 +643,5 @@
             }
             return 'Order Management';
           }
+
 }

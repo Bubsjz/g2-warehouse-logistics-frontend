@@ -1,15 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import {jwtDecode} from 'jwt-decode';
-
-type decodeToken = {
-  user_name: string;
-  user_surname: string;
-  user_id: number;
-  user_role: string;
-  iat: number;
-  exp: number;
-}
+import { AuthService } from '../../services/token.service';
 
 @Component({
   selector: 'app-main-header',
@@ -19,28 +10,26 @@ type decodeToken = {
   styleUrl: './main-header.component.css'
 })
 export class MainHeaderComponent implements OnInit {
-  userRol!: string;
-  userName!: string;
-  userSurname!:string;
-  
-  ngOnInit(): void {
-      const token = localStorage.getItem('authToken')
-      if(token){
-        const decoded = jwtDecode(token) as decodeToken
-        this.userRol = decoded.user_role
-        this.userName = decoded.user_name;
-        this.userSurname = decoded.user_surname
-        
-      }else{
-        this.userRol = "not found"
-        this.userName = "not found"
-        this.userSurname = "not found"
-      }
-      
-    }
 
-    logOut(){
-      localStorage.removeItem('authToken')
-     
-    }
+  userRol: string = 'not found';
+  userName: string = 'not found';
+  userSurname: string = 'not found';
+
+  constructor(private authService: AuthService) {}
+
+  ngOnInit(): void {
+    this.loadUserData();
   }
+
+  loadUserData(): void {
+    this.userRol = this.authService.getUserRole() || 'not found';
+    this.userName = this.authService.getUserName() || 'not found';
+    this.userSurname = this.authService.getUserSurname() || 'not found';
+    console.log(`User Data: Role=${this.userRol}, Name=${this.userName}, Surname=${this.userSurname}`);
+  }
+
+  logOut(): void {
+    this.authService.logOut();
+  }
+
+}

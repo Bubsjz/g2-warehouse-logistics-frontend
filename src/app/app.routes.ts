@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { DashboardoperatorComponent } from './pages/dashboardoperator/dashboardoperator.component';
 import { OrderTableComponent } from './pages/order-table/order-table.component';
@@ -11,21 +11,23 @@ import { NavbarComponent } from './pages/navbar/navbar.component';
 import { UserFormComponent } from './pages/user-form/user-form.component';
 import { EmployeeViewComponent } from './pages/employee-view/employee-view.component';
 import { loginGuard } from './guards/login.guard';
+import { roleGuard } from './guards/role.guard';
+import { NgModule } from '@angular/core';
 
 
 export const routes: Routes = [
     {path:'', pathMatch:'full', redirectTo:'login'},
     {path:'login', component:LoginComponent},
-    {path:'operator',component:DashboardoperatorComponent,canActivate:[loginGuard],children:[
+    {path:'operator',component:DashboardoperatorComponent,canActivate:[loginGuard, roleGuard],children:[
             {path:'order-list',component:OrderTableComponent},
             {path:'create-order',component:OrderFormComponent},
             {path:'modify-order/:id',component:OrderFormComponent},
         ]},
-    {path:'manager',component:DashboardmanagerComponent,canActivate:[loginGuard],children:[
+    {path:'manager',component:DashboardmanagerComponent,canActivate:[loginGuard, roleGuard],children:[
             {path:'order-list',component:OrderTableComponent},
             {path:'review-order/:id',component:OrderFormComponent},
         ]},
-    {path:'boss',component:DashboardbossComponent,canActivate:[loginGuard],children:[
+    {path:'boss',component:DashboardbossComponent,canActivate:[loginGuard, roleGuard],children:[
             {path:'warehouse-info',component: NavbarComponent},
             {path:'warehouse-view/:id',component:WarehouseViewComponent},
             {path:'update-warehouse/:id',component:WarehouseFormComponent},
@@ -37,3 +39,9 @@ export const routes: Routes = [
         ]},
     {path:'**', redirectTo:'login'}
 ];
+
+@NgModule({
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule]
+  })
+  export class AppRoutingModule {}

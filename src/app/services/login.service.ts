@@ -1,7 +1,7 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { lastValueFrom, Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { iUser } from '../interfaces/user.interface';
 
 
@@ -20,11 +20,11 @@ export class LoginService {
 
 
 login(email: string, password: string): Observable<{ message: string, token: string, role: iUser['role']  } | null> {
-  const payload = { email, password }; // Datos enviados al backend
+  const payload = { email, password };
   return this.http.post<{ message: string, token: string, role: iUser['role'] }>(this.apiUrl, payload).pipe(
     catchError(err => {
-      console.error('Error during login:', err); // Registra errores en consola
-      return of(null); // Devuelve null en caso de error
+      console.error('Error during login:', err);
+      return of(null);
     })
   );
 }

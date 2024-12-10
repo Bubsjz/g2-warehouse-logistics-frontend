@@ -33,13 +33,6 @@ export interface Delivery {
     plate: string;
     driver_id_user: number;
   }
-  
-  export interface DeliveryProduct {
-    id_delivery_products: number;
-    product_id_product: number;
-    quantity: number;
-    delivery_id_delivery: number;
-  }
 
   export interface CombinedResponse {
     id_delivery: number;
@@ -53,7 +46,4 @@ export interface Delivery {
     plate: string;
     comments: string;
     products: { product_id: number; quantity: number | string }[];
-    warehouse: Warehouse[];
-    truck: Truck[];
-    productNames: Product[];
   }
