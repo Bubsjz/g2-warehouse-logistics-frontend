@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { Delivery, Warehouse, Truck, Product, CombinedResponse } from '../interfaces/order.interface';
 
 @Injectable({
@@ -8,7 +9,7 @@ import { Delivery, Warehouse, Truck, Product, CombinedResponse } from '../interf
 })
 
 export class DeliveryService {
-  private baseUrl = 'http://localhost:3000';
+  private baseUrl = environment.API_URL;
 
   constructor(private http: HttpClient) {}
 

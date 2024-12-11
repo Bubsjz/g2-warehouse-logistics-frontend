@@ -5,9 +5,6 @@ import { MainFooterComponent } from './components/main-footer/main-footer.compon
 import { CommonModule } from '@angular/common';
 
 
-
-
-
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -24,7 +21,6 @@ export class AppComponent {
     this.sendPage();
       }
   sendPage(currentPage:string = "1"){
-    console.log(currentPage);
   }
 
 }
