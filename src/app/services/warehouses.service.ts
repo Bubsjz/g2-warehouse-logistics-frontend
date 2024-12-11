@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { Iwarehouse2 } from '../interfaces/iwarehouse2.interface';
 import { Warehouse } from '../interfaces/order.interface';
+import { environment } from '../../environments/environment';
 
 type warehouse= {
 name:string,
@@ -18,7 +19,7 @@ image: File,
 })
 export class WarehousesService {
 
-  private baseUrl: string = "http://localhost:3000/boss";
+  private baseUrl: string = environment.API_URL + "/boss";
   private httpClient = inject(HttpClient);
 
   getAll(): Promise<Iwarehouse[]> {

@@ -3,6 +3,7 @@ import { Iuser3, Iuser4 } from '../interfaces/iuser.interface';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { Itruck } from '../interfaces/itruck.interface';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { Itruck } from '../interfaces/itruck.interface';
 
 export class UsersService {
 
-  private baseUrl: string = "http://localhost:3000/boss";
+  private baseUrl: string = environment.API_URL + "/boss";
   private httpClient = inject(HttpClient);
 
   getAll(): Promise<Iuser3[]> {
