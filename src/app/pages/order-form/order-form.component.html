@@ -77,7 +77,7 @@
           </div>
         </ng-container>
         <ng-template #staticOriginWarehouse>
-          <span class="form-control rounded-pill">{{ delivery.origin_warehouse_name || 'No data associated' }}</span>
+          <span class="form-control rounded-pill notEditable">{{ delivery.origin_warehouse_name || 'No data associated' }}</span>
         </ng-template>
       </div>
 
@@ -108,7 +108,7 @@
           </div>
         </ng-container>
         <ng-template #staticDestinationWarehouse>
-          <span class="form-control rounded-pill">{{ delivery.destination_warehouse_name || 'No data associated' }}</span>
+          <span class="form-control rounded-pill notEditable">{{ delivery.destination_warehouse_name || 'No data associated' }}</span>
         </ng-template>
       </div>
 
@@ -117,7 +117,7 @@
           <label class="form-label" for="plate">Truck Plate</label>
           <ng-container *ngIf="mode !== 'review'; else staticPlate">
             <input
-              class="form-control rounded-pill"
+              class="form-control rounded-pill notEditable"
               type="text"
               id="plate"
               name="plate"
@@ -128,7 +128,7 @@
             />
           </ng-container>
           <ng-template #staticPlate>
-            <span class="form-control rounded-pill">{{ delivery.plate || 'No data associated' }}</span>
+            <span class="form-control rounded-pill notEditable">{{ delivery.plate || 'No data associated' }}</span>
           </ng-template>
         </div>
 
@@ -162,7 +162,7 @@
         </div>
         </ng-container>
         <ng-template #staticProduct>
-          <span class="form-control rounded-pill w-50">{{ detail.product_name || 'No data associated' }}</span>
+          <span class="form-control rounded-pill w-50 notEditable">{{ detail.product_name || 'No data associated' }}</span>
         </ng-template>
 
 
@@ -187,7 +187,7 @@
               </div>
             </ng-container>
             <ng-template #staticQuantity>
-              <span class="form-control rounded-pill w-4">{{ detail.product_quantity || '0' }}</span>
+              <span class="form-control rounded-pill w-4 notEditable">{{ detail.product_quantity || '0' }}</span>
             </ng-template>
           </div>
 
@@ -224,7 +224,8 @@
 
       <!-- Botones -->
       <div class="d-flex justify-content-center gap-2 my-4">
-        <!-- Botones en modo create -->
+
+        <!-- Modo creación -->
         <ng-container *ngIf="mode === 'create' && areButtonsEnabled">
           <button
             type="button"
@@ -242,18 +243,20 @@
             Create Order
           </button>
         </ng-container>
-      
-        <!-- Botones en modo edit -->
-        <ng-container *ngIf="mode === 'edit' && areButtonsEnabled">
+
+        <!-- Modo edición -->
+        <ng-container *ngIf="mode === 'edit' && role === 'operator' && areButtonsEnabled">
           <button
-            type="button"
+            *ngIf="isEditable"
+            type="submit"
             class="btn btn-success rounded-pill"
             [disabled]="!validateForm()"
-            (click)="processModeSpecificActions('update', 'review')"
+            (click)="processModeSpecificActions('update', delivery.status === 'pending' ? 'review' : 'corrections needed')"
           >
-          {{ delivery.status === 'pending' ? 'Create Order' : 'Update Order' }}
+            {{ delivery.status === 'pending' ? 'Create Order' : 'Update Order' }}
           </button>
           <button
+            *ngIf="isEditable"
             type="button"
             class="btn btn-danger rounded-pill"
             (click)="deleteDelivery()"
@@ -261,32 +264,43 @@
             Delete Order
           </button>
         </ng-container>
-      
-        <!-- Botones en modo review -->
-        <ng-container *ngIf="mode === 'review' && areButtonsEnabled">
+
+        <!-- Modo review -->
+        <ng-container *ngIf="mode === 'review' && role === 'manager' && areButtonsEnabled">
           <button
-          class="btn btn-danger rounded-pill"
-          type="button"
-          (click)="handleReviewAction(delivery.status === 'review' ? 'submit' : 'reject')"
-          [disabled]="!isCommentEditable || !delivery.comments || delivery.comments.trim() === ''"
+            class="btn btn-danger rounded-pill"
+            type="button"
+            (click)="handleReviewAction(delivery.status === 'review' ? 'submit' : 'reject')"
+            [disabled]="!isCommentEditable || !delivery.comments.trim()"
           >
-          {{
-            delivery.status === 'review'
-              ? 'Send Comments'
-              : delivery.status === 'pending reception'
-              ? 'Reject'
-              : 'Not Approved'
-          }}
+            {{
+              delivery.status === 'review'
+                ? 'Send Comments'
+                : delivery.status === 'pending reception'
+                ? 'Reject'
+                : 'Not Approved'
+            }}
           </button>
           <button
             class="btn btn-success rounded-pill"
             type="button"
             (click)="handleReviewAction('approve')"
           >
-          {{ delivery.status === 'review' ? 'Send delivery' : 'Approved' }}
+            {{ delivery.status === 'review' ? 'Send delivery' : 'Approved' }}
           </button>
         </ng-container>
-      
+
+        <!-- Cambios de status para operator -->
+        <ng-container *ngIf="role === 'operator' && ['ready for departure', 'in transit'].includes(delivery.status)">
+          <button
+            class="btn btn-primary rounded-pill"
+            type="button"
+            (click)="handleStatusChange()"
+          >
+            {{ delivery.status === 'ready for departure' ? 'Start delivery' : 'Mark as delivered' }}
+          </button>
+        </ng-container>
+
         <!-- Botón "Back" (siempre visible) -->
         <button
           type="button"
@@ -299,5 +313,3 @@
     </form>
   </div>
 </section>
-
-
