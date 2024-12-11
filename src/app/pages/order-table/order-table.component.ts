@@ -49,16 +49,13 @@ export class OrderTableComponent {
      
     // manager 
       if(this.idUser.user_role === "manager"){
-        
-        //const response2 = await this.managerService.getManagerById(this.idUser.user_id)
         this.userLogin = this.idUser.user_role
-        
         const response1 = await this.managerService.getEntryOrders()
         
         this.originWarehouseName = response1[0].destination_warehouse_name
         this.originWarehouseLocality =  response1[0].destination_warehouse_locality
         this.arrDeliveriesEntry = response1
-        console.log(this.arrDeliveriesEntry)
+        
 
         const response2 = await this.managerService.getOutputOrders()
         this.arrDeliveriesOutput = response2
@@ -98,7 +95,6 @@ export class OrderTableComponent {
   entryOrders(entry:string) {
     this.isSelected = entry;
    this.arrDeliveries = this.arrDeliveriesEntry
-
   }
 
   outputOrders(output:string) {

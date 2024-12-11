@@ -127,4 +127,10 @@ td button {
     font-weight: 900;
   }
 
- 
+ .btnNotReview{
+  background-color:white; 
+  color:#909293 ;
+  padding: 5px;
+  border-radius: 8px;
+  border-color: rgb(240, 240, 240);
+ }

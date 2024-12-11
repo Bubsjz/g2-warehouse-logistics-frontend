@@ -50,7 +50,15 @@
                 <tbody>
                         @for(order of this.arrDeliveries; track [order.id_delivery]){
                             <tr>
-                                <th scope="row" [class]= "userLogin === 'operator' ? 'text-primary' : 'text-manager'" class=" pointer" [routerLink]="['/dashboard','operator','order-form',order.id_delivery]">{{order.id_delivery}}</th>
+                                @if(userLogin === "operator"){
+                                    <th scope="row" [class]= "userLogin === 'operator' ? 'text-primary' : 'text-manager'" class=" pointer" [routerLink]="['/operator','modify-order',order.id_delivery]">{{order.id_delivery}}</th>
+                                }@else if(userLogin === "manager"){
+                                    @if(order.status === "delivered" && this.isSelected === "output"){
+                                        <th scope="row" [class]= "'text-manager'" class=" pointer">{{order.id_delivery}}</th>
+                                    }@else{
+                                        <th scope="row" [class]= "'text-manager'" class=" pointer" [routerLink]="['/manager','review-order',order.id_delivery]">{{order.id_delivery}}</th>
+                                    }
+                                }
                                 @if(order.send_date === null){
                                     <td class="d-none d-md-table-cell">-</td>
                                 }@else{
@@ -86,15 +94,22 @@
                                             <i class=" fa-regular fa-pen-to-square fa-xl"></i>
                                         </button>
                                     }@else if (userLogin === "manager") {
-                                        <button class="btnreview" [routerLink]="['/manager','review-order',order.id_delivery]">
-                                            <i class=" fa-solid fa-eye fa-xl"></i>
-                                        </button>
+                                        @if(order.status === "delivered" && this.isSelected === "output"){
+                                            <button class="btnNotReview">
+                                                <i class=" fa-solid fa-eye fa-xl" ></i>
+                                            </button>
+                                        }@else{
+                                            <button class="btnreview" [routerLink]="['/manager','review-order',order.id_delivery]">
+                                                <i class=" fa-solid fa-eye fa-xl"></i>
+                                            </button>
+                                        }
+                                       
                                     } 
                                 </td>
                             </tr>
                             }@empty{
                                 <div class=" d-inline flex-row">
-                                    <p>There are no orders with those characteristics</p>
+                                    <p>There are no orders </p>
                                 </div>
                             }
                 </tbody>
