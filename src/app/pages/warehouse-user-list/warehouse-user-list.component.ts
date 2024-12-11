@@ -35,26 +35,32 @@ export class WarehouseUserListComponent {
 
   async delete(id: number) {
     const currentUser = this.employees!.filter(employee => employee.id_user === id)
-    let confirmation = confirm('Are you sure you want to remove user with name ' + currentUser[0].name + '?');
-    if (confirmation) {
-      let alert_res: AlertResponse;
-      try {
-        const res = await this.userServices.deleteByID(id);
-        if ('id_user' in res && res.id_user === id) {
-          alert_res = {title: 'Great!', text: 'User with ID: ' + id + ' succesfully removed', icon: 'success', cbutton: 'Accept'}
-          this.warehouse = await this.warehouseServices.getById(this.warehouse_id)
-          this.employees = this.warehouse.users;
-        } else {
-          let text: string;
-          text = ('error' in res) ?  'Error' : 'User with ID: ' + id + ' not found'
-          alert_res = {title: 'Error!', text: text, icon: 'error', cbutton: 'Accept'}
+    Swal.fire({
+      title: 'Warning!',
+      text: 'Are you sure you want to remove user with name ' + currentUser[0].name + '?',
+      icon: 'warning',
+      showCancelButton: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        let alert_res: AlertResponse;
+        try {
+          const res = await this.userServices.deleteByID(id);
+          if ('id_user' in res && res.id_user === id) {
+            alert_res = {title: 'Great!', text: 'User with ID: ' + id + ' succesfully removed', icon: 'success', cbutton: 'Accept'}
+            this.warehouse = await this.warehouseServices.getById(this.warehouse_id)
+            this.employees = this.warehouse.users;
+          } else {
+            let text: string;
+            text = ('error' in res) ?  'Error' : 'User with ID: ' + id + ' not found'
+            alert_res = {title: 'Error!', text: text, icon: 'error', cbutton: 'Accept'}
+          }
+        } catch (error) {
+          console.log(error);
+          alert_res = {title: 'Error!', text: 'Error', icon: 'error', cbutton: 'Accept'}
         }
-      } catch (error) {
-        console.log(error);
-        alert_res = {title: 'Error!', text: 'Error', icon: 'error', cbutton: 'Accept'}
+        Swal.fire(alert_res)
       }
-      Swal.fire(alert_res)
-    }
+    });
   }
 
   capitalizeRol(Rol:string) {
@@ -64,5 +70,5 @@ export class WarehouseUserListComponent {
         .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Convierte la primera letra de cada palabra en mayúscula
         .join(' '); // Une las palabras nuevamente
   }
-
+  
 }
