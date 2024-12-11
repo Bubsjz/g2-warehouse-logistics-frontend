@@ -19,3 +19,12 @@ header {
 .title:hover{
   color:#358deb ;
 }
+
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-top: -5px;
+}

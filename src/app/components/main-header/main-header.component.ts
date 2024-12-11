@@ -1,6 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../../services/token.service';
+import {jwtDecode} from 'jwt-decode';
+
+type decodeToken = {
+  user_name: string;
+  user_surname: string;
+  user_id: number;
+  user_role: string;
+  user_image: File;
+  iat: number;
+  exp: number;
+}
 
 @Component({
   selector: 'app-main-header',
@@ -10,26 +20,35 @@ import { AuthService } from '../../services/token.service';
   styleUrl: './main-header.component.css'
 })
 export class MainHeaderComponent implements OnInit {
-
-  userRol: string = 'not found';
-  userName: string = 'not found';
-  userSurname: string = 'not found';
-
-  constructor(private authService: AuthService) {}
-
+  userRol!: string;
+  userName!: string;
+  userSurname!:string;
+  userImage!: string | null
+  
   ngOnInit(): void {
-    this.loadUserData();
-  }
+      const token = localStorage.getItem('authToken')
+      if(token){
+        const decoded = jwtDecode(token) as decodeToken
+        console.log('Decoded Token:', decoded)
+        this.userRol = decoded.user_role
+        this.userName = decoded.user_name;
+        this.userSurname = decoded.user_surname
+        if (decoded.user_image) {
+           this.userImage = `http://localhost:3000/uploads/${decoded.user_image}`
+ 
+        } else {
+          this.userImage = null;
+        }
+      }else{
+        this.userRol = "not found"
+        this.userName = "not found"
+        this.userSurname = "not found"
+      }
+      
+    }
 
-  loadUserData(): void {
-    this.userRol = this.authService.getUserRole() || 'not found';
-    this.userName = this.authService.getUserName() || 'not found';
-    this.userSurname = this.authService.getUserSurname() || 'not found';
-    console.log(`User Data: Role=${this.userRol}, Name=${this.userName}, Surname=${this.userSurname}`);
+    logOut(){
+      localStorage.removeItem('authToken')
+     
+    }
   }
-
-  logOut(): void {
-    this.authService.logOut();
-  }
-
-}
