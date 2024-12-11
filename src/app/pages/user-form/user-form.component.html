@@ -125,17 +125,31 @@
         <label class="form-label" for="warehouse"
           ><strong>Warehouse</strong></label
         >
-        <select
+        @if (isOperator) {
+            <select
+            class="form-select "
+            id="warehouse"
+            formControlName="warehouse"
+          >
+            <option value="" selected>Select a warehouse</option>
+            @for(warehouse of warehouses; track warehouse.id_warehouse) {
+              <option [value]="warehouse.name">{{ warehouse.name }}</option>
+            }
+          </select>
+        }@else {
+          <select
           class="form-select "
           id="warehouse"
           formControlName="warehouse"
         >
           <option value="" selected>Select a warehouse</option>
-          @for(warehouse of warehouses; track warehouse.id_warehouse) {
-          <option [value]="warehouse.name">{{ warehouse.name }}</option>
 
+          @for(warehouse of managerWarehouses; track warehouse.id_warehouse) {
+            <option [value]="warehouse.name">{{ warehouse.name }}</option>
           }
         </select>
+
+        }
       </div>
 
       <div class="my-3" *ngIf="isOperator">

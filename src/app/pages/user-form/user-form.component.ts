@@ -26,6 +26,7 @@ export class UserFormComponent {
   router = inject(Router);
 
   warehouses: Iwarehouse[] | undefined = [];
+  managerWarehouses: Iwarehouse[] | undefined = [];
   trucks: Itruck[] | undefined = [];
   myWarehouseId: number | undefined;
   myUserId: number | undefined;
@@ -99,6 +100,7 @@ export class UserFormComponent {
     try {
       this.warehouses = await this.warehouseServices.getAll();
       this.trucks = await this.userServices.getAvailableTrucks();
+      this.managerWarehouses = await this.warehouseServices.getManagerAvailable();
       this.isOperator = true;
     } catch (error) {
       console.log(error)
