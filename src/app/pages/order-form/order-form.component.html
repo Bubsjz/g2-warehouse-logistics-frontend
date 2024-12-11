@@ -113,32 +113,33 @@
       </div>
 
       <!-- Matrícula del camión -->
-        <div class="my-3">
-          <label class="form-label" for="plate">Truck Plate</label>
-          <ng-container *ngIf="mode !== 'review'; else staticPlate">
-            <input
-              class="form-control rounded-pill notEditable"
-              type="text"
-              id="plate"
-              name="plate"
-              #plate="ngModel"
-              [(ngModel)]="delivery.plate"
-              [value]="delivery.plate || 'No data associated'"
-              readonly
-            />
-          </ng-container>
-          <ng-template #staticPlate>
-            <span class="form-control rounded-pill notEditable">{{ delivery.plate || 'No data associated' }}</span>
-          </ng-template>
-        </div>
+      <div class="my-3">
+        <label class="form-label" for="plate">Truck Plate</label>
+        <ng-container *ngIf="mode !== 'review'; else staticPlate">
+          <input
+            class="form-control rounded-pill notEditable"
+            type="text"
+            id="plate"
+            name="plate"
+            #plate="ngModel"
+            [(ngModel)]="delivery.plate"
+            [value]="delivery.plate || 'No data associated'"
+            readonly
+          />
+        </ng-container>
+        <ng-template #staticPlate>
+          <span class="form-control rounded-pill notEditable">{{ delivery.plate || 'No data associated' }}</span>
+        </ng-template>
+      </div>
 
       <!-- Productos -->
-        <p class="fw-bold mt-4">Order Products</p>
-        <div *ngIf="orderDetails.length === 0 && mode === 'review'" class="alert alert-warning">
-          There are no products associated with this order.
-        </div>
-        <div *ngFor="let detail of orderDetails; let i = index" class="my-3 d-flex align-items-center gap-3">
+      <p class="fw-bold mt-4">Order Products</p>
+      <div *ngIf="orderDetails.length === 0 && mode === 'review'" class="alert alert-warning">
+        There are no products associated with this order.
+      </div>
 
+      <div *ngFor="let detail of orderDetails; let i = index" class="my-3 d-flex align-items-center gap-3">
+        
         <!-- Selector de tipo de producto -->
         <ng-container *ngIf="mode === 'edit' || mode === 'create'; else staticProduct">
           <select
@@ -152,57 +153,56 @@
             [disabled]="!isEditable"
             required
           >
-            <option [ngValue]="null" disabled>Select a product</option>
-            <option *ngFor="let product of products" [value]="product.name">
-              {{ product.name }}
-            </option>
+          <option [ngValue]="null" disabled>Select a product</option>
+          <option *ngFor="let product of products" [value]="product.name">
+            {{ product.name }}
+          </option>
           </select>
-        <div *ngIf="productName.touched && !detail.product_name" class="text-danger">
-          Product is required.
-        </div>
+          <div *ngIf="productName.touched && !detail.product_name" class="text-danger">
+            Product is required.
+          </div>
         </ng-container>
         <ng-template #staticProduct>
           <span class="form-control rounded-pill w-50 notEditable">{{ detail.product_name || 'No data associated' }}</span>
         </ng-template>
 
-
         <!-- Campo de cantidad -->
-          <div>
-            <ng-container *ngIf="mode === 'edit' || mode === 'create'; else staticQuantity">
-              <input
-                type="number"
-                class="form-control rounded-pill w-3"
-                placeholder="Quantity"
-                [(ngModel)]="detail.product_quantity"
-                [ngClass]="{ 'is-invalid': submitted && !detail.product_quantity }"
-                name="quantity-{{ i }}"
-                id="quantity{{ i }}"
-                [ngModelOptions]="{ standalone: true }"
-                min="1"
-                [disabled]="!isEditable"
-                required
-              />
-              <div *ngIf="detail.touched && (!detail.product_quantity || detail.product_quantity <= 0)" class="text-danger">
-                Quantity must be greater than 0.
-              </div>
-            </ng-container>
-            <ng-template #staticQuantity>
-              <span class="form-control rounded-pill w-4 notEditable">{{ detail.product_quantity || '0' }}</span>
-            </ng-template>
-          </div>
+        <div>
+          <ng-container *ngIf="mode === 'edit' || mode === 'create'; else staticQuantity">
+            <input
+              type="number"
+              class="form-control rounded-pill w-3"
+              placeholder="Quantity"
+              [(ngModel)]="detail.product_quantity"
+              [ngClass]="{ 'is-invalid': submitted && !detail.product_quantity }"
+              name="quantity-{{ i }}"
+              id="quantity{{ i }}"
+              [ngModelOptions]="{ standalone: true }"
+              min="1"
+              [disabled]="!isEditable"
+              required
+            />
+            <div *ngIf="detail.touched && (!detail.product_quantity || detail.product_quantity <= 0)" class="text-danger">
+              Quantity must be greater than 0.
+            </div>
+          </ng-container>
+          <ng-template #staticQuantity>
+            <span class="form-control rounded-pill w-4 notEditable">{{ detail.product_quantity || '0' }}</span>
+          </ng-template>
+        </div>
 
         <!-- Botón para eliminar producto -->
         <button type="button" class="btn btn-danger" *ngIf="canManageProducts" (click)="removeProduct(i)">
           &minus;
         </button>
-        </div>
+      </div>
 
-        <!-- Botón para agregar nuevos productos -->
-        <div class="my-3">
-          <button type="button" class="btn btn-primary rounded-pill" *ngIf="canManageProducts" (click)="addProduct()">
-            + Add Product
-          </button>
-        </div>
+      <!-- Botón para agregar nuevos productos -->
+      <div class="my-3">
+        <button type="button" class="btn btn-primary rounded-pill" *ngIf="canManageProducts" (click)="addProduct()">
+          + Add Product
+        </button>
+      </div>
 
       <!-- Sección de comentarios solo visible en modo edit y review -->
       <div class="my-3" *ngIf="mode !== 'create' && (delivery.status !== 'pending' || mode === 'review')">
@@ -217,7 +217,7 @@
           rows="3"
           #comments="ngModel"
         ></textarea>
-        <div *ngIf="comments.touched && !delivery.comments" class="text-danger">
+        <div *ngIf="mode === 'review' && !delivery.comments" class="text-danger">
           Comments are required if you want to cancel the order.
         </div>
       </div>
@@ -301,13 +301,13 @@
           </button>
         </ng-container>
 
-        <!-- Botón "Back" (siempre visible) -->
+        <!-- Botón "Back" -->
         <button
           type="button"
           class="btn btn-dark rounded-pill"
           (click)="cancel()"
         >
-          Back
+          Go back
         </button>
       </div>
     </form>
