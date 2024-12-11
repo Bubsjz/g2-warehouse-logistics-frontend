@@ -49,7 +49,7 @@ export class DeliveryService {
 
   // Eliminar envío
   deleteDelivery(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/modify-order/${id}`);
+    return this.http.delete<void>(`${this.baseUrl}/operator/modify-order/${id}`);
   }
 
   // Cambiar estado de un envío en modo revisión (basado en status que se envía)

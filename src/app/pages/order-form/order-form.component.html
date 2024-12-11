@@ -117,7 +117,7 @@
           <label class="form-label" for="plate">Truck Plate</label>
           <ng-container *ngIf="mode !== 'review'; else staticPlate">
             <input
-              class="form-control rounded-pill"
+              class="form-control rounded-pill notEditable"
               type="text"
               id="plate"
               name="plate"
@@ -224,7 +224,8 @@
 
       <!-- Botones -->
       <div class="d-flex justify-content-center gap-2 my-4">
-        <!-- Botones en modo create -->
+
+        <!-- Modo creación -->
         <ng-container *ngIf="mode === 'create' && areButtonsEnabled">
           <button
             type="button"
@@ -242,14 +243,15 @@
             Create Order
           </button>
         </ng-container>
-      
-        <!-- Botones en modo edit -->
-        <ng-container *ngIf="mode === 'edit'">
+
+        <!-- Modo edición -->
+        <ng-container *ngIf="mode === 'edit' && role === 'operator' && areButtonsEnabled">
           <button
-            *ngIf="areButtonsEnabled && isEditable"
+            *ngIf="isEditable"
             type="submit"
             class="btn btn-success rounded-pill"
-            (click)="processModeSpecificActions('update', 'review')"
+            [disabled]="!validateForm()"
+            (click)="processModeSpecificActions('update', delivery.status === 'pending' ? 'review' : 'corrections needed')"
           >
             {{ delivery.status === 'pending' ? 'Create Order' : 'Update Order' }}
           </button>
@@ -263,43 +265,42 @@
           </button>
         </ng-container>
 
-        <!-- Botón cambio de status en modo operator durante el envío -->
-        <ng-container *ngIf="role === 'operator' && ['ready for departure', 'in transit'].includes(delivery.status)">
+        <!-- Modo review -->
+        <ng-container *ngIf="mode === 'review' && role === 'manager' && areButtonsEnabled">
           <button
-            class="btn btn-primary rounded-pill"
+            class="btn btn-danger rounded-pill"
             type="button"
-            (click)="handleStatusChange()"
-            [disabled]="!areButtonsEnabled"
+            (click)="handleReviewAction(delivery.status === 'review' ? 'submit' : 'reject')"
+            [disabled]="!isCommentEditable || !delivery.comments.trim()"
           >
-            {{ delivery.status === 'ready for departure' ? 'Start delivery' : 'Mark as delivered' }}
-          </button>
-        </ng-container>
-      
-        <!-- Botones en modo review -->
-        <ng-container *ngIf="mode === 'review' && areButtonsEnabled">
-          <button
-          class="btn btn-danger rounded-pill"
-          type="button"
-          (click)="handleReviewAction(delivery.status === 'review' ? 'submit' : 'reject')"
-          [disabled]="!isCommentEditable || !delivery.comments || delivery.comments.trim() === ''"
-          >
-          {{
-            delivery.status === 'review'
-              ? 'Send Comments'
-              : delivery.status === 'pending reception'
-              ? 'Reject'
-              : 'Not Approved'
-          }}
+            {{
+              delivery.status === 'review'
+                ? 'Send Comments'
+                : delivery.status === 'pending reception'
+                ? 'Reject'
+                : 'Not Approved'
+            }}
           </button>
           <button
             class="btn btn-success rounded-pill"
             type="button"
             (click)="handleReviewAction('approve')"
           >
-          {{ delivery.status === 'review' ? 'Send delivery' : 'Approved' }}
+            {{ delivery.status === 'review' ? 'Send delivery' : 'Approved' }}
           </button>
         </ng-container>
-      
+
+        <!-- Cambios de status para operator -->
+        <ng-container *ngIf="role === 'operator' && ['ready for departure', 'in transit'].includes(delivery.status)">
+          <button
+            class="btn btn-primary rounded-pill"
+            type="button"
+            (click)="handleStatusChange()"
+          >
+            {{ delivery.status === 'ready for departure' ? 'Start delivery' : 'Mark as delivered' }}
+          </button>
+        </ng-container>
+
         <!-- Botón "Back" (siempre visible) -->
         <button
           type="button"
@@ -312,5 +313,3 @@
     </form>
   </div>
 </section>
-
-

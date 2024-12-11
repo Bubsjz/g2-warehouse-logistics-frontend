@@ -231,29 +231,41 @@
 //-------------------------------
         
         //Normalización de datos del back para poder trabajarlos y transformarlos en el formulario
-          normalizeDeliveryFromBackend(data: any): { 
-            delivery: Delivery; 
-            orderDetails: { product_id: null; product_name: string; product_quantity: number; touched: boolean }[] 
-          } {
-            return {
-              delivery: {
-                id_delivery: data.id_delivery,
-                send_date: this.onDateChangeTransform(data.send_date),
-                received_date: this.onDateChangeTransform(data.received_date),
-                comments: data.comments || '',
-                status: data.status || 'null',
-                origin_warehouse_name: data.origin_warehouse_name || null,
-                destination_warehouse_name: data.destination_warehouse_name || null,
-                plate: data.plate || null,
-                products: [],
-              },
-              orderDetails: (data.products || []).map((product: { product_name: string; product_quantity: number }) => ({
+            normalizeDeliveryFromBackend(data: any): { 
+              delivery: Delivery; 
+              orderDetails: { product_id: null; product_name: string; product_quantity: number; touched: boolean }[] 
+            } {
+              // Procesar los productos recibidos o establecer un producto vacío si no hay datos
+              const orderDetails = (data.products || []).map((product: { product_name: string; product_quantity: number }) => ({
                 product_name: product.product_name || '',
                 product_quantity: product.product_quantity ?? 0,
                 touched: false,
-              })),
-            };
-          }        
+              }));
+            
+              // Si no hay productos, añadir un campo vacío con un mensaje inicial
+              if (orderDetails.length === 0) {
+                orderDetails.push({
+                  product_name: null,
+                  product_quantity: 0,
+                  touched: false,
+                });
+              }
+            
+              return {
+                delivery: {
+                  id_delivery: data.id_delivery,
+                  send_date: this.onDateChangeTransform(data.send_date),
+                  received_date: this.onDateChangeTransform(data.received_date),
+                  comments: data.comments || null,
+                  status: data.status || null,
+                  origin_warehouse_name: data.origin_warehouse_name || null,
+                  destination_warehouse_name: data.destination_warehouse_name || null,
+                  plate: data.plate || null,
+                  products: [],
+                },
+                orderDetails,
+              };
+            }       
 
         //Genera un objeto con los datos del pedido para enviar al back-end
           prepareDeliveryPayload(status: string): any {
@@ -329,7 +341,7 @@
               (detail) => !detail.product_name || detail.product_quantity <= 0
             );
             //Aviso para cuando no hay unidades
-            if (invalidProducts) {
+            if (invalidProducts || this.orderDetails.length === 0) {
               this.errorMessage = 'All products must have a valid name and quantity greater than 0.';
               return false;
             }
@@ -599,52 +611,53 @@
 //-------------------------------
 
         //Comprueba las condiciones de editabilidad
-          checkIfEditable(): void {
-            const editableStatuses = ['pending', 'corrections needed'];
-            const nonEditableStatuses = ['ready for departure', 'in transit'];
-            const reviewStatuses = ['review', 'pending reception'];
-
-            // En caso de haber fallo en obtener datos del back-end o estado del pedido no está definido, deshabilita todos los campos y botones excepto "Back"
-            if (this.errorMessage && this.errorMessage.includes('Error loading') && (this.mode !== 'create' && !this.delivery.status)) {
-              console.warn('Error detected or missing status. Disabling all fields and buttons except "Back".');
+            checkIfEditable(): void {
+              const editableStatuses = ['pending', 'corrections needed'];
+              const reviewStatuses = ['review', 'pending reception'];
+              const nonEditableStatuses = ['ready for departure', 'in transit'];
+            
+              // Modo creación
+              if (this.mode === 'create') {
+                this.isEditable = true;
+                this.isCommentEditable = false;
+                this.areButtonsEnabled = this.role === 'operator';
+                this.canManageProducts = true;
+                return;
+              }
+            
+              // Modo edición
+              if (this.mode === 'edit') {
+                this.isEditable = this.role === 'operator' && editableStatuses.includes(this.delivery.status);
+                this.isCommentEditable = false;
+                this.areButtonsEnabled = this.role === 'operator' && editableStatuses.includes(this.delivery.status);
+                this.canManageProducts = this.isEditable;
+                return;
+              }
+            
+              // Modo review
+              if (this.mode === 'review') {
+                this.isEditable = false;
+                this.isCommentEditable = this.role === 'manager' && reviewStatuses.includes(this.delivery.status);
+                this.areButtonsEnabled = this.role === 'manager' && reviewStatuses.includes(this.delivery.status);
+                this.canManageProducts = false;
+                return;
+              }
+            
+              // Cambios de status (ready for departure, in transit)
+              if (nonEditableStatuses.includes(this.delivery.status)) {
+                this.isEditable = false;
+                this.isCommentEditable = false;
+                this.areButtonsEnabled = this.role === 'operator';
+                this.canManageProducts = false;
+                return;
+              }
+            
+              // Resto de situaciones
               this.isEditable = false;
+              this.isCommentEditable = false;
               this.areButtonsEnabled = false;
-              this.isCommentEditable = false;
               this.canManageProducts = false;
-              return;
             }
-
-            // Controla la editabilidad del formulario, no disponible en modo de revisión y depende del estado del pedido
-            this.isEditable = this.mode !== 'review' && editableStatuses.includes(this.delivery.status);
-
-            // Deshabilitar campos en "ready for departure" e "in transit"
-            if (nonEditableStatuses.includes(this.delivery.status)) {
-              this.isEditable = false;
-              this.areButtonsEnabled = true;
-            } else {
-              this.areButtonsEnabled =
-                (this.mode === 'edit' && editableStatuses.includes(this.delivery.status)) ||
-                (this.mode === 'review' && ['review', 'pending reception'].includes(this.delivery.status));
-            }
-          
-            // Botones visibles para operator en el proceso de envío
-            this.areButtonsEnabled =
-              (this.mode === 'edit' && editableStatuses.includes(this.delivery.status)) ||
-              (this.role === 'operator' && nonEditableStatuses.includes(this.delivery.status));
-          
-            console.log('Editable:', this.isEditable);
-            console.log('Botones habilitados:', this.areButtonsEnabled);
-          
-            // Comentarios editables solo en modo review y dependiente del estado del pedido
-            if (this.mode === 'review') {
-              this.isCommentEditable = reviewStatuses.includes(this.delivery.status);
-            } else {
-              this.isCommentEditable = false;
-            }
-          
-            // Botones de producto solo disponibles en modo create o edit
-            this.canManageProducts = this.mode !== 'review' && this.isEditable;
-          }
 
         //Agrega un nuevo producto al pedido
           addProduct(): void {
