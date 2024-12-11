@@ -50,7 +50,16 @@
                 <tbody>
                         @for(order of this.arrDeliveries; track [order.id_delivery]){
                             <tr>
-                                <th scope="row" [class]= "userLogin === 'operator' ? 'text-primary' : 'text-manager'" class=" pointer" [routerLink]="['/dashboard','operator','order-form',order.id_delivery]">{{order.id_delivery}}</th>
+                                @if(userLogin === "operator"){
+                                    <th scope="row" [class]= "userLogin === 'operator' ? 'text-primary' : 'text-manager'" class=" pointer" [routerLink]="['/operator','modify-order',order.id_delivery]">{{order.id_delivery}}</th>
+                                }@else{
+                                    @if(order.status === "delivered" && this.isSelected === "output"){
+                                        <th scope="row" [class]= "userLogin === 'operator' ? 'text-primary' : 'text-manager'" class=" pointer">{{order.id_delivery}}</th>
+                                    }@else{
+
+                                        <th scope="row" [class]= "userLogin === 'operator' ? 'text-primary' : 'text-manager'" class=" pointer" [routerLink]="['/manager','review-order',order.id_delivery]">{{order.id_delivery}}</th>
+                                    }
+                                }
                                 @if(order.send_date === null){
                                     <td class="d-none d-md-table-cell">-</td>
                                 }@else{
