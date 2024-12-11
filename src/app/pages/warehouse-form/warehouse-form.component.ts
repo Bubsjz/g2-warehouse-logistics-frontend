@@ -36,10 +36,6 @@ export class WarehouseFormComponent {
       locality: new FormControl('', [Validators.required]),
       address: new FormControl('', [Validators.required,Validators.minLength(10)]),
       image: new FormControl('', [Validators.required]),
-      latitude: new FormControl('',[Validators.required]),
-      longitude: new FormControl('',[Validators.required])
-
-
     }, [])
   }
   ngOnInit() {
@@ -57,8 +53,6 @@ export class WarehouseFormComponent {
           name: new FormControl(warehouse.name, [Validators.required]),
           locality: new FormControl(warehouse.locality, [Validators.required]),
           address: new FormControl(warehouse.address, [Validators.required]),
-          latitude: new FormControl(warehouse.latitude, [Validators.required]),
-          longitude: new FormControl(warehouse.longitude, [Validators.required]),
           image: new FormControl(null)
 
         }, [])
@@ -113,8 +107,7 @@ export class WarehouseFormComponent {
       formData.append("name", this.reactiveForm.get("name")?.value);
       formData.append("locality", this.reactiveForm.get("locality")?.value);
       formData.append("address", this.reactiveForm.get("address")?.value);
-      formData.append("latitude", this.reactiveForm.get("latitude")?.value);
-      formData.append("longitude", this.reactiveForm.get("longitude")?.value);
+    
       if (this.selectedFile) {
         formData.append("image", this.selectedFile)
       } else {

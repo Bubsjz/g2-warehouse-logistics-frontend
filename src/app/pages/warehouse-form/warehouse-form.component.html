@@ -35,22 +35,6 @@
           }
       </div>
       <div class="my-3">
-        <label class="form-label" for="latitude">Latitude</label>
-        <input class="form-control " type="text" id="latitude" formControlName="latitude"
-          placeholder="Enter the latitude of the warehouse" />
-          @if(checkControl("latitude","required")){
-            <p class="text-danger">This field is required.</p>
-          }
-      </div>
-      <div class="my-3">
-        <label class="form-label" for="longitude">Longitude</label>
-        <input class="form-control " type="text" id="longitude" formControlName="longitude"
-          placeholder="Enter the longitude of the warehouse" />
-          @if(checkControl("longitude","required")){
-            <p class="text-danger">This field is required.</p>
-          }
-      </div>
-      <div class="my-3">
         <div class="image-upload">
           <input class="form-control " type="file" id="image" formControlName="image" accept="image/*"
             style="display: none" (change)="onFileSelected($event)" />
