@@ -244,21 +244,34 @@
         </ng-container>
       
         <!-- Botones en modo edit -->
-        <ng-container *ngIf="mode === 'edit' && areButtonsEnabled">
+        <ng-container *ngIf="mode === 'edit'">
           <button
-            type="button"
+            *ngIf="areButtonsEnabled && isEditable"
+            type="submit"
             class="btn btn-success rounded-pill"
-            [disabled]="!validateForm()"
             (click)="processModeSpecificActions('update', 'review')"
           >
-          {{ delivery.status === 'pending' ? 'Create Order' : 'Update Order' }}
+            {{ delivery.status === 'pending' ? 'Create Order' : 'Update Order' }}
           </button>
           <button
+            *ngIf="isEditable"
             type="button"
             class="btn btn-danger rounded-pill"
             (click)="deleteDelivery()"
           >
             Delete Order
+          </button>
+        </ng-container>
+
+        <!-- Botón cambio de status en modo operator durante el envío -->
+        <ng-container *ngIf="role === 'operator' && ['ready for departure', 'in transit'].includes(delivery.status)">
+          <button
+            class="btn btn-primary rounded-pill"
+            type="button"
+            (click)="handleStatusChange()"
+            [disabled]="!areButtonsEnabled"
+          >
+            {{ delivery.status === 'ready for departure' ? 'Start delivery' : 'Mark as delivered' }}
           </button>
         </ng-container>
       

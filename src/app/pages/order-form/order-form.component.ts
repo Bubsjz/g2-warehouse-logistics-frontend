@@ -445,6 +445,40 @@
               }
           }
 
+          async handleStatusChange(): Promise<void> {
+            try {
+              // Determinar el próximo estado basado en el actual
+              const nextStatus = this.delivery.status === 'ready for departure' ? 'in transit' : 'delivered';
+              console.log('Next status:', nextStatus);
+          
+              // Confirmación de la acción
+              const confirm = await Swal.fire({
+                title: 'Confirm Action',
+                text: `Are you sure you want to mark this order as "${nextStatus}"?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, proceed!',
+                cancelButtonText: 'Cancel',
+              });
+          
+              if (!confirm.isConfirmed) {
+                return;
+              }
+          
+              // Enviar datos actualizados al backend
+              const deliveryPayload = this.prepareDeliveryPayload(nextStatus);
+              console.log(`Updating delivery to "${nextStatus}" with payload:`, deliveryPayload);
+          
+              await firstValueFrom(this.deliveryService.updateDelivery(this.delivery.id_delivery!, deliveryPayload));
+          
+              Swal.fire('Success', `Order marked as "${nextStatus}".`, 'success');
+              this.router.navigate([`/${this.role}/order-list`]);
+            } catch (error) {
+              console.error('Error updating delivery status:', error);
+              Swal.fire('Error', 'Failed to update order status. Please try again later.', 'error');
+            }
+          }
+
 
           //Manejo de respuesta en modo revisión previo envío
             async handleReviewAction(action: 'approve' | 'submit' | 'reject'): Promise<void> {
@@ -567,6 +601,7 @@
         //Comprueba las condiciones de editabilidad
           checkIfEditable(): void {
             const editableStatuses = ['pending', 'corrections needed'];
+            const nonEditableStatuses = ['ready for departure', 'in transit'];
             const reviewStatuses = ['review', 'pending reception'];
 
             // En caso de haber fallo en obtener datos del back-end o estado del pedido no está definido, deshabilita todos los campos y botones excepto "Back"
@@ -581,11 +616,24 @@
 
             // Controla la editabilidad del formulario, no disponible en modo de revisión y depende del estado del pedido
             this.isEditable = this.mode !== 'review' && editableStatuses.includes(this.delivery.status);
+
+            // Deshabilitar campos en "ready for departure" e "in transit"
+            if (nonEditableStatuses.includes(this.delivery.status)) {
+              this.isEditable = false;
+              this.areButtonsEnabled = true;
+            } else {
+              this.areButtonsEnabled =
+                (this.mode === 'edit' && editableStatuses.includes(this.delivery.status)) ||
+                (this.mode === 'review' && ['review', 'pending reception'].includes(this.delivery.status));
+            }
           
-            // Botones visibles en función del modo y el estado del pedido
+            // Botones visibles para operator en el proceso de envío
             this.areButtonsEnabled =
               (this.mode === 'edit' && editableStatuses.includes(this.delivery.status)) ||
-              (this.mode === 'review' && reviewStatuses.includes(this.delivery.status));
+              (this.role === 'operator' && nonEditableStatuses.includes(this.delivery.status));
+          
+            console.log('Editable:', this.isEditable);
+            console.log('Botones habilitados:', this.areButtonsEnabled);
           
             // Comentarios editables solo en modo review y dependiente del estado del pedido
             if (this.mode === 'review') {
