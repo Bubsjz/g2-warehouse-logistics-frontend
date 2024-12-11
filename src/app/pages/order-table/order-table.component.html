@@ -52,12 +52,11 @@
                             <tr>
                                 @if(userLogin === "operator"){
                                     <th scope="row" [class]= "userLogin === 'operator' ? 'text-primary' : 'text-manager'" class=" pointer" [routerLink]="['/operator','modify-order',order.id_delivery]">{{order.id_delivery}}</th>
-                                }@else{
+                                }@else if(userLogin === "manager"){
                                     @if(order.status === "delivered" && this.isSelected === "output"){
-                                        <th scope="row" [class]= "userLogin === 'operator' ? 'text-primary' : 'text-manager'" class=" pointer">{{order.id_delivery}}</th>
+                                        <th scope="row" [class]= "'text-manager'" class=" pointer">{{order.id_delivery}}</th>
                                     }@else{
-
-                                        <th scope="row" [class]= "userLogin === 'operator' ? 'text-primary' : 'text-manager'" class=" pointer" [routerLink]="['/manager','review-order',order.id_delivery]">{{order.id_delivery}}</th>
+                                        <th scope="row" [class]= "'text-manager'" class=" pointer" [routerLink]="['/manager','review-order',order.id_delivery]">{{order.id_delivery}}</th>
                                     }
                                 }
                                 @if(order.send_date === null){
