@@ -6,3 +6,7 @@
 .is-invalid {
     border: 1px solid red;
   }
+
+.notEditable {
+    background-color: #e9ecef;
+}
