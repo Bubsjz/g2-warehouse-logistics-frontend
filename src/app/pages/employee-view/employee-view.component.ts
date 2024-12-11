@@ -30,32 +30,38 @@ export class EmployeeViewComponent implements OnInit {
     this.activatedRoute.params.subscribe(async (params: any) => {
     const res = await this.userServices.getById(params.id);
     console.log(res)
-    this.userID = params!.id
+    this.userID = Number(params!.id)
     this.myUser = res;
 
     })
   }
 
-  async delete(id: number) {
-    let borrado = confirm('Seguro que deseas borrar el usuario ' + this.myUser?.name + '?');
-    if (borrado) {
-      let alert_res: AlertResponse;
-      try {
-        const res = await this.userServices.deleteByID(id);
-        if ('id_user' in res && res.id_user === id) {
-          alert_res = {title: 'Great!', text: 'User with ID: ' + id + ' succesfully removed', icon: 'success', cbutton: 'Accept'}
-        } else {
-          let text: string;
-          text = ('error' in res) ?  'Error' : 'User with ID: ' + id + ' not found'
-          alert_res = {title: 'Error!', text: text, icon: 'error', cbutton: 'Accept'}
+  delete(id: number) {
+    Swal.fire({
+      title: 'Warning!',
+      text: 'Are you sure you want to removed user with ID: ' + id + ' ?',
+      icon: 'warning',
+      showCancelButton: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        let alert_res: AlertResponse;
+        try {
+          const res = await this.userServices.deleteByID(id);
+          if ('id_user' in res && res.id_user === id) {
+            alert_res = {title: 'Great!', text: 'User with ID: ' + id + ' succesfully removed', icon: 'success', cbutton: 'Accept'}
+          } else {
+            let text: string;
+            text = ('error' in res) ?  'Error' : 'User with ID: ' + id + ' not found'
+            alert_res = {title: 'Error!', text: text, icon: 'error', cbutton: 'Accept'}
+          }
+        } catch (error) {
+          console.log(error);
+          alert_res = {title: 'Error!', text: 'Error', icon: 'error', cbutton: 'Accept'}
         }
-      } catch (error) {
-        console.log(error);
-        alert_res = {title: 'Error!', text: 'Error', icon: 'error', cbutton: 'Accept'}
+        Swal.fire(alert_res)
+        this.router.navigate(['/boss', 'warehouse-view', this.myUser?.assigned_id_warehouse])
       }
-      Swal.fire(alert_res)
-      this.router.navigate(['/boss', 'warehouse-view', this.myUser?.assigned_id_warehouse])
-    }
+    });
   }
 
   // userInfo: iUser | null = null;
