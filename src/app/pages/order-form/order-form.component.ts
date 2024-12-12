@@ -359,18 +359,18 @@
           }
 
         //Procesa las acciones específicas del modo en los botones para envío al back de los datos
-          async processModeSpecificActions(action: 'save' | 'submit' | 'update' | 'approve' | 'reject', status?: string): Promise<void> {
-              
+          async processModeSpecificActions(action: 'save' | 'submit' | 'update' | 'approve' | 'reject',status?: string): Promise<void> {
             if (action === 'save' && this.mode === 'create') {
               await this.handleCreateAction(status || 'pending');
               return;
             }
-
+          
             if (action === 'update' && this.mode === 'edit') {
-              await this.handleEditAction(status || 'review');
+              const updatedStatus = this.delivery.status === 'corrections needed' ? 'review' : status || 'review';
+              await this.handleEditAction(updatedStatus);
               return;
             }
-
+          
             if (this.mode === 'review' && ['submit', 'approve', 'reject'].includes(action)) {
               await this.handleReviewAction(action as 'submit' | 'approve' | 'reject');
               return;
@@ -395,17 +395,18 @@
 
         //Modo edición
           async handleEditAction(status: string): Promise<void> {
-              const deliveryPayload = this.prepareDeliveryPayload(status);
-              try {
-                await firstValueFrom(this.deliveryService.updateDelivery(this.delivery.id_delivery!, deliveryPayload));
-                const message = this.delivery.status === 'pending' ? 'Order created successfully!' : 'Order updated successfully!';
-                Swal.fire('Success', message, 'success');
-                this.router.navigate([`/${this.role}/order-list`]);
-              } catch (error) {
-                this.errorMessage = 'Failed to update order.';
-                Swal.fire('Error', this.errorMessage, 'error');
-                console.error('Error during delivery update:', error);
-              }
+            const deliveryPayload = this.prepareDeliveryPayload(status);
+            try {
+              const response = await firstValueFrom(
+                this.deliveryService.updateDelivery(this.delivery.id_delivery!, deliveryPayload)
+              );
+              Swal.fire('Success', 'Order updated successfully!', 'success');
+              this.router.navigate([`/${this.role}/order-list`]);
+            } catch (error) {
+              this.errorMessage = 'Failed to update order.';
+              Swal.fire('Error', this.errorMessage, 'error');
+              console.error('Error durante la actualización del pedido:', error);
+            }
           }
 
         //Cambio de estado de un pedido en proceso de envío
