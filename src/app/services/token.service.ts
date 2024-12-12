@@ -1,13 +1,14 @@
 import { Injectable } from "@angular/core";
 import { jwtDecode } from "jwt-decode";
 import { DecodedToken } from "../interfaces/token.interface";
+import { environment } from "../../environments/environment";
 
 @Injectable({
     providedIn: 'root',
   })
   export class AuthService {
 
-    private tokenKey = 'authToken';
+    private tokenKey = environment.TOKEN_KEY;
     
     getTokenData(): DecodedToken | null {
       const token = localStorage.getItem(this.tokenKey);
@@ -44,6 +45,10 @@ import { DecodedToken } from "../interfaces/token.interface";
     getUserImage(): File | null {
       const tokenData = this.getTokenData();
         return tokenData?.user_image || null;
+    }
+
+    saveToken(token: string): void {
+      localStorage.setItem(this.tokenKey, token);
     }
 
     logOut(): void {

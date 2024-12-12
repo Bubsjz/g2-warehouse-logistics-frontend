@@ -13,9 +13,6 @@ export class roleGuard implements CanActivate {
     const userRole = this.authService.getUserRole();
     const url = state.url;
   
-    console.log('User role:', userRole);
-    console.log('Accessed URL:', url);
-  
     if (!userRole) {
         console.warn('User role not found. Redirecting to login.');
         Swal.fire({

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map, switchMap } from 'rxjs';
 import { iUser } from '../interfaces/user-view.interface';
 import { iWarehouse } from '../interfaces/warehouse-user-view.interface';
+import { environment } from '../../environments/environment';
 
 import { inject} from '@angular/core';
 import { lastValueFrom } from 'rxjs';
@@ -12,8 +13,8 @@ import { User } from '../interfaces/user.interface';
   providedIn: 'root',
 })
 export class UserService {
-  private userApiUrl = 'http://localhost:3000/users';
-  private warehouseApiUrl = 'http://localhost:3000/warehouses';
+  private userApiUrl = environment.API_URL + '/users';
+  private warehouseApiUrl = environment.API_URL + '/warehouses';
 
   constructor(private http: HttpClient) {}
 
@@ -40,7 +41,7 @@ export class UserService {
     }
 
     deleteUser(id_user: number): Observable<void> {
-      const url = `http://localhost:3000/users/${id_user}`;
+      const url = `${this.userApiUrl}/${id_user}`;
       return this.http.delete<void>(url);
     }
 

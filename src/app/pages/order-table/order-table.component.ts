@@ -5,16 +5,17 @@ import { NewOrderBtnComponent } from "../../components/new-order-btn/new-order-b
 import { Router, RouterLink } from "@angular/router";
 import { DatePipe } from "@angular/common";
 import { OperatorService } from "../../services/operator.service";
-import {jwtDecode} from 'jwt-decode';
+/* import {jwtDecode} from 'jwt-decode'; */
 import { ManagerService } from "../../services/manager.service";
 import Swal from "sweetalert2";
+import { AuthService } from "../../services/token.service";
 
-type decodeToken = {
+/* type decodeToken = {
   user_id: number;
   user_role: string;
   iat: number;
   exp: number;
-}
+} */
 
 @Component({
   selector: 'app-order-table',
@@ -28,12 +29,13 @@ export class OrderTableComponent {
   operatorService = inject(OperatorService)
   managerService = inject(ManagerService)
   router = inject(Router)
+  authService = inject(AuthService)
 
   arrDeliveries:Delivery[]=[];
   arrDeliveriesOutput:Delivery[] =[];
   arrDeliveriesEntry:Delivery[] =[];
   userLogin!:string
-  idUser!:decodeToken
+/*   idUser!:decodeToken */
   originWarehouseName!:string;
   originWarehouseLocality!:String;
   isSelected:string= 'entry'
@@ -41,15 +43,23 @@ export class OrderTableComponent {
 
   async ngOnInit() {
     
+    const userRole = this.authService.getUserRole();
     
-    const token = localStorage.getItem('authToken')
+/*     const token = localStorage.getItem('authToken')
     if(token){
       const decoded = jwtDecode(token) as decodeToken
-      this.idUser = decoded
+      this.idUser = decoded */
+
+      if (!userRole) {
+        Swal.fire('Error', 'Role is missing or invalid. Redirecting to login...', 'error');
+        this.router.navigateByUrl('/login');
+        return;
+      }
      
+      this.userLogin = userRole;
     // manager 
-      if(this.idUser.user_role === "manager"){
-        this.userLogin = this.idUser.user_role
+      if/* (this.idUser.user_role === "manager") */(userRole === 'manager'){
+        /* this.userLogin = this.idUser.user_role */
         const response1 = await this.managerService.getEntryOrders()
         
         this.originWarehouseName = response1[0].destination_warehouse_name
@@ -64,17 +74,17 @@ export class OrderTableComponent {
         
 
       }else{
-        this.userLogin = this.idUser.user_role
+        /* this.userLogin = this.idUser.user_role */
         const response1 =  await this.operatorService.getAllDeliveryByUser()
         this.arrDeliveries = response1
       }
 
       
       
-    }else{
+    /* }else{
       alert('Token is missing')
       this.router.navigateByUrl('/login')
-    }
+    } */
   }
     
 

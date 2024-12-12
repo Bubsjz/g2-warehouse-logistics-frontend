@@ -217,8 +217,8 @@
           rows="3"
           #comments="ngModel"
         ></textarea>
-        <div *ngIf="mode === 'review' && !delivery.comments" class="text-danger">
-          Comments are required if you want to cancel the order.
+        <div *ngIf="mode === 'review' && (delivery.status === 'review' || delivery.status === 'pending reception') && !delivery.comments" class="text-danger">
+          Comments are required if you want to cancel o reject the order.
         </div>
       </div>
 
@@ -251,7 +251,7 @@
             type="submit"
             class="btn btn-success rounded-pill"
             [disabled]="!validateForm()"
-            (click)="processModeSpecificActions('update', delivery.status === 'pending' ? 'review' : 'corrections needed')"
+            (click)="processModeSpecificActions('update')"
           >
             {{ delivery.status === 'pending' ? 'Create Order' : 'Update Order' }}
           </button>

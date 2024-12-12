@@ -3,12 +3,13 @@ import { inject, Injectable } from '@angular/core';
 import { User } from '../interfaces/user.interface';
 import { lastValueFrom } from 'rxjs';
 import { Delivery } from '../interfaces/delivery.interface';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ManagerService {
-  private baseUrl: string = "http://localhost:3000/manager"
+  private baseUrl: string = environment.API_URL + "/manager"
  
   private httpClient = inject(HttpClient)
 

@@ -1,15 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import {jwtDecode} from 'jwt-decode';
-
-type decodeToken = {
-  user_name: string;
-  user_surname: string;
-  user_id: number;
-  user_role: string;
-  iat: number;
-  exp: number;
-}
+import { AuthService } from '../../services/token.service';
 
 
 @Component({
@@ -20,23 +11,17 @@ type decodeToken = {
   styleUrl: './main-footer.component.css'
 })
 export class MainFooterComponent implements OnInit {
-  UserRole!: string;
+  userRole!: string;
   adminEmail:String= "support@rountravel.com"
 
-  
+  constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-
-    const token = localStorage.getItem('authToken')
-    if(token){
-      const decoded = jwtDecode(token) as decodeToken
-      this.UserRole = decoded.user_role
-    }
-
-     
+    this.userRole = this.authService.getUserRole() || 'unknown';
   }
-    logOutFooter(){
-      localStorage.removeItem('authToken')
+
+    logOutFooter(): void {
+      this.authService.logOut();
     }
 }
 
