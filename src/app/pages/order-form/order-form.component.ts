@@ -361,37 +361,20 @@
         //Procesa las acciones específicas del modo en los botones para envío al back de los datos
           async processModeSpecificActions(action: 'save' | 'submit' | 'update' | 'approve' | 'reject', status?: string): Promise<void> {
               
-            if (action === 'save') {
-                if (this.mode === 'create') {
-                    // Crear pedido nuevo (POST)
-                    await this.handleCreateAction(status || 'pending');
-                } else {
-                    console.error(`Invalid action '${action}' for mode '${this.mode}'.`);
-                }
-                return;
-            }
-          
-            if (action === 'update') {
-                if (this.mode === 'edit') {
-                    // Actualizar pedido existente (PUT)
-                    await this.handleEditAction(status || 'review');
-                } else {
-                    console.error(`Invalid action '${action}' for mode '${this.mode}'.`);
-                }
-                return;
-            }
-
-            if (this.mode === 'review') {
-              if (['submit', 'approve', 'reject'].includes(action)) {
-                  // Manejo de acciones específicas de revisión
-                  await this.handleReviewAction(action as 'submit' | 'approve' | 'reject');
-              } else {
-                  console.error(`Invalid review action '${action}' for mode '${this.mode}'.`);
-              }
+            if (action === 'save' && this.mode === 'create') {
+              await this.handleCreateAction(status || 'pending');
               return;
             }
 
-            console.error(`Unsupported action '${action}' in mode '${this.mode}'.`);
+            if (action === 'update' && this.mode === 'edit') {
+              await this.handleEditAction(status || 'review');
+              return;
+            }
+
+            if (this.mode === 'review' && ['submit', 'approve', 'reject'].includes(action)) {
+              await this.handleReviewAction(action as 'submit' | 'approve' | 'reject');
+              return;
+            }
           }
 
         //Modo creación
