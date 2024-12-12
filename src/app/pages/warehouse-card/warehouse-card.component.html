@@ -27,15 +27,12 @@
             {{ n_managers }} manager{{ n_managers > 1 ? 's': ''}}. 
             The complete list is found below</p>
 
-          <p class="card-text">
-            <strong>Administrator:</strong>
-          </p>
-          <ul class="list-unstyled">
-            <li *ngFor="let administrator of administrators">
-              <a>{{administrator.name}} {{administrator.surname}} </a>
-              <p class="mt-2"><a  [href]="'mailto:' + administrator.email">{{administrator.email}} </a></p>
-            </li>
-          </ul>
+            <p class="card-text">
+              <strong>Warehouse Id:</strong> {{warehouse?.id_warehouse}}
+            </p>
+            <p class="card-text">
+              <strong>Address:</strong> {{warehouse?.address}}
+            </p>
 
         <div class="d-flex mt-5">
           <a class="btn btn-outline-success m-2 p-2 px-4" [routerLink]="['/boss', 'update-warehouse', warehouse_id]">Update</a>
