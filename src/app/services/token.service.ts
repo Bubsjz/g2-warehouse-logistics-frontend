@@ -14,19 +14,12 @@ import { DecodedToken } from "../interfaces/token.interface";
       if (!token) return null;
         try {
             const decoded: DecodedToken = jwtDecode(token);
-            console.log('Decoded Token:', decoded);
             return decoded;
           } catch (error) {
             console.error('Failed to decode token:', error);
             return null;
           }
         }
-        
-    // Verifica si el token está expirado
-    /* isTokenExpired(): boolean {
-      const tokenData = this.getTokenData();
-      return tokenData ? tokenData.exp < Math.floor(Date.now() / 1000) : true;
-    } */
 
     getUserName(): string | null {
       const tokenData = this.getTokenData();

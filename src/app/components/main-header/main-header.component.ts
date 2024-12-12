@@ -35,7 +35,6 @@ export class MainHeaderComponent implements OnInit {
         this.userSurname = decoded.user_surname
         if (decoded.user_image) {
            this.userImage = `http://localhost:3000/uploads/${decoded.user_image}`
- 
         } else {
           this.userImage = null;
         }

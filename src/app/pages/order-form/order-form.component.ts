@@ -43,11 +43,11 @@
   
     // Detalles de los productos seleccionados para el pedido
     orderDetails: { 
-      product_name: string;
+      product_name: string | null;
       product_quantity: number; 
       touched: boolean; 
     }[] = [
-      { product_name: '', product_quantity: 0, touched: false },
+      { product_name: null, product_quantity: 0, touched: false },
     ];
   
     // Mensaje de error para mostrar en caso de validación fallida o error del servidor
@@ -91,84 +91,71 @@
 //-------------------------------
 
         //Determina el rol y modo del formulario y carga los datos correspondientes
-            private async detectMode(): Promise<void> {
+          private async detectMode(): Promise<void> {
 
-              // Obtener el rol del token
-              const userRole = this.authService.getUserRole();
-              if (!userRole) {
-                console.error('User role not found in token. Redirecting to login.');
-                this.router.navigate(['/login']);
+            // Obtener el rol del token
+            const userRole = this.authService.getUserRole();
+            if (!userRole) {
+              console.error('User role not found in token. Redirecting to login.');
+              this.router.navigate(['/login']);
+              return;
+            }
+            this.role = userRole;
+
+            // Si el rol es 'operator', asignar la matrícula del token al formulario
+            const userPlate = this.authService.getUserPlate();
+            if (this.role === 'operator' && userPlate) {
+              this.delivery.plate = userPlate;
+            }
+              
+            // Detectar el modo y carga de datos de selectores
+            const fullUrl = this.router.url;
+            if (fullUrl.includes('create-order')) {
+              this.mode = 'create';
+              await this.loadInitialData();
+            } else if (fullUrl.includes('modify-order')) {
+              this.mode = 'edit';
+              await this.loadInitialData();
+            } else if (fullUrl.includes('review-order')) {
+              this.mode = 'review';
+            } else {
+              console.error('Invalid mode detected. Defaulting to "create".');
+              this.mode = 'create';
+            }
+            
+            // Si no es "create", cargar datos del pedido
+            if (this.mode !== 'create') {
+              const id = +this.route.snapshot.paramMap.get('id')!;
+              if (!id) {
+                console.error('Missing ID for non-create mode.');
                 return;
               }
-              this.role = userRole;
-              console.log(`Role detected from token: ${this.role}`);
-
-              // Si el rol es 'operator', asignar la matrícula del token al formulario
-              const userPlate = this.authService.getUserPlate();
-              if (this.role === 'operator' && userPlate) {
-                this.delivery.plate = userPlate;
-              }
-              
-              // Detectar el modo y carga de datos de selectores
-              const fullUrl = this.router.url;
-              if (fullUrl.includes('create-order')) {
-                this.mode = 'create';
-                console.log(`Mode detected: ${this.mode}`);
-                await this.loadInitialData();
-              } else if (fullUrl.includes('modify-order')) {
-                this.mode = 'edit';
-                console.log(`Mode detected: ${this.mode}`);
-                await this.loadInitialData();
-              } else if (fullUrl.includes('review-order')) {
-                this.mode = 'review';
-                console.log(`Mode detected: ${this.mode}`);
-              } else {
-                console.error('Invalid mode detected. Defaulting to "create".');
-                this.mode = 'create';
-              }
+              await this.loadDeliveryWithProducts(id, this.role);
             
-              // Si no es "create", cargar datos del pedido
-              if (this.mode !== 'create') {
-                const id = +this.route.snapshot.paramMap.get('id')!;
-                if (!id) {
-                  console.error('Missing ID for non-create mode.');
-                  return;
-                }
-                console.log(`Detected ID: ${id}`);
-                await this.loadDeliveryWithProducts(id, this.role);
-            
-                // Confirmar carga exitosa del estado
-                if (!this.delivery.status) {
-                  console.error('Status is missing after data load.');
-                  this.errorMessage = 'Failed to load valid delivery data.';
-                } else {
-                  console.log('Loaded delivery status:', this.delivery.status);
-                }
+              // Confirmar carga exitosa del estado
+              if (!this.delivery.status) {
+                console.error('Status is missing after data load.');
+                this.errorMessage = 'Failed to load valid delivery data.';
               }
             }
+          }
 
         //Carga los datos básicos para el funcionamiento del formulario y asiganción de los datos al HTML
           async loadInitialData(): Promise<void> {
             try {
               //Uso de firstValueFrom para manejar el observable del servicio y transformar en promesa
               const combinedData = await firstValueFrom(this.deliveryService.getCombinedData());
-              console.log('Combined data loaded:', combinedData);
+
               if (Array.isArray(combinedData) && combinedData.length > 0) {
                 const data = combinedData[0];
-
 
               //Asignación de datos al HTML
               this.warehouses = data.warehouse || [];
               this.trucks = data.truck || [];
               this.products = data.productNames || [];
-          
-              console.log('Warehouses:', this.warehouses);
-              console.log('Trucks:', this.trucks);
-              console.log('Products:', this.products);
-              console.log('Combined data asigned to HTML:', this.warehouses, this.trucks, this.products);
-            } else {
-              console.error('Estructura inesperada en los datos recibidos del back:', combinedData);
-            }
+              } else {
+                console.error('Unexpected structure in the data received from the back:', combinedData);
+              }
 
             } catch (error: unknown) {
               console.error('Error loading combined initial data:', error);
@@ -188,20 +175,15 @@
         //Carga los detalles del envío seleccionado los formatea y establece su estado en el formulario
           async loadDeliveryWithProducts(id: number, role: string): Promise<void> {
             try {
-              //Petición al back-end de los detalles del envío según el ID y el rol
               const response = await firstValueFrom(this.deliveryService.getDeliveryById(id, role));
-              console.log('Petition getDeliveryById response:', response);
 
-              //Si el response es un array, toma el primer elemento (Revisar si requiere dee ajsutes en base a respuesta del back-end)
+              //Si el response es un array, toma el primer elemento
               const data = Array.isArray(response) ? response[0] : response;
-              console.log('Response from backend:', data);
           
-              // Normalizar los datos recibidos del backend para que coincidan con los datos del formulario (normalizeDeliveryFromBackend)
+              // Normalizar los datos recibidos del backend para que coincidan con los datos del formulario
               const normalizedData = this.normalizeDeliveryFromBackend(data);
               this.delivery = normalizedData.delivery;
               this.orderDetails = normalizedData.orderDetails;
-              console.log('Mapped delivery:', this.delivery);
-              console.log('Mapped order details:', this.orderDetails);
               
               if (!this.orderDetails || this.orderDetails.length === 0) {
                 console.warn('No products found for this delivery.');
@@ -231,41 +213,41 @@
 //-------------------------------
         
         //Normalización de datos del back para poder trabajarlos y transformarlos en el formulario
-            normalizeDeliveryFromBackend(data: any): { 
-              delivery: Delivery; 
-              orderDetails: { product_id: null; product_name: string; product_quantity: number; touched: boolean }[] 
-            } {
-              // Procesar los productos recibidos o establecer un producto vacío si no hay datos
-              const orderDetails = (data.products || []).map((product: { product_name: string; product_quantity: number }) => ({
-                product_name: product.product_name || '',
-                product_quantity: product.product_quantity ?? 0,
+          normalizeDeliveryFromBackend(data: any): { 
+            delivery: Delivery; 
+            orderDetails: { product_id: null; product_name: string; product_quantity: number; touched: boolean }[] 
+          } {
+            // Procesar los productos recibidos o establecer un producto vacío si no hay datos
+            const orderDetails = (data.products || []).map((product: { product_name: string; product_quantity: number }) => ({
+              product_name: product.product_name || '',
+              product_quantity: product.product_quantity ?? 0,
+              touched: false,
+            }));
+          
+            // Si no hay productos, añadir un campo vacío
+            if (orderDetails.length === 0) {
+              orderDetails.push({
+                product_name: null,
+                product_quantity: 0,
                 touched: false,
-              }));
+              });
+            }
             
-              // Si no hay productos, añadir un campo vacío con un mensaje inicial
-              if (orderDetails.length === 0) {
-                orderDetails.push({
-                  product_name: null,
-                  product_quantity: 0,
-                  touched: false,
-                });
-              }
-            
-              return {
-                delivery: {
-                  id_delivery: data.id_delivery,
-                  send_date: this.onDateChangeTransform(data.send_date),
-                  received_date: this.onDateChangeTransform(data.received_date),
-                  comments: data.comments || null,
-                  status: data.status || null,
-                  origin_warehouse_name: data.origin_warehouse_name || null,
-                  destination_warehouse_name: data.destination_warehouse_name || null,
-                  plate: data.plate || null,
-                  products: [],
-                },
-                orderDetails,
-              };
-            }       
+            return {
+              delivery: {
+                id_delivery: data.id_delivery,
+                send_date: this.onDateChangeTransform(data.send_date),
+                received_date: this.onDateChangeTransform(data.received_date),
+                comments: data.comments || null,
+                status: data.status || null,
+                origin_warehouse_name: data.origin_warehouse_name || null,
+                destination_warehouse_name: data.destination_warehouse_name || null,
+                plate: data.plate || null,
+                products: [],
+              },
+              orderDetails,
+            };
+          }       
 
         //Genera un objeto con los datos del pedido para enviar al back-end
           prepareDeliveryPayload(status: string): any {
@@ -360,19 +342,14 @@
 
         //Enviar el formulario (crear o actualizar un pedido)
           async onSubmit(form: NgForm): Promise<void> {
-            console.log('onSubmit called');
-            // Marcar el formulario como enviado para activar las validaciones visuales
             this.submitted = true;
           
             // Llamada a validateForm para comprobar validez del formulario
             if (!this.validateForm()) {
-              console.log('Form submission blocked due to validation errors.');
               return;
             }
           
-            console.log('Form submitted successfully with data:', this.delivery, this.orderDetails);
-          
-            // Envío de los datos al back por otra función saveDelivery
+            // Constrol de estado para asignar respuesta al back-end
             try {
               await this.processModeSpecificActions('save');
             } catch (error) {
@@ -382,71 +359,62 @@
           }
 
         //Procesa las acciones específicas del modo en los botones para envío al back de los datos
-            async processModeSpecificActions(action: 'save' | 'submit' | 'update' | 'approve' | 'reject', status?: string): Promise<void> {
-              console.log(`processModeSpecificActions called with action: ${action}`);
-              if (action === 'save') {
-                  if (this.mode === 'create') {
-                      // Crear pedido nuevo (POST)
-                      await this.handleCreateAction(status || 'pending');
-                  } else {
-                      console.error(`Invalid action '${action}' for mode '${this.mode}'.`);
-                  }
-                  return;
-              }
-          
-              if (action === 'update') {
-                  if (this.mode === 'edit') {
-                      // Actualizar pedido existente (PUT)
-                      await this.handleEditAction(status || 'review');
-                  } else {
-                      console.error(`Invalid action '${action}' for mode '${this.mode}'.`);
-                  }
-                  return;
-              }
-
-              if (this.mode === 'review') {
-                if (['submit', 'approve', 'reject'].includes(action)) {
-                    // Manejo de acciones específicas de revisión
-                    await this.handleReviewAction(action as 'submit' | 'approve' | 'reject');
+          async processModeSpecificActions(action: 'save' | 'submit' | 'update' | 'approve' | 'reject', status?: string): Promise<void> {
+              
+            if (action === 'save') {
+                if (this.mode === 'create') {
+                    // Crear pedido nuevo (POST)
+                    await this.handleCreateAction(status || 'pending');
                 } else {
-                    console.error(`Invalid review action '${action}' for mode '${this.mode}'.`);
+                    console.error(`Invalid action '${action}' for mode '${this.mode}'.`);
                 }
                 return;
-              }
+            }
           
-              console.error(`Unsupported action '${action}' in mode '${this.mode}'.`);
+            if (action === 'update') {
+                if (this.mode === 'edit') {
+                    // Actualizar pedido existente (PUT)
+                    await this.handleEditAction(status || 'review');
+                } else {
+                    console.error(`Invalid action '${action}' for mode '${this.mode}'.`);
+                }
+                return;
+            }
+
+            if (this.mode === 'review') {
+              if (['submit', 'approve', 'reject'].includes(action)) {
+                  // Manejo de acciones específicas de revisión
+                  await this.handleReviewAction(action as 'submit' | 'approve' | 'reject');
+              } else {
+                  console.error(`Invalid review action '${action}' for mode '${this.mode}'.`);
+              }
+              return;
+            }
+
+            console.error(`Unsupported action '${action}' in mode '${this.mode}'.`);
           }
 
-          //Modo creación
-            async handleCreateAction(status: string): Promise<void> {
-                console.log('handleCreateAction called');
-                const deliveryPayload = this.prepareDeliveryPayload(status);
-                console.log('Creating delivery with payload:', deliveryPayload);
-            
-                try {
-                    const response = await firstValueFrom(this.deliveryService.createDelivery(deliveryPayload));
-                    console.log('Server response:', response);
-
-                    const message = status === 'pending' ? 'Draft saved successfully!' : 'Order created successfully!';
-                    Swal.fire('Success', message, 'success');
-                    this.router.navigate([`/${this.role}/order-list`]);
-                } catch (error) {
-                    this.errorMessage = status === 'pending' ? 'Failed to save draft.' : 'Failed to create order.';
-                    Swal.fire('Error', this.errorMessage, 'error');
-                    console.error('Error during delivery creation:', error);
-                }
+        //Modo creación
+          async handleCreateAction(status: string): Promise<void> {
+              const deliveryPayload = this.prepareDeliveryPayload(status);
+              try {
+                  await firstValueFrom(this.deliveryService.createDelivery(deliveryPayload));
+                  const message = status === 'pending' ? 'Draft saved successfully!' : 'Order created successfully!';
+                  Swal.fire('Success', message, 'success');
+                  this.router.navigate([`/${this.role}/order-list`]);
+              } catch (error) {
+                  this.errorMessage = status === 'pending' ? 'Failed to save draft.' : 'Failed to create order.';
+                  Swal.fire('Error', this.errorMessage, 'error');
+                  console.error('Error during delivery creation:', error);
+              }
             }
 
 
         //Modo edición
           async handleEditAction(status: string): Promise<void> {
               const deliveryPayload = this.prepareDeliveryPayload(status);
-              console.log('Updating delivery with payload:', deliveryPayload);
-          
               try {
-                const response = await firstValueFrom(this.deliveryService.updateDelivery(this.delivery.id_delivery!, deliveryPayload));
-                console.log('Back-end response for update:', response);
-                  
+                await firstValueFrom(this.deliveryService.updateDelivery(this.delivery.id_delivery!, deliveryPayload));
                 const message = this.delivery.status === 'pending' ? 'Order created successfully!' : 'Order updated successfully!';
                 Swal.fire('Success', message, 'success');
                 this.router.navigate([`/${this.role}/order-list`]);
@@ -457,13 +425,10 @@
               }
           }
 
+        //Cambio de estado de un pedido en proceso de envío
           async handleStatusChange(): Promise<void> {
             try {
-              // Determinar el próximo estado basado en el actual
               const nextStatus = this.delivery.status === 'ready for departure' ? 'in transit' : 'delivered';
-              console.log('Next status:', nextStatus);
-          
-              // Confirmación de la acción
               const confirm = await Swal.fire({
                 title: 'Confirm Action',
                 text: `Are you sure you want to mark this order as "${nextStatus}"?`,
@@ -472,17 +437,13 @@
                 confirmButtonText: 'Yes, proceed!',
                 cancelButtonText: 'Cancel',
               });
-          
               if (!confirm.isConfirmed) {
                 return;
               }
           
               // Enviar datos actualizados al backend
-              const deliveryPayload = this.prepareDeliveryPayload(nextStatus);
-              console.log(`Updating delivery to "${nextStatus}" with payload:`, deliveryPayload);
-          
+              const deliveryPayload = this.prepareDeliveryPayload(nextStatus);       
               await firstValueFrom(this.deliveryService.updateDelivery(this.delivery.id_delivery!, deliveryPayload));
-          
               Swal.fire('Success', `Order marked as "${nextStatus}".`, 'success');
               this.router.navigate([`/${this.role}/order-list`]);
             } catch (error) {
@@ -492,55 +453,55 @@
           }
 
 
-          //Manejo de respuesta en modo revisión previo envío
-            async handleReviewAction(action: 'approve' | 'submit' | 'reject'): Promise<void> {
-              // Configuración de acciones
-              const actionHandlers: Record<string, { status: string; confirmationText: string }> = {
-                approve: {
-                  status: this.delivery.status === 'review' ? 'ready for departure' : 'approved',
-                  confirmationText: `Are you sure you want to approve this order?`,
-                },
-                submit: {
-                  status: this.delivery.status === 'review' ? 'corrections needed' : 'not approved',
-                  confirmationText: 'Are you sure you want to submit your comments?',
-                },
-                reject: {
-                  status: 'not approved',
-                  confirmationText: 'Are you sure you want to reject this order?',
-                },
-              };
+        //Manejo de respuesta en modo revisión previo envío
+          async handleReviewAction(action: 'approve' | 'submit' | 'reject'): Promise<void> {
+            // Configuración de acciones
+            const actionHandlers: Record<string, { status: string; confirmationText: string }> = {
+              approve: {
+                status: this.delivery.status === 'review' ? 'ready for departure' : 'approved',
+                confirmationText: `Are you sure you want to approve this order?`,
+              },
+              submit: {
+                status: this.delivery.status === 'review' ? 'corrections needed' : 'not approved',
+                confirmationText: 'Are you sure you want to submit your comments?',
+              },
+              reject: {
+                status: 'not approved',
+                confirmationText: 'Are you sure you want to reject this order?',
+              },
+            };
             
-              // Comprobación específica para "reject"
-              if (action === 'reject' && this.delivery.status !== 'pending reception') {
-                Swal.fire({
-                  title: 'Action Not Allowed',
-                  text: 'The order can only be rejected if its current status is "pending reception".',
-                  icon: 'error',
-                  confirmButtonText: 'OK',
-                });
-                return;
-              }
-            
-              // Obtener configuración de la acción
-              const handler = actionHandlers[action];
-              if (!handler) {
-                console.error('Unknown action:', action);
-                return;
-              }
-            
-              // Confirmación del usuario
-              const confirm = await Swal.fire({
-                title: 'Confirm Action',
-                text: handler.confirmationText,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, proceed!',
-                cancelButtonText: 'Cancel',
+            // Comprobación específica para "reject"
+            if (action === 'reject' && this.delivery.status !== 'pending reception') {
+              Swal.fire({
+                title: 'Action Not Allowed',
+                text: 'The order can only be rejected if its current status is "pending reception".',
+                icon: 'error',
+                confirmButtonText: 'OK',
               });
+              return;
+            }
             
-              if (!confirm.isConfirmed) {
-                return;
-              }
+            // Obtener configuración de la acción
+            const handler = actionHandlers[action];
+            if (!handler) {
+              console.error('Unknown action:', action);
+              return;
+            }
+            
+            // Confirmación del usuario
+            const confirm = await Swal.fire({
+              title: 'Confirm Action',
+              text: handler.confirmationText,
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'Yes, proceed!',
+              cancelButtonText: 'Cancel',
+            });
+            
+            if (!confirm.isConfirmed) {
+              return;
+            }
             
           // Actualización del estado
             try {
@@ -562,14 +523,12 @@
               return;
             }
             try {
-              // Llama al servicio updateDeliveryStatus pasando el rol actual
               await firstValueFrom(this.deliveryService.updateDeliveryStatus(
                   this.delivery.id_delivery,
                   newStatus,
                   comments || this.delivery.comments,
               ));
-              console.log(`Delivery status updated to "${newStatus}".`);
-          } catch (error) {
+            } catch (error) {
               console.error('Error during status update:', error);
               throw error;
             }
@@ -594,7 +553,6 @@
             if (!confirm.isConfirmed) {
               return;
             }
-          
             try {
               await firstValueFrom(this.deliveryService.deleteDelivery(this.delivery.id_delivery!));
               Swal.fire('Success', 'Order deleted successfully.', 'success');
@@ -611,53 +569,53 @@
 //-------------------------------
 
         //Comprueba las condiciones de editabilidad
-            checkIfEditable(): void {
-              const editableStatuses = ['pending', 'corrections needed'];
-              const reviewStatuses = ['review', 'pending reception'];
-              const nonEditableStatuses = ['ready for departure', 'in transit'];
+          checkIfEditable(): void {
+            const editableStatuses = ['pending', 'corrections needed'];
+            const reviewStatuses = ['review', 'pending reception'];
+            const nonEditableStatuses = ['ready for departure', 'in transit'];
             
-              // Modo creación
-              if (this.mode === 'create') {
-                this.isEditable = true;
-                this.isCommentEditable = false;
-                this.areButtonsEnabled = this.role === 'operator';
-                this.canManageProducts = true;
-                return;
-              }
+            // Modo creación
+            if (this.mode === 'create') {
+              this.isEditable = true;
+              this.isCommentEditable = false;
+              this.areButtonsEnabled = this.role === 'operator';
+              this.canManageProducts = true;
+              return;
+            }
             
-              // Modo edición
-              if (this.mode === 'edit') {
-                this.isEditable = this.role === 'operator' && editableStatuses.includes(this.delivery.status);
-                this.isCommentEditable = false;
-                this.areButtonsEnabled = this.role === 'operator' && editableStatuses.includes(this.delivery.status);
-                this.canManageProducts = this.isEditable;
-                return;
-              }
+            // Modo edición
+            if (this.mode === 'edit') {
+              this.isEditable = this.role === 'operator' && editableStatuses.includes(this.delivery.status);
+              this.isCommentEditable = false;
+              this.areButtonsEnabled = this.role === 'operator' && editableStatuses.includes(this.delivery.status);
+              this.canManageProducts = this.isEditable;
+              return;
+            }
             
-              // Modo review
-              if (this.mode === 'review') {
-                this.isEditable = false;
-                this.isCommentEditable = this.role === 'manager' && reviewStatuses.includes(this.delivery.status);
-                this.areButtonsEnabled = this.role === 'manager' && reviewStatuses.includes(this.delivery.status);
-                this.canManageProducts = false;
-                return;
-              }
+            // Modo review
+            if (this.mode === 'review') {
+              this.isEditable = false;
+              this.isCommentEditable = this.role === 'manager' && reviewStatuses.includes(this.delivery.status);
+              this.areButtonsEnabled = this.role === 'manager' && reviewStatuses.includes(this.delivery.status);
+              this.canManageProducts = false;
+              return;
+            }
             
-              // Cambios de status (ready for departure, in transit)
-              if (nonEditableStatuses.includes(this.delivery.status)) {
-                this.isEditable = false;
-                this.isCommentEditable = false;
-                this.areButtonsEnabled = this.role === 'operator';
-                this.canManageProducts = false;
-                return;
-              }
-            
-              // Resto de situaciones
+            // Cambios de status (ready for departure, in transit)
+            if (nonEditableStatuses.includes(this.delivery.status)) {
               this.isEditable = false;
               this.isCommentEditable = false;
-              this.areButtonsEnabled = false;
+              this.areButtonsEnabled = this.role === 'operator';
               this.canManageProducts = false;
+              return;
             }
+            
+            // Resto de situaciones
+            this.isEditable = false;
+            this.isCommentEditable = false;
+            this.areButtonsEnabled = false;
+            this.canManageProducts = false;
+          }
 
         //Agrega un nuevo producto al pedido
           addProduct(): void {
@@ -672,7 +630,6 @@
           removeProduct(index: number): void {
             if (this.orderDetails.length > 1) {
               this.orderDetails.splice(index, 1);
-              console.log('Product removed. Current details:', this.orderDetails);
             } else {
               alert('You must have at least one product in the order.');
             }
