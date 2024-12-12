@@ -14,9 +14,9 @@
         <div class="col-6 col-md-2">
           <p class="h6 fw-bold">LINKS</p>
           <p class="mb-2">
-            @if(this.UserRole === "operator"){
+            @if(this.userRole === "operator"){
               <a [routerLink]="['/operator','order-list']" class="link-offset-2"><i class="fa-solid fa-house fa-lg"></i></a>
-            }@else if(this.UserRole === "manager"){
+            }@else if(this.userRole === "manager"){
               <a [routerLink]="['/manager','order-list']" class="link-offset-2"><i class="fa-solid fa-house fa-lg"></i></a>
             }@else{
               <a [routerLink]="['/boss','warehouse-info']" class="link-offset-2"><i class="fa-solid fa-house fa-lg"></i></a>
