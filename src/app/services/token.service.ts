@@ -47,6 +47,10 @@ import { environment } from "../../environments/environment";
         return tokenData?.user_image || null;
     }
 
+    saveToken(token: string): void {
+      localStorage.setItem(this.tokenKey, token);
+    }
+
     logOut(): void {
       localStorage.removeItem(this.tokenKey);
     }

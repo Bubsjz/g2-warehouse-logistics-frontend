@@ -1,10 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { LoginService } from '../../services/login.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { iUser } from '../../interfaces/user.interface';
 import Swal from 'sweetalert2';
-import { environment } from '../../../environments/environment';
 import { AuthService } from '../../services/token.service';
 
 @Component({
@@ -46,8 +45,7 @@ export class LoginComponent {
 onSubmit() {
   this.loginService.login(this.email, this.password).subscribe(result => {
     if (result) {
-      this.token = result.token;
-      localStorage.setItem(environment.TOKEN_KEY, result.token); // Guardar en localStorage
+      this.authService.saveToken(result.token);
       const route = this.rolRedirectMap[result.role];
       if (route) {
         this.router.navigate([route]);

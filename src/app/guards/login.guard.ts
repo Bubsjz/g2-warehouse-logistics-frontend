@@ -1,10 +1,11 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { environment } from '../../environments/environment';
+import { AuthService } from '../services/token.service';
 
 export const loginGuard: CanActivateFn = (route, state) => {
   const router = inject(Router)
-  if(!localStorage.getItem(environment.TOKEN_KEY)){
+  const authService = inject(AuthService);
+  if(!authService.getTokenData()){
     router.navigateByUrl('/login?status=1')
     return false
   }
