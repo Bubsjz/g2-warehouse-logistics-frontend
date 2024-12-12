@@ -8,6 +8,7 @@ import { Iuser3 } from '../../interfaces/iuser.interface';
 import Swal, { SweetAlertIcon } from 'sweetalert2';
 import { Itruck } from '../../interfaces/itruck.interface';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 
 type AlertResponse = { title: string; text: string; icon: SweetAlertIcon, cbutton: string};
 
@@ -26,6 +27,7 @@ export class UserFormComponent {
   router = inject(Router);
 
   warehouses: Iwarehouse[] | undefined = [];
+  managerWarehouses: Iwarehouse[] | undefined = [];
   trucks: Itruck[] | undefined = [];
   myWarehouseId: number | undefined;
   myUserId: number | undefined;
@@ -41,6 +43,10 @@ export class UserFormComponent {
   selectedFile!: File; // Para almacenar el archivo seleccionado
 
   isOperator: boolean | undefined;
+
+  private isHttpErrorResponse(error: unknown): error is HttpErrorResponse {
+    return error instanceof HttpErrorResponse;
+  }
 
   constructor() {
     this.userForm = new FormGroup({
@@ -99,6 +105,7 @@ export class UserFormComponent {
     try {
       this.warehouses = await this.warehouseServices.getAll();
       this.trucks = await this.userServices.getAvailableTrucks();
+      this.managerWarehouses = await this.warehouseServices.getManagerAvailable();
       this.isOperator = true;
     } catch (error) {
       console.log(error)
@@ -185,10 +192,15 @@ export class UserFormComponent {
           Swal.fire(alert_res)
           this.router.navigate(['/boss', 'employee-view', response.id_user])
         }
-
-        
-      } catch (error) {
-        console.log(error)
+      } catch (error: unknown) {
+        if (this.isHttpErrorResponse(error) && error.error.message.startsWith("Duplicate entry")) {
+          Swal.fire({
+            title: 'Error',
+            text: 'Email address already exists',
+            icon: 'error',
+            confirmButtonText: 'Accept',
+          });
+        }
       }
 
     }else{
@@ -227,8 +239,15 @@ export class UserFormComponent {
           Swal.fire(alert_res)
           this.router.navigate(['/boss', 'employee-view', response.id_user])
         }
-      } catch (error) {
-        console.log(error)
+      } catch (error: unknown) {
+        if (this.isHttpErrorResponse(error) && error.error.message.startsWith("Duplicate entry")) {
+          Swal.fire({
+            title: 'Error',
+            text: 'Email address already exists',
+            icon: 'error',
+            confirmButtonText: 'Accept',
+          });
+        }
       }
     }
   }
@@ -248,23 +267,23 @@ export class UserFormComponent {
     }
   }
 
-  checkRole(formValue: AbstractControl): any {
-    enum Role {"operator", "manager", "administrator"}
-    const role = formValue.get('role')?.value;
-    if (role in Role) {
-      return null
-    } else {
-      return {'checkrole': true}
-    }
-  }
+  // checkRole(formValue: AbstractControl): any {
+  //   enum Role {"operator", "manager"}
+  //   const role = formValue.get('role')?.value;
+  //   if (role in Role) {
+  //     return null
+  //   } else {
+  //     return {'checkrole': true}
+  //   }
+  // }
 
-  checkWarehouse(formValue: AbstractControl): any {
-    const warehouse = formValue.get('warehouse')?.value;
-    if (warehouse.includes(this.warehouses)) {
-      return null
-    } else {
-      return {'checkwarehouse': true}
-    }
-  }
+  // checkWarehouse(formValue: AbstractControl): any {
+  //   const warehouse = formValue.get('warehouse')?.value;
+  //   if (warehouse.includes(this.warehouses)) {
+  //     return null
+  //   } else {
+  //     return {'checkwarehouse': true}
+  //   }
+  // }
 
 }

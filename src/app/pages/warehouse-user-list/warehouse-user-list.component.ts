@@ -30,6 +30,7 @@ export class WarehouseUserListComponent {
 
     this.warehouse = await this.warehouseServices.getById(this.warehouse_id)
     this.employees = this.warehouse.users;
+    this.employees = this.employees.filter(employee => ((employee.role !== 'boss') && (employee.role !== 'administrator')))
 
   }
 

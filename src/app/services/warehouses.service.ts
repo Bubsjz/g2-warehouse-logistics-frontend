@@ -29,6 +29,10 @@ export class WarehousesService {
     return lastValueFrom(this.httpClient.get<Iwarehouse2>(`${this.baseUrl}/warehouse/${id}`))
   }
 
+  getManagerAvailable(): Promise<Iwarehouse[]> {
+    return lastValueFrom(this.httpClient.get<Iwarehouse[]>(`${this.baseUrl}/available-warehouse`))
+   }
+
   createWarehouse(body:FormData){
     return lastValueFrom(this.httpClient.post<warehouse>(`${this.baseUrl}/warehouse`, body))
   }
