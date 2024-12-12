@@ -1,16 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import {jwtDecode} from 'jwt-decode';
-
-type decodeToken = {
-  user_name: string;
-  user_surname: string;
-  user_id: number;
-  user_role: string;
-  user_image: File;
-  iat: number;
-  exp: number;
-}
+import { AuthService } from '../../services/token.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-main-header',
@@ -25,28 +16,29 @@ export class MainHeaderComponent implements OnInit {
   userSurname!:string;
   userImage!: string | null
   
+  private mainUrl = environment.API_URL + '/uploads'
+
+  constructor(private authService: AuthService) {}
+
   ngOnInit(): void {
-      const token = localStorage.getItem('authToken')
+      const token = this.authService.getTokenData();
       if(token){
-        const decoded = jwtDecode(token) as decodeToken
-        this.userRol = decoded.user_role
-        this.userName = decoded.user_name;
-        this.userSurname = decoded.user_surname
-        if (decoded.user_image) {
-           this.userImage = `http://localhost:3000/uploads/${decoded.user_image}`
-        } else {
-          this.userImage = null;
-        }
+        this.userRol = token.user_role;
+        this.userName = token.user_name;
+        this.userSurname = token.user_surname;
+        this.userImage = token.user_image 
+        ? `${this.mainUrl}/${token.user_image}`
+        : null;
       }else{
-        this.userRol = "not found"
-        this.userName = "not found"
-        this.userSurname = "not found"
+        this.userRol = 'not found';
+        this.userName = 'not found';
+        this.userSurname = 'not found';
+        this.userImage = null;
       }
       
     }
 
-    logOut(){
-      localStorage.removeItem('authToken')
-     
+    logOut(): void {
+      this.authService.logOut();    
     }
   }

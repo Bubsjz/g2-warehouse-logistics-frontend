@@ -17,10 +17,10 @@ export class AppComponent {
 
   constructor(public router: Router) {}
 
-  ngOnInit(): void {
+/*   ngOnInit(): void {
     this.sendPage();
       }
   sendPage(currentPage:string = "1"){
-  }
+  } */
 
 }

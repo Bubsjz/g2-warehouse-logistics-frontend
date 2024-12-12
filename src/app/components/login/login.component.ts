@@ -32,7 +32,6 @@ export class LoginComponent {
 
     ngOnInit(){
       this.authService.logOut();
-      /* localStorage.removeItem(environment.TOKEN_KEY) */
       this.route.queryParams.subscribe((params:any) => {
         if(params.status === '1'){
           this.errorBoolean = true
