@@ -35,7 +35,7 @@ export class DeliveryService {
 
   // Actualizar envío
   updateDelivery(id: number, delivery: any): Observable<any> {
-    return this.http.delete<void>(`${this.baseUrlOperator}/modify-order/${id}`);
+    return this.http.put<void>(`${this.baseUrlOperator}/modify-order/${id}`, delivery);
   }
 
   // Eliminar envío
