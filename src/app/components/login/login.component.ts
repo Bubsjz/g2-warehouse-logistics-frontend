@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { iUser } from '../../interfaces/user.interface';
 import Swal from 'sweetalert2';
+import { environment } from '../../../environments/environment';
+import { AuthService } from '../../services/token.service';
 
 @Component({
   selector: 'app-login',
@@ -26,11 +28,12 @@ export class LoginComponent {
     'operator': '/operator/order-list',
   };
 
-  constructor(private loginService: LoginService, private router: Router, private route:ActivatedRoute) {}
+  constructor(private loginService: LoginService, private router: Router, private route:ActivatedRoute, private authService: AuthService) {}
 
 
     ngOnInit(){
-      localStorage.removeItem('authToken')
+      this.authService.logOut();
+      /* localStorage.removeItem(environment.TOKEN_KEY) */
       this.route.queryParams.subscribe((params:any) => {
         if(params.status === '1'){
           this.errorBoolean = true
@@ -43,11 +46,8 @@ export class LoginComponent {
 onSubmit() {
   this.loginService.login(this.email, this.password).subscribe(result => {
     if (result) {
-      // Guardar el token (opcional: en localStorage o sessionStorage)
       this.token = result.token;
-      localStorage.setItem('authToken', result.token); // Guardar en localStorage
-      console.log (result.role, result.token, result.message);
-      // Redirigir según el rol
+      localStorage.setItem(environment.TOKEN_KEY, result.token); // Guardar en localStorage
       const route = this.rolRedirectMap[result.role];
       if (route) {
         this.router.navigate([route]);
