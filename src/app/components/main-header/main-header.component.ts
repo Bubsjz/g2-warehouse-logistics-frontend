@@ -29,7 +29,6 @@ export class MainHeaderComponent implements OnInit {
       const token = localStorage.getItem('authToken')
       if(token){
         const decoded = jwtDecode(token) as decodeToken
-        console.log('Decoded Token:', decoded)
         this.userRol = decoded.user_role
         this.userName = decoded.user_name;
         this.userSurname = decoded.user_surname
