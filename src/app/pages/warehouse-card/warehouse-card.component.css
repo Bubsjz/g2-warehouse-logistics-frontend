@@ -1,0 +1,18 @@
+.custom-size {
+    width: 600px;
+    height: auto;
+    border-radius: 20px;
+}
+
+.custom-border {
+    border-right: 2px solid #ccc;
+    padding-right: 46px
+}
+
+.divider {
+    width: 2px;
+    min-height: 200px;
+    background-color: #ccc;
+    align-self: stretch;
+}
+

@@ -1,0 +1,79 @@
+<section class="container mt-5">
+  <div class="card shadow-lg p-4">
+    <h3 class="text-center my-4"> Warehouse {{type}}</h3>
+    <hr />
+    <form [formGroup]="reactiveForm" (ngSubmit)="onSubmit()">
+      <div class="my-3">
+        <label class="form-label" for="name">Warehouse name</label>
+        <input class="form-control " type="text" id="name" formControlName="name"
+          placeholder="Enter the name of the warehouse" />
+          @if(checkControl("name","required")){
+            <p class="text-danger">This field is required.</p>
+          }
+          @if(checkControl("name","minlength")){
+            <p class="text-danger">This field must have more than 6 characters.</p>
+          }
+      </div>
+      <div class="my-3">
+        <label class="form-label" for="locality">Locality</label>
+        <input class="form-control " type="text" id="locality" formControlName="locality"
+          placeholder="Enter the locality of the warehouse" />
+          @if(checkControl("locality","required")){
+            <p class="text-danger">This field is required.</p>
+          }
+          
+      </div>
+      <div class="my-3">
+        <label class="form-label" for="address">Address</label>
+        <input class="form-control " type="text" id="address" formControlName="address"
+          placeholder="Enter the street of the warehouse" />
+          @if(checkControl("address","required")){
+            <p class="text-danger">This field is required.</p>
+          }
+          @if(checkControl("address","minlength")){
+            <p class="text-danger">This field must have more than 10 characters.</p>
+          }
+      </div>
+      <div class="my-3">
+        <div class="image-upload">
+          <input class="form-control " type="file" id="image" formControlName="image" accept="image/*"
+            style="display: none" (change)="onFileSelected($event)" />
+            @if(checkControl("image","required")){
+              <p class="text-danger">This image is required.</p>
+            }
+        </div>
+      </div>
+      @if(this.imagePreview){
+        <div class="mb-4 image-preview-container position-relative">
+          <button type="button" class="btn-close position-absolute" style="top:5px; left:5px ; z-index:10;" (click)="clearImage()"></button>
+          <img [src]="imagePreview" alt="image warehouse"  class="img rounded shadow-lg border" style="max-width: 200px;"/>
+  
+        </div>
+      }
+
+        <div>
+          <button type="button" onclick="document.getElementById('image').click()" class="btn btn-primary p-3 btnSelect  ">Select photo <i class="fa-solid fa-cloud-arrow-up fa-xl"></i> 
+          </button>
+         
+        </div>
+        <div class="d-flex justify-content-center gap-2 my-3">
+          @if(typebtn === "Create"){
+            <input type="submit" [value]="typebtn" class="btn btn-success  pb-5 btn-size" [disabled]='!reactiveForm.valid' />
+
+          }@else  {
+            <input type="submit" [value]="typebtn" class="btn btn-success  pb-5 btn-size"  />
+
+          }
+          @if(typebtn === "Update"){
+
+            <input type="button" value="Back" class="btn btn-primary pb-5 btn-size " [routerLink]="['/boss','warehouse-view',this.warehouse_id]"
+            />
+          }@else{
+            <input type="button" value="Back" class="btn btn-primary pb-5 btn-size " [routerLink]="['/boss','warehouse-info']"
+            />
+          }
+        </div>
+          
+        </form >
+      </div>
+</section>

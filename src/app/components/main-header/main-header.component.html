@@ -1,0 +1,26 @@
+<header class="container-fluid py-3">
+  <div class="col text-center mb-3">
+    <h1 class=" title fw-bold pb-3 pt-2">Rountravel Logistics</h1>
+    <div class="d-flex justify-content-center">
+      <div class="divWelcome bg-white bg-opacity-75 rounded w-50 pt-2 d-flex align-items-center justify-content-center">
+        <h4 class="font text-dark pe-3 ">  Welcome back, <strong>{{userName}} {{userSurname}}</strong> </h4> 
+        <img [src]="userImage" alt="User Image" class="user-avatar" />
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-auto ms-auto me-5">
+      @if(userRol === "operator"){
+        <button class="btn btn-primary fw-bold me-2 text-uppercase" [routerLink]="['/operator','order-list']"> home </button>
+      }@else if(userRol === "manager"){
+        <button class="btn btn-primary fw-bold me-2 text-uppercase" [routerLink]="['/manager','order-list']"> home </button>
+      }@else{
+        <button class="btn btn-primary fw-bold me-2 text-uppercase" [routerLink]="['/boss','warehouse-info']"> home </button>
+      }
+      <button class="btn btn-danger fw-bold  text-uppercase" (click)="logOut()" [routerLink]="['/login']">
+       log out <i class="fa-solid fa-right-from-bracket fa-lg"></i>
+      </button>
+     
+    </div>
+  </div>
+</header>

@@ -1,0 +1,58 @@
+<div class="card border-0 p-4">
+
+  <div class="row">
+
+    <div class="col-md-6 d-flex justify-content-center align-items-center ps-0 custom-border">
+      <img src="{{ warehouse?.image }}" alt="imagen" class="img-fluid custom-size">
+    </div>
+
+    <div class="col-md-6 p-0">
+      <div class="card-body p-5">
+        <h2 class="card-title"><strong>{{ warehouse?.name }}</strong></h2>
+        <div class="d-flex align-items-center">
+          <h4 class="card-subtitle mt-3 mb-4 " style="color: #1a994b;">{{ warehouse?.locality }}</h4>
+          <button class="btn ms-2 mb-2" title="View in map" (click)="locationMap()" >
+            <i class="fa-solid fa-location-crosshairs" style="color: #060606"></i>
+          </button>
+          @if(this.showMap === true){
+            <google-map  width="500px" height="500px" [zoom]="12" [center]="getPosition()">
+            <map-marker #market="mapMarker"   [position]="getPosition()" (mapClick)="openInfoWindow(market, infoWindow)">
+             <map-info-window #infoWindow = "mapInfoWindow">
+              <div style="width: 275px; height: 100px; overflow: auto;"> 
+                <h4>{{warehouse?.name}} <img class="img-fluid w-25 h-25" src="rountravel.png" alt="logo image"></h4>
+                <hr>
+                <p>Number of Managers: {{n_managers}}</p>
+                <p>Number of operators: {{n_operators}}</p>
+                <p>Total employees: {{n_employees}}</p>
+              </div>
+             </map-info-window>
+            </map-marker>
+          </google-map>
+          }
+        </div>
+        <hr class="mt-2 mb-4">
+        <p class="card-text mb-4">{{ warehouse?.name }} is located in {{ warehouse?.locality }}. The staff is comprised of 
+            {{ n_employees }} employee{{n_employees > 1 ? 's' : ''}}: 
+            {{ n_operators }} operator{{n_operators > 1 ? 's' : ''}} and 
+            {{ n_managers }} manager{{ n_managers > 1 ? 's': ''}}. 
+            The complete list is found below</p>
+
+            <p class="card-text">
+              <strong>Warehouse Id:</strong> {{warehouse?.id_warehouse}}
+            </p>
+            <p class="card-text">
+              <strong>Address:</strong> {{warehouse?.address}}
+            </p>
+
+        <div class="d-flex mt-5">
+          <a class="btn btn-outline-success m-2 p-2 px-4" [routerLink]="['/boss', 'update-warehouse', warehouse_id]">Update</a>
+          <a class="btn btn-outline-danger m-2 p-2 px-4" (click)="deleteWarehouse(warehouse_id)">Delete</a>
+          <a class="btn btn-outline-primary m-2 p-2 px-4" [routerLink]="['/boss', 'warehouse-info']">Home</a>
+        </div>
+      </div>
+      
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,18 @@
+
+<div class=" d-flex flex-row justify-content-start ">
+    <div class="w-25">
+        <select class="form-select" id="statusFilter" [(ngModel)]="selectedStatus" >
+            <option value="">All Products</option>
+            <option value="pending">Pending</option>
+            <option value="review">Review</option>
+            <option value="corrections needed">Corrections Needed</option>
+            <option value="ready for departure">Ready for departure</option>
+             <option value="in transit">In Transit</option>
+             <option value="delivered"> Delivered</option>
+        </select>  
+    </div>
+    <div>
+        <button (click)="filterByStatus()" class="btn btn-primary w-100 mx-4 " >Filter Status</button>
+    </div>
+  
+</div>

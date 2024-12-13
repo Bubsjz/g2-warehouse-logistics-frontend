@@ -1,0 +1,136 @@
+/*color de todos los valores */
+td{
+    font-weight:500;
+}
+/*Quito el margen de los p para poder poner el punto al lado del status */
+.td-p{
+    margin: 0;
+}
+
+/*encabezado de la tabla con fuente mas gruesa para resaltar sobre la tabla */
+thead tr th{
+  font-size: large;
+  font-weight: 800;
+  text-align: center;
+  width: 100px
+   
+}
+
+/* Para el driver/operario color de cabecera*/
+
+table.table.table-hover > thead.operator > tr > th {
+  background-color: #026dde ; /* Fondo azul */
+  color: white ; /* Texto blanco */
+  text-align: center ;
+  
+}
+
+/* Para el manager/encargado color de cabecera*/
+
+table.table.table-hover > thead.manager > tr > th {
+  background-color: #2C3E50; /* Azul oscuro */
+  color: white;
+  text-align: center ;
+  
+}
+
+/* Para el manager/encargado cambio de boton color en boton entryOrders y outputOrders, tambien en edit*/
+.btnreview{
+  background-color:white; 
+  color:#2C3E50 ;
+  padding: 5px;
+  border-radius: 8px;
+  border-color: 2px solid  #2C3E50;
+}
+
+.btnreview:hover{
+  background-color: #2C3E50; 
+  border-color: 1px solid  #2C3E50;
+  color: white;
+}
+.btnreview2{
+  background-color: #2C3E50; 
+  border-color: 1px solid  #2C3E50;
+  color: white;
+}
+.btnreview2.active{
+  background-color: #0d6efd; 
+  border-color: 1px solid  #2C3E50;
+  color: white;
+}
+
+/* Para el manager/encargado color del order */
+.text-manager{
+  color:#22476b;
+}
+
+
+/* para poner separacion entre pedidos */
+table tr, table td, table th{
+  padding-top: 20px;
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+td button {
+  font-weight: 700 ;
+}
+/* circulo que hace del estado del send order */
+.status-circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%; /* Hace el div circular */
+    display: flex;
+    flex-direction: row;
+    margin-right: 10px;
+    
+  }
+/*color de todos los valores del circulo */
+ 
+  .corrections {
+    background-color: #d9534f; /* Color rojo (Review) */
+    animation: pulse 2s infinite; 
+  }
+
+/* cuando esta completo el pedido se realiza animacion para especificar que ya puede salir el envio */
+  .ready {
+    background-color: #5cb85c; /* Color verde más vivo (Ready) */
+    animation: pulse 2s infinite; /* Añade la animación */
+
+  }
+
+  .orderStatusYellow{
+
+    color: rgba(227, 120, 44, 0.888)
+
+  }
+
+  .task-status {
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+  }
+
+/* Animacion circulo verde de send order  */
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1; /* Totalmente visible */
+    }
+    50% {
+      opacity: 0.1; /* Más transparente */
+    }
+  }
+
+  .pointer{
+    cursor: pointer;
+    font-weight: 900;
+  }
+
+ .btnNotReview{
+  background-color:white; 
+  color:#909293 ;
+  padding: 5px;
+  border-radius: 8px;
+  border-color: rgb(240, 240, 240);
+ }

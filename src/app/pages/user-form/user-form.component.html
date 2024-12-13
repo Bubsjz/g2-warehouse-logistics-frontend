@@ -1,0 +1,189 @@
+<section class="container mt-5">
+  <div class="card shadow-lg p-4">
+    <h3 class="text-center my-4">{{ formType }} a user</h3>
+    <hr />
+    <form [formGroup]="userForm" (ngSubmit)="getDataForm()">
+      <div class="my-3">
+        <label class="form-label" for="name"><strong>Name</strong></label>
+        <input
+          class="form-control "
+          type="text"
+          id="name"
+          formControlName="name"
+          placeholder="Enter the employee's name"
+        />
+        @if(checkControl('name', 'required')) {
+        <p class="text-danger">Name is required</p>
+        }
+      </div>
+
+      <div class="my-3">
+        <label class="form-label" for="surname"><strong>Surname</strong></label>
+        <input
+          class="form-control "
+          type="text"
+          id="surname"
+          formControlName="surname"
+          placeholder="Enter the employee's surname"
+        />
+        @if(checkControl('surname', 'required')) {
+        <p class="text-danger">Surname is required</p>
+        }
+      </div>
+
+      <div class="my-3">
+        <label class="form-label" for="email"><strong>Email</strong></label>
+        <input
+          class="form-control "
+          type="text"
+          id="email"
+          formControlName="email"
+          placeholder="Enter the email"
+        />
+        @if(checkControl('email', 'required')) {
+        <p class="text-danger">Email is required</p>
+        } @if(checkControl('email', 'pattern')) {
+        <p class="text-danger">Email is incorrect</p>
+        }
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="password"
+          ><strong>Password</strong></label
+        >
+        <input
+          class="form-control "
+          type="password"
+          id="password"
+          formControlName="password"
+          placeholder="Enter the password"
+        />
+        @if(checkControl('password', 'required')) {
+        <p class="text-danger">Password is required</p>
+        }
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="repeatpassword"
+          ><strong>Repeat Password</strong></label
+        >
+        <input
+          class="form-control "
+          type="password"
+          id="repeatpassword"
+          formControlName="repeatpassword"
+          placeholder="Repeat the password"
+        />
+        @if(checkControl('password', 'required')) {
+        <p class="text-danger">Password is required</p>
+        } @if(userForm.hasError('checkpassword')) {
+        <p class="text-danger">Both password values must coincide</p>
+        }
+      </div>
+
+      <div class="my-3">
+        <label class="form-label" for="role"><strong>Role</strong></label>
+        <select
+          class="form-select"
+          id="role"
+          formControlName="role"
+        >
+          <option disabled selected value="">Select a role</option>
+          <option value="operator">Operator</option>
+          <option value="manager">Manager</option>
+        </select>
+        @if(checkControl('role', 'required')) {
+          <p class="text-danger">Role is required</p>
+          }
+        </div>
+
+      <div class="my-3">
+        <label class="form-label" for="warehouse"
+          ><strong>Warehouse</strong></label
+        >
+        @if (isOperator) {
+            <select
+            class="form-select"
+            id="warehouse"
+            formControlName="warehouse"
+          >
+            <option disabled selected value="" selected>Select a warehouse</option>
+            @for(warehouse of warehouses; track warehouse.id_warehouse) {
+              <option [value]="warehouse.name">{{ warehouse.name }}</option>
+            }
+          </select>
+        }@else {
+          <select
+          class="form-select"
+          id="warehouse"
+          formControlName="warehouse"
+        >
+          <option disabled selected value="">Select a warehouse</option>
+          @if(managerWarehouses!.length === 0) {
+            <option>No available warehouses</option>
+          }
+          @for(warehouse of managerWarehouses; track warehouse.id_warehouse) {
+            <option [value]="warehouse.name">{{ warehouse.name }}</option>
+          }
+        </select>
+        }
+        @if(checkControl('warehouse', 'required')) {
+          <p class="text-danger">Warehouse is required</p>
+          }
+      </div>
+
+      <div class="my-3" *ngIf="isOperator">
+        <label class="form-label" for="truck"
+          ><strong>Truck Plate</strong></label
+        >
+        <select
+          class="form-select"
+          id="truck"
+          formControlName="truck"
+        >
+          <option value= "" disabled selected>Select a truck plate</option>
+          @for(truck of trucks; track truck.id_truck) {
+          <option [value]="truck.plate">{{ truck.plate }}</option>
+
+          }
+        </select>
+        @if(checkControl('truck', 'required')) {
+          <p class="text-danger">Truck is required</p>
+          }
+      </div>
+
+      <div class="my-3">
+        <div class="image-upload">
+          <input class="form-control " type="file" id="image" formControlName="image" accept="image/*"
+            style="display: none" (change)="onFileSelected($event)" />
+            @if(checkControl("image","required")){
+              <p class="text-danger">This image is required.</p>
+            }
+          </div>
+      </div>
+      @if(this.imagePreview){
+        <div class="mb-4 image-preview-container position-relative">
+          <button type="button" class="btn-close position-absolute" style="top:5px; left:5px ; z-index:10;" (click)="clearImage()"></button>
+          <img [src]="imagePreview" alt="image user"  class="img rounded shadow-lg border" style="max-width: 200px;"/>
+  
+        </div>
+      }
+      <div>
+      <button type="button" onclick="document.getElementById('image').click()" class="btn btn-primary p-3 btnSelect" >
+        Select photo  <i class="fa-solid fa-cloud-arrow-up fa-xl"></i> 
+      </button>
+      </div>
+
+      <div class="d-flex justify-content-center gap-3 my-3">
+        <input type="submit"
+          [value]="formType === 'Update' ? formType : 'Save'"
+          [disabled]="!userForm.valid"
+          class="btn btn-success p-3 btn-success"
+        />
+        <input class="btn btn-primary p-3 btn-size " value = "Back" type="submit"
+        [routerLink]="formType === 'Insert' ? ['/boss', 'warehouse-info'] : ['/boss', 'warehouse-view', myWarehouseId]"/>
+    
+      </div>
+    </form>
+  </div>
+</section>

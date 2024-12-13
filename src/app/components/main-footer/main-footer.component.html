@@ -1,0 +1,42 @@
+<footer class="container-fluid mt-5 pt-4">
+  <div class="row align-items-center ">
+    <div class="col-12 col-md-2 text-center text-md-start mb-3 mb-md-0 p-1">
+      <img src="rountravel.png" alt="Rountravel Logo" class="img-fluid mx-auto d-block"/>
+    </div>
+    <div class="col-12 col-md-10">
+      <div class="row">
+        <div class="col-12 col-md-7">
+          <p>
+            Rountravel Logistics logistics software for product shipments between warehouses.<br />Any incident to communicate through the channels provided in the
+            in the contact area to be forwarded to the warehouse manager.
+          </p>
+        </div>
+        <div class="col-6 col-md-2">
+          <p class="h6 fw-bold">LINKS</p>
+          <p class="mb-2">
+            @if(this.userRole === "operator"){
+              <a [routerLink]="['/operator','order-list']" class="link-offset-2"><i class="fa-solid fa-house fa-lg"></i></a>
+            }@else if(this.userRole === "manager"){
+              <a [routerLink]="['/manager','order-list']" class="link-offset-2"><i class="fa-solid fa-house fa-lg"></i></a>
+            }@else{
+              <a [routerLink]="['/boss','warehouse-info']" class="link-offset-2"><i class="fa-solid fa-house fa-lg"></i></a>
+            }
+            
+          </p>
+          <p class="mb-2"><a href="/login" class="link-offset-2" (click)="logOutFooter()"> <i class="fa-solid fa-right-from-bracket fa-lg" style="color: #ff0033;"></i></a></p>
+        </div>
+        <div class="col-6 col-md-3">
+          <p class="h6 fw-bold">CONTACT</p>
+          <p class="mb-2"><a href="tel:93806409609" class="link-offset-2">93 806 409 609 </a> <i class="fa-solid fa-phone fa-lg"></i></p>
+          <p class="text-truncate mb-2"><a href="mailto:incidencias@roundtravel.com" class="link-offset-2">{{adminEmail}} </a> <i class="fa-solid fa-shield-halved fa-lg"></i></p>
+        </div>
+      </div>
+      <div class="border-top pt-3 mt-3 text-center">
+        <p class="small">
+          2024 copyright Rountravel Logistics Managment Software, Spain. All
+          Rights Reserved
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>

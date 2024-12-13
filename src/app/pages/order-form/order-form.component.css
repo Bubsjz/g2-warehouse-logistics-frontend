@@ -1,0 +1,12 @@
+.btn-size {
+    width: 150px;
+    height: 45px;
+}
+
+.is-invalid {
+    border: 1px solid red;
+  }
+
+.notEditable {
+    background-color: #e9ecef;
+}

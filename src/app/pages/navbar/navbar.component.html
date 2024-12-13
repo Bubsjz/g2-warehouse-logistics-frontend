@@ -1,0 +1,22 @@
+<app-search-engine (EmittedSearch)="search($event)"></app-search-engine>
+
+<div class="layout-grid">
+
+  <div class="card-container mb-4">
+    <a class="btn registrar-empleados" [routerLink]="['/boss', 'new-employee']">Register employee</a>
+    <a class="btn registrar-almacenes" [routerLink]="['/boss','new-warehouse']">Register warehouse</a>
+  </div>
+
+  <div class="store-container">
+    @for(warehouse of warehouses; track warehouse.id_warehouse) {
+      <a [routerLink]="['/boss', 'warehouse-view', warehouse.id_warehouse]" class="store">
+        <div class="store-header">{{warehouse.name}}</div>
+          <div class="store-body">
+            <div class="store-image-container">
+            <img src={{warehouse.image}} alt={{warehouse.name}} class="store-image">
+          </div>
+          </div>
+      </a>
+    }
+  </div>
+</div>

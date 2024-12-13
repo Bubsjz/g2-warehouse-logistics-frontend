@@ -1,0 +1,121 @@
+<div class="container">
+    @if(userLogin){
+        @if(userLogin === "operator"){
+            <div class=" d-flex justify-content-start mb-4 mt-5 ">
+                <app-new-order-btn></app-new-order-btn>
+            </div>
+        }@else if(userLogin === "manager"){ 
+            <div class="d-flex flex-row justify-content-center gap-5 mb-4 p-5">
+                <div class="w-25" >
+                   <button class="btn btnreview2 w-100  " [class.active]='isSelected ==="entry" ' style="height: 80px;" (click)="entryOrders('entry')">View entry orders</button> <!-- ver pedidos de entrada. origin es otro almacen, entrada es el almacen del usuario -->
+    
+                </div>
+               <div class="w-25 ">
+                   <button class=" btn btnreview2 w-100 " [class.active]='isSelected ==="output" ' style="height: 80px;" (click)="outputOrders('output')">View output orders</button> <!-- ver pedidos de salida. origin es el almacen del usuario, salida es otro almacen-->
+               </div>
+            </div>
+            @if(this.isSelected === 'entry'){
+                <h4>My Warehouse : <strong>{{originWarehouseName}} ({{this.originWarehouseLocality}})</strong></h4>
+
+            }
+
+        }
+    }@else{
+        <p>Not found</p>
+    }
+    @if(this.arrDeliveries.length > 0 && this.userLogin === 'operator'){
+        <div>
+            <app-order-filter [productos]="this.arrDeliveries "  (filteredDeliveriesChange)="filterFather($event)"></app-order-filter>
+        </div>
+    }
+    <section class="mt-5">
+        <div class="table-responsive">
+            <table class="table table-borderless table-hover  ">
+                <thead  [class]= "userLogin === 'operator' ? 'operator' : 'manager'" >
+                    <tr>
+                        <th scope="col">Orders</th>
+                        <th scope="col" class="d-none d-md-table-cell">Date</th>
+                        <th scope="col" class="d-none d-lg-table-cell">Origin</th>
+                        <th scope="col"class="d-none d-md-table-cell">Destination</th>
+                        <th scope="col" >Number plate</th>
+                        <th scope="col">Status</th>
+                        @if(userLogin === "operator"){
+                        <th scope="col">Edit</th>
+                        }@else if(userLogin === "manager"){
+                        <th scope="col">Review</th>
+                        }
+
+                    </tr>
+                </thead>
+                <tbody>
+                        @for(order of this.arrDeliveries; track [order.id_delivery]){
+                            <tr>
+                                @if(userLogin === "operator"){
+                                    <th scope="row" [class]= "userLogin === 'operator' ? 'text-primary' : 'text-manager'" class=" pointer" [routerLink]="['/operator','modify-order',order.id_delivery]">{{order.id_delivery}}</th>
+                                }@else if(userLogin === "manager"){
+                                    @if(order.status === "delivered" && this.isSelected === "output"){
+                                        <th scope="row" [class]= "'text-manager'" class=" pointer">{{order.id_delivery}}</th>
+                                    }@else{
+                                        <th scope="row" [class]= "'text-manager'" class=" pointer" [routerLink]="['/manager','review-order',order.id_delivery]">{{order.id_delivery}}</th>
+                                    }
+                                }
+                                @if(order.send_date === null){
+                                    <td class="d-none d-md-table-cell">-</td>
+                                }@else{
+                                    <td class="d-none d-md-table-cell">{{order.send_date| date: 'mediumDate'}}</td>
+                                }
+                                <td class="d-none d-lg-table-cell">{{order.origin_warehouse_name}} ({{order.origin_warehouse_locality}})</td>
+                                <td class="d-none d-md-table-cell">{{order.destination_warehouse_name}} ({{order.destination_warehouse_locality}})</td>
+                                <td >{{order.plate}}</td>
+                                <td >
+                                    
+                                        <div class="task-status justify-content-center">
+                                            @if(order.status === "corrections needed" || order.status === "not approved") {
+                                                <span class="status-circle corrections d-none d-lg-table-cell"></span>
+                                                <p class="td-p text-danger">{{ capitalizeStatus(order.status) }} <i
+                                                        class="fa-solid fa-circle-exclamation"></i></p>
+                                            } @else if (order.status === "delivered" || order.status === "approved") {
+                                                <p class="td-p text-success">{{ capitalizeStatus(order.status) }} <i class="fa-solid fa-check fa-lg"></i></p>
+                                            } @else if(order.status === "in transit") {
+                                                <p class="td-p text-success">{{ capitalizeStatus(order.status) }} <i
+                                                        class="fa-solid fa-truck-fast fa-lg"></i></p>
+                                            } @else if(order.status === "ready for departure") {
+                                                <span class="status-circle ready d-none d-lg-table-cell"></span>
+                                                <p class="td-p text-success">{{ capitalizeStatus(order.status) }}</p>
+                                            } @else if(order.status === "pending" || order.status === "review" || order.status === "pending reception") {
+                                                <p class="td-p orderStatusYellow">{{ capitalizeStatus(order.status) }}</p>
+                                            }
+                                        </div>
+                                   
+                                </td>
+                                <td>
+                                    @if(userLogin === "operator"){
+                                        <button class="btn btn-outline-primary" [routerLink]="['/operator','modify-order',order.id_delivery]">
+                                            <i class=" fa-regular fa-pen-to-square fa-xl"></i>
+                                        </button>
+                                    }@else if (userLogin === "manager") {
+                                        @if(order.status === "delivered" && this.isSelected === "output"){
+                                            <button class="btnNotReview">
+                                                <i class=" fa-solid fa-eye fa-xl" ></i>
+                                            </button>
+                                        }@else{
+                                            <button class="btnreview" [routerLink]="['/manager','review-order',order.id_delivery]">
+                                                <i class=" fa-solid fa-eye fa-xl"></i>
+                                            </button>
+                                        }
+                                       
+                                    } 
+                                </td>
+                            </tr>
+                            }@empty{
+                                <div class=" d-inline flex-row">
+                                    <p>There are no orders </p>
+                                </div>
+                            }
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+

@@ -1,0 +1,30 @@
+header {
+        margin: 0;
+    
+        background-image: url(../../../assets/warehouse.png);
+        background-size: cover;
+        background-position: center;
+        color: white;
+      }
+
+.font{
+  
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+
+
+.title:hover{
+  color:#358deb ;
+}
+
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-top: -5px;
+}
