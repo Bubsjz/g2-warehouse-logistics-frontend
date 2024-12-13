@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { UsersService } from '../../services/users.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { Iwarehouse } from '../../interfaces/iwarehouse.interface';
 import { WarehousesService } from '../../services/warehouses.service';
 import { Iuser3 } from '../../interfaces/iuser.interface';
@@ -27,12 +27,13 @@ export class UserFormComponent {
   router = inject(Router);
 
   warehouses: Iwarehouse[] | undefined = [];
-  managerWarehouses: Iwarehouse[] | undefined = [];
+  managerWarehouses: Iwarehouse[] = [];
   trucks: Itruck[] | undefined = [];
   myWarehouseId: number | undefined;
   myUserId: number | undefined;
   previousFile: File = new File([], "image.jpg", { type: 'image/jpeg' });
   previousTruck: Itruck | undefined;
+  previousWarehouse: Iwarehouse | undefined;
 
   userForm: FormGroup;
   formType: string = 'Insert';
@@ -58,9 +59,9 @@ export class UserFormComponent {
       ]),
       password: new FormControl(null, [Validators.required]),
       repeatpassword: new FormControl(null, [Validators.required]),
-      image: new FormControl(null),
-      role: new FormControl(null),
-      warehouse: new FormControl(null),
+      image: new FormControl(null, [Validators.required]),
+      role: new FormControl(null, [Validators.required]),
+      warehouse: new FormControl(null, [Validators.required]),
       truck: new FormControl(null)
     }, [this.checkPassword])
   }
@@ -129,6 +130,9 @@ export class UserFormComponent {
           this.trucks?.push({id_truck: this.previousTruck.id_truck, plate: this.previousTruck.plate});
         }
 
+        this.previousWarehouse = this.warehouses!.filter(warehouse => warehouse.id_warehouse === res.assigned_id_warehouse)[0]
+        this.managerWarehouses?.push(this.previousWarehouse);
+
         this.userForm = new FormGroup({
           name: new FormControl(res.name, [Validators.required]),
           surname: new FormControl(res.surname, [Validators.required]),
@@ -139,10 +143,13 @@ export class UserFormComponent {
           password: new FormControl(res.password, [Validators.required]),
           repeatpassword: new FormControl(res.password, [Validators.required]),
           image: new FormControl(null),
-          role: new FormControl(res.role),
-          warehouse: new FormControl(res.warehouse_name),
+          role: new FormControl(res.role, [Validators.required]),
+          warehouse: new FormControl(res.warehouse_name, [Validators.required]),
           truck: new FormControl(this.previousTruck ? this.previousTruck.plate : null)
         }, [this.checkPassword])
+
+        this.imagePreview = String(res.image)
+
       }
     
       this.userForm.get('role')?.valueChanges.subscribe((value) => {
@@ -152,6 +159,15 @@ export class UserFormComponent {
         } else {
           this.isOperator = false;
           this.userForm.get('truck')?.reset();
+          if (this.previousWarehouse) {
+            if (this.managerWarehouses?.includes(this.previousWarehouse)) {
+              const index = this.managerWarehouses.indexOf(this.previousWarehouse);
+              if (index > -1) {
+                this.managerWarehouses.splice(index, 1);
+              }              
+            }
+          }
+          console.log('hola', this.userForm.get("role")?.value, this.userForm.get("warehouse")?.value)
         }
       });
     
@@ -168,7 +184,6 @@ export class UserFormComponent {
         formData.append("surname", this.userForm.get("surname")?.value);
         formData.append("email", this.userForm.get("email")?.value);
         formData.append("password", this.userForm.get("password")?.value);
-        formData.append("role", this.userForm.get("role")?.value);
         if (this.selectedFile) {
           formData.append("image", this.selectedFile)
         } else {
@@ -183,6 +198,14 @@ export class UserFormComponent {
         if (chosenPlate) {
           const chosenTruckId: string = this.trucks!.find((obj) => obj.plate == chosenPlate)!.id_truck;
           formData.append("assigned_id_truck", chosenTruckId);
+        }
+
+        const users = await (await this.warehouseServices.getById(newWarehouseId)).users
+        if (users?.find((user) => user.role === "manager")) {
+          const previousRole: String = "operator"
+          formData.append("role", previousRole.toString());
+        } else {
+          formData.append("role", this.userForm.get("role")?.value);
         }
 
         const response: Iuser3 = await this.userServices.update(this.myUserId, formData)
@@ -231,7 +254,8 @@ export class UserFormComponent {
           const chosenTruckId: string = this.trucks!.find((obj) => obj.plate == chosenPlate)!.id_truck;
           formData.append("assigned_id_truck", chosenTruckId);
         }
-    
+   
+        console.log(this.userForm.get("role")?.value, chosenPlate)
         const response: Iuser3 = await this.userServices.insert(formData)
         console.log('usuario creado:', response)
         if (response.id_user) {
@@ -262,6 +286,16 @@ export class UserFormComponent {
     const repeatpassword = formValue.get('repeatpassword')?.value
     if (password !== repeatpassword) {
       return {'checkpassword': true}
+    } else {
+      return null
+    }
+  }
+
+  checkManagerWarehouse(formValue: AbstractControl, managerWarehouses: Iwarehouse[]): any {
+    const role = formValue.get('role')?.value;
+    const warehouse = formValue.get('warehouse')?.value;
+    if (role === 'manager' && managerWarehouses.length === 0) {
+      return {'checkmanagerwarehouse': true}
     } else {
       return null
     }
