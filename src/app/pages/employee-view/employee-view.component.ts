@@ -29,7 +29,6 @@ export class EmployeeViewComponent implements OnInit {
 
     this.activatedRoute.params.subscribe(async (params: any) => {
     const res = await this.userServices.getById(params.id);
-    console.log(res)
     this.userID = Number(params!.id)
     this.myUser = res;
 
