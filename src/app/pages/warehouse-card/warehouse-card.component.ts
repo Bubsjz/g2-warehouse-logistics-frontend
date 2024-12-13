@@ -7,6 +7,7 @@ import { Iuser2 } from '../../interfaces/iuser2.interface';
 import Swal from 'sweetalert2';
 import { GoogleMap, MapMarker } from '@angular/google-maps';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-warehouse-card',
@@ -37,7 +38,7 @@ export class WarehouseCardComponent {
 
 
   async ngOnInit() {
-
+    this.addGoogleMapsScript()
     const res = await this.warehouseServices.getById(this.warehouse_id)
     this.warehouse = res
     this.latitude = res.latitude
@@ -96,4 +97,24 @@ export class WarehouseCardComponent {
      return new google.maps.LatLng(Number(this.latitude),Number(this.longitude))
  
    }
+
+
+
+
+   addGoogleMapsScript() {
+    
+    if (!document.querySelector(`script[src*="maps.googleapis.com"]`)) {
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.API_KEY}`;
+      script.async = true;
+      script.defer = true;
+      document.body.appendChild(script);
+
+      script.onload = () => {
+        this.getPosition();
+      };
+    } else {
+      this.getPosition(); 
+    }
+  }
 }
