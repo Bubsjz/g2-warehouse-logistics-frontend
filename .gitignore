@@ -42,3 +42,5 @@ testem.log
 Thumbs.db
 
 .gitmodules
+src/environments/environment.development.ts
+src/environments/environment.ts
