@@ -15,8 +15,18 @@
             <i class="fa-solid fa-location-crosshairs" style="color: #060606"></i>
           </button>
           @if(this.showMap === true){
-            <google-map  width="300px" height="200px" [zoom]="12" [center]="getPosition()">
-            <map-marker #market="mapMarker"   [position]="getPosition()"></map-marker>
+            <google-map  width="500px" height="500px" [zoom]="12" [center]="getPosition()">
+            <map-marker #market="mapMarker"   [position]="getPosition()" (mapClick)="openInfoWindow(market, infoWindow)">
+             <map-info-window #infoWindow = "mapInfoWindow">
+              <div style="width: 275px; height: 100px; overflow: auto;"> 
+                <h4>{{warehouse?.name}} <img class="img-fluid w-25 h-25" src="rountravel.png" alt="logo image"></h4>
+                <hr>
+                <p>Number of Managers: {{n_managers}}</p>
+                <p>Number of operators: {{n_operators}}</p>
+                <p>Total employees: {{n_employees}}</p>
+              </div>
+             </map-info-window>
+            </map-marker>
           </google-map>
           }
         </div>
