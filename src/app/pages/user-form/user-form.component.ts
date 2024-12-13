@@ -167,7 +167,6 @@ export class UserFormComponent {
               }              
             }
           }
-          console.log('hola', this.userForm.get("role")?.value, this.userForm.get("warehouse")?.value)
         }
       });
     
@@ -201,7 +200,7 @@ export class UserFormComponent {
         }
 
         const users = await (await this.warehouseServices.getById(newWarehouseId)).users
-        if (users?.find((user) => user.role === "manager")) {
+        if (users?.find((user) => user.role === "manager" && users.length !== 1)) {
           const previousRole: String = "operator"
           formData.append("role", previousRole.toString());
         } else {
