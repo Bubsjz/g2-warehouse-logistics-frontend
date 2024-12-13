@@ -301,23 +301,4 @@ export class UserFormComponent {
     }
   }
 
-  // checkRole(formValue: AbstractControl): any {
-  //   enum Role {"operator", "manager"}
-  //   const role = formValue.get('role')?.value;
-  //   if (role in Role) {
-  //     return null
-  //   } else {
-  //     return {'checkrole': true}
-  //   }
-  // }
-
-  // checkWarehouse(formValue: AbstractControl): any {
-  //   const warehouse = formValue.get('warehouse')?.value;
-  //   if (warehouse.includes(this.warehouses)) {
-  //     return null
-  //   } else {
-  //     return {'checkwarehouse': true}
-  //   }
-  // }
-
 }
