@@ -198,9 +198,9 @@ export class UserFormComponent {
           const chosenTruckId: string = this.trucks!.find((obj) => obj.plate == chosenPlate)!.id_truck;
           formData.append("assigned_id_truck", chosenTruckId);
         }
-
-        const users = await (await this.warehouseServices.getById(newWarehouseId)).users
-        if (users?.find((user) => user.role === "manager" && users.length !== 1)) {
+        const users = (await this.warehouseServices.getById(newWarehouseId)).users
+        const currentManager = users?.find((user) => user.role === "manager")
+        if (currentManager && (currentManager?.id_user !== Number(this.myUserId))) {
           const previousRole: String = "operator"
           formData.append("role", previousRole.toString());
         } else {
